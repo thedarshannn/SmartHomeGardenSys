@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "SmartHomeGarden"
-include ':app'
+include ':SmartHomeGarden'
