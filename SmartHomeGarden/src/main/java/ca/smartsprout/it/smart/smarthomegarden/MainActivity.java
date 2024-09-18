@@ -24,6 +24,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyUp(keyCode, event);
     }
 
+    /**
+     * Displays a confirmation dialog asking the user if they want to exit the application.
+     *
+     * <p>The dialog shows a title, an icon, and a message prompting the user to confirm their choice.
+     * The dialog has two buttons: "Yes" and "No". If the user selects "Yes", the application
+     * will close using {@link #finish()}. If the user selects "No", the dialog will be dismissed.</p>
+     *
+     * <p>The dialog is non-cancelable, meaning the user must explicitly choose either "Yes" or "No".</p>
+     */
     public void showExitConfirmationDialog() {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
