@@ -15,6 +15,10 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
+    /**
+     * Displays a splash screen and navigates to MainActivity after a delay.
+     */
+
     private Handler handler = new Handler();
     private Runnable runnable;
 
