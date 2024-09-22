@@ -1,11 +1,11 @@
-![logo](https://drive.google.com/file/d/1pezVuc5-j0kZ6TsOqcU4y0Io7nzz0BPs/view)
+![logo](Logo.png)
 # Smart Home Garden system
 
 ## Team Member
-Aditi Patel - n01525570
-Birava Prajapati - n01579924
-Darshankumar Prajapati - n01584247
-Zeel Patel - n01526282
+1. Aditi Patel - n01525570 
+1. Birava Prajapati - n01579924
+1. Darshankumar Prajapati - n01584247
+1. Zeel Patel - n01526282
 
 ## Project Objective
 The Smart Home-Garden system automates plant care, letting users monitor and manage their garden via a mobile app.
