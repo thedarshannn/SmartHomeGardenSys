@@ -1,3 +1,5 @@
+package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

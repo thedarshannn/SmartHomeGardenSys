@@ -9,7 +9,7 @@
 
     <!-- Clover Item -->
     <item
-        android:id="@+id/navigation_clover"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/profile"
         android:title="@string/Profile" />
 
@@ -21,13 +21,13 @@
 
     <!-- Stethoscope Item -->
     <item
-        android:id="@+id/navigation_health"
+        android:id="@+id/navigation_diagnosis"
         android:icon="@drawable/diagnosis"
         android:title="@string/diagnosis" />
 
     <!-- Device Item -->
     <item
-        android:id="@+id/navigation_device"
+        android:id="@+id/navigation_sensor"
         android:icon="@drawable/sensor"
         android:title="@string/sensors" />
 
