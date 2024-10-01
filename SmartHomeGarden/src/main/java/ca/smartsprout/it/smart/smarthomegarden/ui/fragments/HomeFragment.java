@@ -9,6 +9,8 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,11 +18,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 
 public class HomeFragment extends Fragment {
-
 
 
     public HomeFragment() {
@@ -36,6 +39,18 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+       View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
+        TextClock clockTC = view.findViewById(R.id.textClock);
+        clockTC.setFormat12Hour("dd MMM, yyyy");
+
+        TextView greetingTextView = view.findViewById(R.id.greetingTextView);
+        // Set the greeting with the username
+        String username = "John"; // Replace this with the actual username
+        greetingTextView.setText("Hello, " + username);
+
+        return view;
     }
 }
