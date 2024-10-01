@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,12 +45,12 @@ public class HomeFragment extends Fragment {
 
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
         TextClock clockTC = view.findViewById(R.id.textClock);
-        clockTC.setFormat12Hour("dd MMM, yyyy");
+        clockTC.setFormat12Hour(getString(R.string.date_format));
 
         TextView greetingTextView = view.findViewById(R.id.greetingTextView);
         // Set the greeting with the username
-        String username = "John"; // Replace this with the actual username
-        greetingTextView.setText("Hello, " + username);
+        String username = "John"; // Gonna change this later with the username of the user
+        greetingTextView.setText(getString(R.string.hello) + username);
 
         return view;
     }

@@ -9,4 +9,5 @@ Members:
 
 <resources>
     <string name="SmartHomeGarden">SmartHomeGarden</string>
+    <string name="date_format">dd MMM, yyyy</string>
 </resources>
