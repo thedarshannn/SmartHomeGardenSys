@@ -5,13 +5,63 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.DiagnoseFragment;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HomeFragment;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.ProfileFragment;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SearchFragment;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SensorFragment;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NavigationViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    private NavigationViewModel navigationViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
+
+        // Set default fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new HomeFragment())
+                    .commit();
+        }
+        // Observe the selected item from ViewModel
+        navigationViewModel.getSelectedItem().observe(this, itemId -> {
+            Fragment selectedFragment = null;
+            if (itemId == R.id.navigation_home) {
+                selectedFragment = new HomeFragment();
+            } else if (itemId == R.id.navigation_profile) {
+                selectedFragment = new ProfileFragment();
+            } else if (itemId == R.id.navigation_search) {
+                selectedFragment = new SearchFragment();
+            } else if (itemId == R.id.navigation_diagnosis) {
+                selectedFragment = new DiagnoseFragment();
+            } else if (itemId == R.id.navigation_sensor) {
+                selectedFragment = new SensorFragment();
+            }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, selectedFragment)
+                        .commit();
+            }
+        });
+
+        // Handle bottom navigation item clicks
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            navigationViewModel.setSelectedItem(item.getItemId());
+            return true;
+        });
     }
 
     // Alert dialog box which shows up when user click on back button.
