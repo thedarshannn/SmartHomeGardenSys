@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
 
         TextView greetingTextView = view.findViewById(R.id.greetingTextView);
         // Set the greeting with the username
-        String username = "John"; // Gonna change this later with the username of the user
+        String username = getString(R.string.sir); // Gonna change this later with the username of the user
         greetingTextView.setText(getString(R.string.hello) + username);
 
         return view;
