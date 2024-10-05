@@ -61,11 +61,11 @@ public class HomeFragment extends Fragment {
                 if (fineLocationGranted != null && fineLocationGranted) {
                     // Location permission was granted
                     fetchWeatherData(); // Only fetch weather data now, after permission is granted
-                    Snackbar.make(requireView(), "Location permission granted", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(requireView(), R.string.location_permission_granted, Snackbar.LENGTH_SHORT).show();
                 } else if (coarseLocationGranted != null && coarseLocationGranted) {
                     // Location permission was granted
                     fetchWeatherData();
-                    Snackbar.make(requireView(), "Location permission granted", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(requireView(), R.string.location_permission_granted, Snackbar.LENGTH_SHORT).show();
                 } else if (result.containsKey(Manifest.permission.ACCESS_FINE_LOCATION) || result.containsKey(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                     // Location permission was denied
                     handlePermissionDenied();
@@ -141,11 +141,11 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onProviderDisabled(String provider) {
-                    Log.e("WeatherFragment", "Location provider disabled.");
+                    Log.e(getString(R.string.weatherfragment), getString(R.string.location_provider_disabled));
                 }
             });
         } else {
-            Log.e("WeatherFragment", "Network provider is not enabled.");
+            Log.e(getString(R.string.weatherfragment), getString(R.string.network_provider_is_not_enabled));
             // You can add additional logic to notify the user or use the GPS provider as a fallback
         }
     }
@@ -159,6 +159,7 @@ public class HomeFragment extends Fragment {
         WeatherService service = retrofit.create(WeatherService.class);
         Call<WeatherResponse> call = service.getWeather(lat, lon, API_KEY);
         call.enqueue(new Callback<WeatherResponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -168,21 +169,21 @@ public class HomeFragment extends Fragment {
                         float tempMinCelsius = weather.main.temp_min - 273.15f;
 
                         // Format the temperatures to 2 decimal places
-                        String tempMaxFormatted = String.format("%.2f", tempMaxCelsius);
-                        String tempMinFormatted = String.format("%.2f", tempMinCelsius);
+                        String tempMaxFormatted = String.format(getString(R.string.tempFormat), tempMaxCelsius);
+                        String tempMinFormatted = String.format(getString(R.string.tempFormat), tempMinCelsius);
 
                         // Update the UI with fetched weather data
-                        tvHighTemp.setText("High: \n" + tempMaxFormatted + "°C");
-                        tvLowTemp.setText("Low: \n" + tempMinFormatted + "°C");
+                        tvHighTemp.setText(getString(R.string.high) + tempMaxFormatted + getString(R.string.celius));
+                        tvLowTemp.setText(getString(R.string.low) + tempMinFormatted + getString(R.string.celius));
                     }
                 } else {
-                    Log.e("WeatherFragment", "Response unsuccessful or null.");
+                    Log.e(getString(R.string.weatherfragment), getString(R.string.response_unsuccessful_or_null));
                 }
             }
 
             @Override
             public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                Log.e("WeatherFragment", "API call failed: " + t.getMessage());
+                Log.e(getString(R.string.weatherfragment), getString(R.string.api_call_failed) + t.getMessage());
             }
         });
     }
@@ -190,8 +191,8 @@ public class HomeFragment extends Fragment {
 
     // Handle permission denied by showing Snackbar with "Settings" button
     private void handlePermissionDenied() {
-        Log.e("WeatherFragment", "Location permissions denied.");
-        Snackbar.make(requireView(), "Location permission denied", Snackbar.LENGTH_SHORT).show();
+        Log.e(getString(R.string.weatherfragment), getString(R.string.location_permissions_denied));
+        Snackbar.make(requireView(), getString(R.string.location_permissions_denied), Snackbar.LENGTH_SHORT).show();
         openSettings();
     }
     private void openSettings() {

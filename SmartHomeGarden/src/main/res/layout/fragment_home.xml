@@ -35,7 +35,7 @@
         android:layout_height="126dp"
         android:orientation="vertical"
         android:padding="16dp"
-        app:cardBackgroundColor="#EFFAE3"
+        app:cardBackgroundColor="@color/cardViewBg"
         app:cardCornerRadius="12dp"
         app:cardElevation="6dp"
         android:layout_gravity="start"
@@ -54,23 +54,23 @@
                 android:layout_height="61dp"
                 android:layout_marginEnd="21dp"
                 android:layout_marginBottom="30dp"
-                android:src="@drawable/weather_icon" />
+                android:src="@drawable/weather_icon"/>
 
             <TextView
                 android:id="@+id/tv_low_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="Low: \n  --°C"
-                android:textColor="#52b788"
+                android:text="@string/low_n_c"
+                android:textColor="@color/LowTempColour"
                 android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/tv_high_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="High: \n  --°C"
-                android:textColor="#1b4332"
+                android:text="@string/high_n_c"
+                android:textColor="@color/highTempColour"
                 android:textSize="25sp" />
 
         </LinearLayout>
