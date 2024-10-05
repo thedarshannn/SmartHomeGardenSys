@@ -11,8 +11,13 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +36,14 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.WeatherService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class HomeFragment extends Fragment {
 
@@ -46,11 +60,11 @@ public class HomeFragment extends Fragment {
 
                 if (fineLocationGranted != null && fineLocationGranted) {
                     // Location permission was granted
-
+                    fetchWeatherData(); // Only fetch weather data now, after permission is granted
                     Snackbar.make(requireView(), "Location permission granted", Snackbar.LENGTH_SHORT).show();
                 } else if (coarseLocationGranted != null && coarseLocationGranted) {
                     // Location permission was granted
-
+                    fetchWeatherData();
                     Snackbar.make(requireView(), "Location permission granted", Snackbar.LENGTH_SHORT).show();
                 } else if (result.containsKey(Manifest.permission.ACCESS_FINE_LOCATION) || result.containsKey(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                     // Location permission was denied
@@ -58,9 +72,10 @@ public class HomeFragment extends Fragment {
                 }
             });
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+//
+//    public HomeFragment() {
+//        // Required empty public constructor
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +98,7 @@ public class HomeFragment extends Fragment {
         // Set the greeting with the username
         String username = getString(R.string.sir); // Gonna change this later with the username of the user
         greetingTextView.setText(getString(R.string.hello) + username);
-
+        // Initialize UI elements
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
 
@@ -94,10 +109,86 @@ public class HomeFragment extends Fragment {
             requestPermissionLauncher.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         } else {
             // Permissions are already granted, fetch weather data immediately
-
+            fetchWeatherData();
         }
         return view;
     }
+
+    private void fetchWeatherData() {
+        // Ensure permissions are granted before accessing location
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return; // Permissions are not granted, so we stop
+        }
+
+        // Get the location manager
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        // Check if the location provider is enabled
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double lat = location.getLatitude();
+                    double lon = location.getLongitude();
+
+                    // Fetch weather data using Retrofit
+                    getWeatherData(lat, lon);
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {}
+
+                @Override
+                public void onProviderDisabled(String provider) {
+                    Log.e("WeatherFragment", "Location provider disabled.");
+                }
+            });
+        } else {
+            Log.e("WeatherFragment", "Network provider is not enabled.");
+            // You can add additional logic to notify the user or use the GPS provider as a fallback
+        }
+    }
+
+    private void getWeatherData(double lat, double lon) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WeatherService service = retrofit.create(WeatherService.class);
+        Call<WeatherResponse> call = service.getWeather(lat, lon, API_KEY);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    WeatherResponse weather = response.body();
+                    if (weather.main != null) {
+                        float tempMaxCelsius = weather.main.temp_max - 273.15f;
+                        float tempMinCelsius = weather.main.temp_min - 273.15f;
+
+                        // Format the temperatures to 2 decimal places
+                        String tempMaxFormatted = String.format("%.2f", tempMaxCelsius);
+                        String tempMinFormatted = String.format("%.2f", tempMinCelsius);
+
+                        // Update the UI with fetched weather data
+                        tvHighTemp.setText("High: \n" + tempMaxFormatted + "°C");
+                        tvLowTemp.setText("Low: \n" + tempMinFormatted + "°C");
+                    }
+                } else {
+                    Log.e("WeatherFragment", "Response unsuccessful or null.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Log.e("WeatherFragment", "API call failed: " + t.getMessage());
+            }
+        });
+    }
+
+
+    // Handle permission denied by showing Snackbar with "Settings" button
     private void handlePermissionDenied() {
         Log.e("WeatherFragment", "Location permissions denied.");
         Snackbar.make(requireView(), "Location permission denied", Snackbar.LENGTH_SHORT).show();
