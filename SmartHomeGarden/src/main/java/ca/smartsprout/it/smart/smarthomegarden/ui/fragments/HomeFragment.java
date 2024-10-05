@@ -192,5 +192,12 @@ public class HomeFragment extends Fragment {
     private void handlePermissionDenied() {
         Log.e("WeatherFragment", "Location permissions denied.");
         Snackbar.make(requireView(), "Location permission denied", Snackbar.LENGTH_SHORT).show();
+        openSettings();
+    }
+    private void openSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
     }
 }
