@@ -36,4 +36,5 @@ Members:
     <string name="do_you_want_to_exit_the_application">Do you want to exit the application?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="settings">Settings</string>
 </resources>   
