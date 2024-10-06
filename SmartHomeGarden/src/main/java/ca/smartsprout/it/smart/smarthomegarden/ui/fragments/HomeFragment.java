@@ -72,10 +72,10 @@ public class HomeFragment extends Fragment {
                 }
             });
 
-//
-//    public HomeFragment() {
-//        // Required empty public constructor
-//    }
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,12 +141,15 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onProviderDisabled(String provider) {
-                    Log.e(getString(R.string.weatherfragment), getString(R.string.location_provider_disabled));
+                    if (isAdded()) {
+                        Log.e(getString(R.string.weatherfragment), getString(R.string.location_provider_disabled));
+                    }
                 }
             });
         } else {
-            Log.e(getString(R.string.weatherfragment), getString(R.string.network_provider_is_not_enabled));
-            // You can add additional logic to notify the user or use the GPS provider as a fallback
+            if (isAdded()) {
+                Log.e(getString(R.string.weatherfragment), getString(R.string.network_provider_is_not_enabled));
+            }
         }
     }
 
@@ -162,7 +165,7 @@ public class HomeFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
                     WeatherResponse weather = response.body();
                     if (weather.main != null) {
                         float tempMaxCelsius = weather.main.temp_max - 273.15f;
@@ -177,28 +180,35 @@ public class HomeFragment extends Fragment {
                         tvLowTemp.setText(getString(R.string.low) + tempMinFormatted + getString(R.string.celius));
                     }
                 } else {
-                    Log.e(getString(R.string.weatherfragment), getString(R.string.response_unsuccessful_or_null));
+                    if (isAdded()) {
+                        Log.e(getString(R.string.weatherfragment), getString(R.string.response_unsuccessful_or_null));
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                Log.e(getString(R.string.weatherfragment), getString(R.string.api_call_failed) + t.getMessage());
+                if (isAdded()) {
+                    Log.e(getString(R.string.weatherfragment), getString(R.string.api_call_failed) + t.getMessage());
+                }
             }
         });
     }
 
-
     // Handle permission denied by showing Snackbar with "Settings" button
     private void handlePermissionDenied() {
+        if (isAdded()){
         Log.e(getString(R.string.weatherfragment), getString(R.string.location_permissions_denied));
         Snackbar.make(requireView(), getString(R.string.location_permissions_denied), Snackbar.LENGTH_SHORT).show();
         openSettings();
+        }
     }
     private void openSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
+        if (isAdded()) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
     }
 }

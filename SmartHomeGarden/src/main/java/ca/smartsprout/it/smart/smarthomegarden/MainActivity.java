@@ -97,17 +97,17 @@ public class MainActivity extends AppCompatActivity {
     public void showExitConfirmationDialog() {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
-        builder.setTitle("Exit");
+        builder.setTitle(R.string.exit);
         builder.setIcon(R.drawable.alert);
-        builder.setMessage("Do you want to exit the application?");
+        builder.setMessage(R.string.do_you_want_to_exit_the_application);
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finish();
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();

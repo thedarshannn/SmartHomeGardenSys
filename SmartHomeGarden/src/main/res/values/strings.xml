@@ -32,4 +32,8 @@ Members:
     <string name="response_unsuccessful_or_null">Response unsuccessful or null.</string>
     <string name="api_call_failed">"API call failed: "</string>
     <string name="location_permissions_denied">Location permissions denied.</string>
+    <string name="exit">Exit</string>
+    <string name="do_you_want_to_exit_the_application">Do you want to exit the application?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>   
