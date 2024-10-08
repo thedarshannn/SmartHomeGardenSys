@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-
-    <color name="green">#132A13</color>
-    <color name ="text">#ECF39E</color>
-
-    <color name="grey">#B6B6B6</color>
     <color name="cardViewBg">#EFFAE3</color>
     <color name="LowTempColour">#52b788</color>
     <color name="highTempColour">#1b4332</color>

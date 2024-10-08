@@ -8,5 +8,32 @@ Members:
 -->
 
 <resources>
+    <string name="home">Home</string>
+    <string name="sensors">Sensor</string>
+    <string name="search">Search</string>
+    <string name="diagnosis">Diagnosis</string>
+    <string name="Profile">Profile</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="SmartHomeGarden">SmartHomeGarden</string>
+    <string name="date_format">dd MMM, yyyy</string>
+    <string name="hello">"Hello, "</string>
+    <string name="sir">Shawn</string>
+    <string name="low_n_c">Low: \n --°C</string>
+    <string name="high_n_c">High: \n --°C</string>
+    <string name="location_permission_granted">Location permission granted</string>
+    <string name="weatherfragment">WeatherFragment</string>
+    <string name="location_provider_disabled">Location provider disabled.</string>
+    <string name="network_provider_is_not_enabled">Network provider is not enabled.</string>
+    <string name="high">High: \n</string>
+    <string name="low">Low: \n</string>
+    <string name="celius">°C</string>
+    <string name="tempFormat">%.2f</string>
+    <string name="response_unsuccessful_or_null">Response unsuccessful or null.</string>
+    <string name="api_call_failed">"API call failed: "</string>
+    <string name="location_permissions_denied">Location permissions denied.</string>
+    <string name="exit">Exit</string>
+    <string name="do_you_want_to_exit_the_application">Do you want to exit the application?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="settings">Settings</string>
 </resources>

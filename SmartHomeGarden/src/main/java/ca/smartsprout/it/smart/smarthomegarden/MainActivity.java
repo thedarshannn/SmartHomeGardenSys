@@ -13,6 +13,10 @@ package ca.smartsprout.it.smart.smarthomegarden;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -97,22 +101,49 @@ public class MainActivity extends AppCompatActivity {
     public void showExitConfirmationDialog() {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
-        builder.setTitle("Exit");
+        builder.setTitle(R.string.exit);
         builder.setIcon(R.drawable.alert);
-        builder.setMessage("Do you want to exit the application?");
+        builder.setMessage(R.string.do_you_want_to_exit_the_application);
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finish();
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
             }
         });
         builder.create().show();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            // Handle settings action
+            return true;
+        } else if (id == R.id.action_translate) {
+            // Handle translate action
+            return true;
+        } else if (id == R.id.action_theme) {
+            // Handle theme change
+            return true;
+        } else if (id == R.id.action_notification) {
+            // Handle notification action
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }
