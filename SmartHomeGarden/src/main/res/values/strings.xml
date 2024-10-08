@@ -16,6 +16,10 @@ Members:
     <string name="Profile">Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start">Get started with sprouting!</string>
+    <string name="signin">Already have an account?Sign in</string>
+    <string name="sign">Sign in</string>
+    <string name="register">REGISTER</string>
     <string name="date_format">dd MMM, yyyy</string>
     <string name="hello">"Hello, "</string>
     <string name="sir">Shawn</string>
@@ -40,4 +44,7 @@ Members:
     <string name="translate">Translate</string>
     <string name="dark_light_theme">Dark/Light Theme</string>
     <string name="notification">Notification</string>
-</resources>   
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Full Name</string>
+</resources>
