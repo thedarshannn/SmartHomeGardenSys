@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "204065205787",
+    "project_id": "loginscreen-adfb6",
+    "storage_bucket": "loginscreen-adfb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204065205787:android:cd5d3cbbd78040a0fd12be",
+        "android_client_info": {
+          "package_name": "ca.smartsprout.it.smart.smarthomegarden"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-rcK4fHasyPOwwHZO-t5PoJaFfQI4wmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204065205787:android:4d3480d66c85d32dfd12be",
+        "android_client_info": {
+          "package_name": "com.example.loginscreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-rcK4fHasyPOwwHZO-t5PoJaFfQI4wmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
