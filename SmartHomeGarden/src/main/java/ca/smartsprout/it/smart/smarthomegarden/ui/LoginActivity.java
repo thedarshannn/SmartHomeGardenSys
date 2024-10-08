@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
     private Button loginButton;
     private AuthViewModel authViewModel;
@@ -51,12 +51,12 @@ public class Login extends AppCompatActivity {
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
         if (authResult != null) {
-            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "LoginActivity successful!", Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
-            Intent intent = new Intent(Login.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
-            Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "LoginActivity failed.", Toast.LENGTH_SHORT).show();
         }
     }
 

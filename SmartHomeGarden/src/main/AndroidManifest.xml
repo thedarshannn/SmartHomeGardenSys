@@ -13,13 +13,13 @@
         android:theme="@style/Theme.SmartHomeGarden"
         tools:targetApi="31">
         <activity
-            android:name=".ui.Registration"
+            android:name=".ui.RegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.Login"
+            android:name=".ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.Selection"
+            android:name=".ui.SelectionActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

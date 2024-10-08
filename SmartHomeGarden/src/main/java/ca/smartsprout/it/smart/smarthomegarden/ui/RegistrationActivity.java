@@ -6,11 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.AuthResult;
@@ -19,7 +15,7 @@ import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
-public class Registration extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput;
     private Button registerButton;
@@ -52,13 +48,13 @@ public class Registration extends AppCompatActivity {
 
     private void handleRegistrationResult(AuthResult authResult) {
         if (authResult != null) {
-            Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "RegistrationActivity successful!", Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
-            Intent intent = new Intent(Registration.this, MainActivity.class);
+            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
             startActivity(intent);
 
         } else {
-            Toast.makeText(this, "Registration failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "RegistrationActivity failed.", Toast.LENGTH_SHORT).show();
         }
     }
 }
