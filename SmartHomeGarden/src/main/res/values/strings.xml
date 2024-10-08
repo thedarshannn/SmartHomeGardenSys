@@ -44,4 +44,7 @@ Members:
     <string name="translate">Translate</string>
     <string name="dark_light_theme">Dark/Light Theme</string>
     <string name="notification">Notification</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Full Name</string>
 </resources>
