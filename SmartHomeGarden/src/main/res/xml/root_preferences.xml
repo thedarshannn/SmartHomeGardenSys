@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Switch for enabling/disabling notifications -->
+    <SwitchPreferenceCompat
+        android:key="notifications"
+        android:title="Enable Notifications"
+        android:summary="Turn notifications on or off"
+        android:defaultValue="true" />
+
+    <!-- ListPreference for selecting screen orientation -->
+    <ListPreference
+        android:key="screen_orientation"
+        android:title="Screen Orientation"
+        android:summary="Select the screen orientation mode"
+        android:entries="@array/orientation_options"
+        android:entryValues="@array/orientation_values"
+        android:defaultValue="auto" />
+
+    <!-- ListPreference for selecting app theme -->
+    <ListPreference
+        android:key="app_theme"
+        android:title="App Theme"
+        android:summary="Choose between light, dark, or system default theme"
+        android:entries="@array/theme_options"
+        android:entryValues="@array/theme_values"
+        android:defaultValue="system" />
+
+    <!-- Log Out option -->
+    <Preference
+        android:key="logout"
+        android:title="Log Out"
+        android:summary="Log out from your account"
+        android:icon="@drawable/ic_logout" />
+
+</PreferenceScreen>
