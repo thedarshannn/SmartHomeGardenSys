@@ -1,19 +1,18 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,22 +48,11 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
             if (key.equals("screen_orientation")) {
-                String orientation = sharedPreferences.getString(key, "auto");
-
-                // Apply the selected orientation
-                switch (orientation) {
-                    case "portrait":
-                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                        break;
-                    case "landscape":
-                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                        break;
-                    default:
-                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                        break;
-                }
+                // Apply screen orientation settings immediately
+                ((BaseActivity) getActivity()).applyScreenOrientation();
             }
         }
+
 
         @Override
         public void onResume() {
