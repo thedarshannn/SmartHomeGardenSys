@@ -51,12 +51,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
         if (authResult != null) {
-            Toast.makeText(this, "LoginActivity successful!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "@string/login", Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
-            Toast.makeText(this, "LoginActivity failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "@string/login_failed", Toast.LENGTH_SHORT).show();
         }
     }
 

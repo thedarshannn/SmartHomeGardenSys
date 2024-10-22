@@ -48,11 +48,13 @@ Members:
     <string name="password">Password</string>
     <string name="name">Full Name</string>
     <string name="title_activity_settings">Settings</string>
-
+<string name="registration">RegistrationActivity successful!</string>
+    <string name="registration_failed">RegistrationActivity failed!</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
-
+<string name="login">LoginActivity successful!</string>
+    <string name="login_failed">LoginActivity failed!</string>"
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>

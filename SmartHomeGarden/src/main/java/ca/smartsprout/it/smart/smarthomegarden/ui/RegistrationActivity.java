@@ -48,13 +48,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void handleRegistrationResult(AuthResult authResult) {
         if (authResult != null) {
-            Toast.makeText(this, "RegistrationActivity successful!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "@string/registration", Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
             Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
             startActivity(intent);
 
         } else {
-            Toast.makeText(this, "RegistrationActivity failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "@string/registration_failed", Toast.LENGTH_SHORT).show();
         }
     }
 }
