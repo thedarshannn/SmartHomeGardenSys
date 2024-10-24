@@ -16,7 +16,13 @@ public class WeatherViewModel extends ViewModel {
         weatherData = new MutableLiveData<>();
     }
 
-    public LiveData<WeatherResponse> getWeatherData(double lat, double lon) {
-        return weatherRepository.getWeatherData(lat, lon);
+    public LiveData<WeatherResponse> getWeatherData() {
+        return weatherData;
+    }
+
+    public void fetchWeatherData(double lat, double lon) {
+        weatherRepository.getWeatherData(lat, lon).observeForever(weatherResponse -> {
+            weatherData.setValue(weatherResponse);
+        });
     }
 }
