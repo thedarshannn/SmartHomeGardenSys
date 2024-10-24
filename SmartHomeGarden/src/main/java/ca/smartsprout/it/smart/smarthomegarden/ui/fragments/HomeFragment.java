@@ -22,6 +22,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -51,6 +52,7 @@ public class HomeFragment extends Fragment {
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
 
     private TextView tvHighTemp, tvLowTemp;
+
 
     // Handle location permission result
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
@@ -101,16 +103,24 @@ public class HomeFragment extends Fragment {
         // Initialize UI elements
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
+        CardView weatherCardView = view.findViewById(R.id.cardView);
 
-        // Check if location permissions are already granted
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Request permissions, but do not show the Snackbar yet
-            requestPermissionLauncher.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
-        } else {
-            // Permissions are already granted, fetch weather data immediately
-            fetchWeatherData();
-        }
+        // Set an onClickListener on the CardView
+        weatherCardView.setOnClickListener(v -> {
+            // Request location permissions when CardView is clicked
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // Request permissions
+                requestPermissionLauncher.launch(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                });
+            } else {
+                // Permissions are already granted, fetch weather data
+                fetchWeatherData();
+            }
+        });
+
         return view;
     }
 
