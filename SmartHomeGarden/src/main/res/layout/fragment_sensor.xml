@@ -49,6 +49,13 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Sunlight"
+                        android:textSize="16sp" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -65,6 +72,13 @@
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Temperature"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -90,6 +104,12 @@
                     android:padding="16dp"
                     android:gravity="center">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Moisture"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -107,6 +127,13 @@
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Health"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp" />
 
 
                 </LinearLayout>
