@@ -60,6 +60,13 @@
                         android:text="Sunlight"
                         android:textSize="16sp" />
 
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:progress="45" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -87,6 +94,13 @@
                         android:text="Temperature"
                         android:textSize="16sp"
                         android:layout_marginBottom="8dp" />
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:progress="18"
+                        android:max="100" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -123,6 +137,13 @@
                         android:textSize="16sp"
                         android:layout_marginBottom="8dp" />
 
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:progress="14"
+                        android:max="100" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -151,6 +172,13 @@
                         android:textSize="16sp"
                         android:layout_marginBottom="8dp" />
 
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:progress="60"
+                        android:max="100" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
