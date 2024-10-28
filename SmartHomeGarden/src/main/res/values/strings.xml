@@ -65,4 +65,13 @@ Members:
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="sensor_readings">Sensor Readings</string>
+    <string name="sunlight">Sunlight</string>
+    <string name="_45">45%</string>
+    <string name="temperature">Temperature</string>
+    <string name="_18">18°</string>
+    <string name="moisture">Moisture</string>
+    <string name="_14">14%</string>
+    <string name="health">Health</string>
+    <string name="_60">60%</string>
 </resources>
