@@ -1,19 +1,19 @@
 [versions]
 agp = "8.6.1"
-glide = "4.12.0"
+glide = "4.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
-lottie = "6.1.0"
+lottie = "6.5.2"
 material = "1.12.0"
-activity = "1.9.2"
+activity = "1.9.3"
 constraintlayout = "2.1.4"
 googleGmsGoogleServices = "4.4.2"
-firebaseAuth = "23.0.0"
+firebaseAuth = "23.1.0"
 playServicesLocation = "21.3.0"
-retrofit = "2.9.0"
-preference = "1.2.0"
+retrofit = "2.11.0"
+preference = "1.2.1"
 
 [libraries]
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
