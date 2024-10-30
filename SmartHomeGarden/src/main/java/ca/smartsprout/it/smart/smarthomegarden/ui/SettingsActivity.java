@@ -8,17 +8,17 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.SessionViewModel;
 
 
 public class SettingsActivity extends BaseActivity {
@@ -53,42 +53,24 @@ public class SettingsActivity extends BaseActivity {
         return true;
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragmentCompat{
+
+        private SessionViewModel sessionViewModel;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            // Set up the Log Out option, no functionality yet
+
+            sessionViewModel = new ViewModelProvider(this).get(SessionViewModel.class);
+
             Preference logoutPreference = findPreference("logout");
             if (logoutPreference != null) {
                 logoutPreference.setOnPreferenceClickListener(preference -> {
-                    // Log Out click event, functionality can be added later
+                    sessionViewModel.logOut();
                     return true;
                 });
             }
         }
 
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
-            if (key.equals("screen_orientation")) {
-                // Apply screen orientation settings immediately
-                ((BaseActivity) getActivity()).applyScreenOrientation();
-            }
-        }
-
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            getPreferenceScreen().getSharedPreferences()
-                    .registerOnSharedPreferenceChangeListener(this);
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            getPreferenceScreen().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener(this);
-        }
     }
 }
+

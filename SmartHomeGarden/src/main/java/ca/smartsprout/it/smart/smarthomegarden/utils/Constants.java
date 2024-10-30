@@ -10,4 +10,6 @@
 package ca.smartsprout.it.smart.smarthomegarden.utils;
 
 public class Constants {
+
+    public static final String PREFS_NAME = "user_session_prefs";
 }
