@@ -75,4 +75,5 @@ Members:
     <string name="feedback_summary">Send us your feedback</string>
     <string name="log_out">Log Out</string>
     <string name="logout_summary">Log out from your account</string>
+    <string name="version">SmartSprout v1.0(ca)</string>
 </resources>
