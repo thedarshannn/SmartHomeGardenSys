@@ -65,4 +65,14 @@ Members:
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="enable_notifications">Enable Notifications</string>
+    <string name="notification_summary">Turn notifications on or off</string>
+    <string name="screen_orientation">Screen Orientation</string>
+    <string name="screen_orientation_summary">Select the screen orientation mode</string>
+    <string name="app_theme">App Theme</string>
+    <string name="theme_summary">Choose between light, dark, or system default theme</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_summary">Send us your feedback</string>
+    <string name="log_out">Log Out</string>
+    <string name="logout_summary">Log out from your account</string>
 </resources>
