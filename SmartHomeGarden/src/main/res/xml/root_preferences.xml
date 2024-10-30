@@ -24,7 +24,12 @@
         android:entries="@array/theme_options"
         android:entryValues="@array/theme_values"
         android:defaultValue="system" />
-
+    <!-- Add feedback option -->
+    <Preference
+        android:key="feedback"
+        android:title="Feedback"
+        android:summary="Send us your feedback"
+        android:icon="@drawable/ic_feedback" />
     <!-- Log Out option -->
     <Preference
         android:key="logout"
