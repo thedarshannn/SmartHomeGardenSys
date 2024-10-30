@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.AuthResult;
@@ -31,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
     private Button loginButton;
     private AuthViewModel authViewModel;
-
+private TextView registerswitch;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,12 +42,20 @@ public class LoginActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.editTextEmail);
         passwordInput = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.button);
-
+registerswitch=findViewById(R.id.registerswitch);
         // Initialize ViewModel
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        registerswitch.setOnClickListener(v -> {
+            // Call the method to load RegistrationFragment
+
+            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+            startActivity(intent);
+        });
 
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
+
+
     }
 
     private void loginUser() {
