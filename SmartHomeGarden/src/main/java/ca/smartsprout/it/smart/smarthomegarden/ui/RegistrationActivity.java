@@ -10,6 +10,10 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,8 +42,26 @@ public class RegistrationActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.editTextEmail1);
         passwordInput = findViewById(R.id.editTextPassword1);
         registerButton = findViewById(R.id.button2);
-
+        passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         // Initialize ViewModel
+
+        // Email validation
+        emailInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
+                    emailInput.setError("Invalid email format");
+                }
+            }
+        });
+
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         // Set click listener for register button
@@ -49,9 +71,18 @@ public class RegistrationActivity extends AppCompatActivity {
     private void registerUser() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Email and Password are required", Toast.LENGTH_SHORT).show();
+        } else if (password.length() > 10) {
+            passwordInput.setError("Password cannot exceed 10 characters");
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailInput.setError("Enter a valid email");
+        } else {
+            //Toast.makeText(MainActivity.this, "Valid Email and Password", Toast.LENGTH_SHORT).show();
 
-        // Register user and observe result
-        authViewModel.registerUser(email, password).observe(this, this::handleRegistrationResult);
+            // Register user and observe result
+            authViewModel.registerUser(email, password).observe(this, this::handleRegistrationResult);
+        }
     }
 
     private void handleRegistrationResult(AuthResult authResult) {
@@ -61,7 +92,9 @@ public class RegistrationActivity extends AppCompatActivity {
             Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
             startActivity(intent);
 
-        } else {
+        }
+
+        else {
             Toast.makeText(this, "@string/registration_failed", Toast.LENGTH_SHORT).show();
         }
     }
