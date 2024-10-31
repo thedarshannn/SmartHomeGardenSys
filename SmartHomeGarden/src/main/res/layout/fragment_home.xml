@@ -84,8 +84,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
-        android:text="Add Plant"
-        android:backgroundTint="@color/lightgreen"
+        android:text="@string/add_plant"
+        android:backgroundTint="@color/bottomNavColour"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"/>
