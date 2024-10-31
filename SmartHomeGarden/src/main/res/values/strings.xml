@@ -67,4 +67,7 @@ Members:
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="user_name">John Smith</string>
     <string name="plants_count">4 plants\n</string>
+    <string name="add_plant">Add plant</string>
+    <string name="plant_pic">Add plant picture</string>
+    <string name="add_task">Add task\n</string>
 </resources>
