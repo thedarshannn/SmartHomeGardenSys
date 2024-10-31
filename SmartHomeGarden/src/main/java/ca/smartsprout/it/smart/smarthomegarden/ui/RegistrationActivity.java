@@ -82,7 +82,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         // Configure Google Sign-In options
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.webclient)) // Ensure this matches your client ID in google-services.json
+                .requestIdToken(getString(R.string.default_web_client_id)) // Ensure this matches your client ID in google-services.json
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -116,7 +116,6 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleGoogleSignInResult(task);

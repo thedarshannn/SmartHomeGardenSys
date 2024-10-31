@@ -10,6 +10,10 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,6 +48,22 @@ private TextView registerswitch;
         loginButton = findViewById(R.id.button);
 registerswitch=findViewById(R.id.registerswitch);
         // Initialize ViewModel
+        passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        emailInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
+                    emailInput.setError("Invalid email format");
+                }
+            }
+        });
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         registerswitch.setOnClickListener(v -> {
             // Call the method to load RegistrationFragment
@@ -61,9 +81,16 @@ registerswitch=findViewById(R.id.registerswitch);
     private void loginUser() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
-
-        // Observe the login result from ViewModel
-        authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Email and Password are required", Toast.LENGTH_SHORT).show();
+        } else if (password.length() > 10) {
+            passwordInput.setError("Password cannot exceed 10 characters");
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailInput.setError("Enter a valid email");
+        } else {
+            // Observe the login result from ViewModel
+            authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
+        }
     }
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
