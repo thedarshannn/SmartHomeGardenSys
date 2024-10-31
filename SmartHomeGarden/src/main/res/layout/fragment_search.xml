@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="26dp"
         android:gravity="center"
-        android:text="Discover"
+        android:text="@string/discover"
         android:textColor="@color/highTempColour"
         android:textSize="36dp"
         android:textStyle="bold"
@@ -29,5 +29,15 @@
         android:background="@drawable/search_view_shape"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
