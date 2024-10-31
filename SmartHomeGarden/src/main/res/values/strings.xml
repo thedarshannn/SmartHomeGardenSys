@@ -68,4 +68,6 @@ Members:
     <string name="plant_name">Plant Name</string>
     <string name="plant_description">Plant Description</string>
     <string name="discover">Discover</string>
+    <string name="find_plants">Find Plants</string>
+    <string name="search_plants">Search plants...</string>
 </resources>
