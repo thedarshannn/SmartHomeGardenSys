@@ -13,11 +13,12 @@
         android:id="@+id/editTextEmail"
         android:layout_width="300dp"
         android:layout_height="52dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="28dp"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:textColor="#1E90FF"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -37,7 +38,7 @@
         android:id="@+id/button"
         android:layout_width="155dp"
         android:layout_height="57dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="76dp"
         android:backgroundTint="@color/green"
         android:text="@string/sign"
         android:textColor="@color/text"
@@ -60,13 +61,24 @@
         android:id="@+id/registerswitch"
         android:layout_width="278dp"
         android:layout_height="36dp"
-        android:layout_marginBottom="324dp"
+        android:layout_marginBottom="284dp"
         android:gravity="center"
         android:text="@string/signin"
         android:textColor="@color/green"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.639"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckBox
+        android:id="@+id/rememberMeCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Remember Me"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.094"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>

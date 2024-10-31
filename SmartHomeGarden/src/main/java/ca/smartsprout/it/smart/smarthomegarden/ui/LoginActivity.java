@@ -9,12 +9,14 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private AuthViewModel authViewModel;
 private TextView registerswitch;
+
+    private CheckBox rememberMeCheckbox;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,7 @@ private TextView registerswitch;
         passwordInput = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.button);
 registerswitch=findViewById(R.id.registerswitch);
+        rememberMeCheckbox = findViewById(R.id.rememberMeCheckbox);
         // Initialize ViewModel
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         emailInput.addTextChangedListener(new TextWatcher() {
@@ -56,6 +62,11 @@ registerswitch=findViewById(R.id.registerswitch);
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
+
+
+            // Check for saved credentials
+
+
             @Override
             public void afterTextChanged(Editable s) {
                 if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
@@ -63,7 +74,7 @@ registerswitch=findViewById(R.id.registerswitch);
                 }
             }
         });
-
+        sharedPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         registerswitch.setOnClickListener(v -> {
             // Call the method to load RegistrationFragment
@@ -71,11 +82,33 @@ registerswitch=findViewById(R.id.registerswitch);
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
             startActivity(intent);
         });
-
+        loadLoginDetails();
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
 
 
+    }
+    private void loadLoginDetails() {
+        boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
+        if (rememberMe) {
+            String savedEmail = sharedPreferences.getString("email", "");
+            String savedPassword = sharedPreferences.getString("password", "");
+            emailInput.setText(savedEmail);
+            passwordInput.setText(savedPassword);
+            rememberMeCheckbox.setChecked(true);
+        }
+    }
+
+    private void saveLoginDetails() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (rememberMeCheckbox.isChecked()) {
+            editor.putBoolean("rememberMe", true);
+            editor.putString("email", emailInput.getText().toString().trim());
+            editor.putString("password", passwordInput.getText().toString().trim());
+        } else {
+            editor.clear();
+        }
+        editor.apply();
     }
 
     private void loginUser() {
@@ -88,6 +121,7 @@ registerswitch=findViewById(R.id.registerswitch);
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError("Enter a valid email");
         } else {
+            saveLoginDetails();
             // Observe the login result from ViewModel
             authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
         }
@@ -95,6 +129,7 @@ registerswitch=findViewById(R.id.registerswitch);
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
         if (authResult != null) {
+
             Toast.makeText(this, "@string/login", Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -103,6 +138,7 @@ registerswitch=findViewById(R.id.registerswitch);
             Toast.makeText(this, "@string/login_failed", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 }
