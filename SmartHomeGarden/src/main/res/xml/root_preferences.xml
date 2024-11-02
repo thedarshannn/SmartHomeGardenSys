@@ -5,7 +5,7 @@
         android:key="notifications"
         android:title="@string/enable_notifications"
         android:summary="@string/notification_summary"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
     <!-- ListPreference for selecting screen orientation -->
     <ListPreference
