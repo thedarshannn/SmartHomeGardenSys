@@ -39,5 +39,7 @@ Members:
     <string name="registration">RegistrationActivity successful!</string>
     <string name="registration_failed">RegistrationActivity failed!</string>
     <string name="login">LoginActivity successful!</string>
-    <string name="login_failed">LoginActivity failed!</string>"
+    <string name="login_failed">LoginActivity failed!</string>
+    <string name="Phone">Phone Number</string>
+    <string name="confirm">Confirm Password</string>
 </resources>

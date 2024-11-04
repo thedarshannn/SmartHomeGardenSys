@@ -67,4 +67,7 @@ Members:
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="webclient">204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com</string>
+
+    <string name="Phone">Phone Number</string>
+    <string name="confirm">Confirm Password</string>
 </resources>

@@ -9,57 +9,61 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
+
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+
+
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
 
 
 
 public class RegistrationActivity extends AppCompatActivity {
-    private static final int RC_SIGN_IN = 9001;
-    private EditText emailInput, passwordInput;
-    private Button registerButton,googleSignInButton;
+
+    private EditText emailInput, passwordInput,passwordInput2,nameInput,phoneInput;
+    private Button registerButton;
     private AuthViewModel authViewModel;
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
+
+    private FirebaseFirestore db;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration); // Use the appropriate layout file
-
-        // Initialize UI elements
+        db = FirebaseFirestore.getInstance();
         emailInput = findViewById(R.id.editTextEmail1);
         passwordInput = findViewById(R.id.editTextPassword1);
         registerButton = findViewById(R.id.button2);
-        googleSignInButton = findViewById(R.id.googleButton);
-        passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
-        // Initialize ViewModel
 
+        nameInput = findViewById(R.id.editTextName1);
+        passwordInput2=findViewById(R.id.editTextPassword2);
+        phoneInput = findViewById(R.id.editTextPhone1);
+        passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        passwordInput2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        // Initialize ViewModel
+       // saveUserProfile();
         // Email validation
         emailInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -78,18 +82,20 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        mAuth = FirebaseAuth.getInstance();
+
+        // Build the Google sign-in request
 
         // Configure Google Sign-In options
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // Ensure this matches your client ID in google-services.json
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         // Set click listener for register button
         registerButton.setOnClickListener(v -> registerUser());
-        googleSignInButton.setOnClickListener(v -> signInWithGoogle());
+
     }
+
+
+
+
+
 
     private void registerUser() {
         String email = emailInput.getText().toString().trim();
@@ -101,64 +107,16 @@ public class RegistrationActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError("Enter a valid email");
         } else {
-            //Toast.makeText(MainActivity.this, "Valid Email and Password", Toast.LENGTH_SHORT).show();
 
-            // Register user and observe result
             authViewModel.registerUser(email, password).observe(this, this::handleRegistrationResult);
         }
     }
 
-    private void signInWithGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleGoogleSignInResult(task);
-        }
-    }
-
-    private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            firebaseAuthWithGoogle(account.getIdToken());
-        } catch (ApiException e) {
-            Toast.makeText(this, "Google Sign-In failed.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    Toast.makeText(RegistrationActivity.this, "Google Sign-In successful!", Toast.LENGTH_SHORT).show();
-
-                    updateUI(user);
-                } else {
-                    Toast.makeText(RegistrationActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                    updateUI(null);
-                }
-            }
-        });
-    }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
-    }
 
     private void handleRegistrationResult(AuthResult authResult) {
         if (authResult != null) {
+            saveUserDataToFirestore(authResult.getUser().getUid());
             Toast.makeText(this, "@string/registration", Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
             Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
@@ -170,4 +128,31 @@ public class RegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "@string/registration_failed", Toast.LENGTH_SHORT).show();
         }
     }
+    private void saveUserDataToFirestore(String uid) {
+        // Collect user data
+        String email = emailInput.getText().toString().trim();
+        String name = nameInput.getText().toString().trim();
+        String phoneNumber = phoneInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+        String password1 = passwordInput2.getText().toString().trim();
+
+        // Prepare data for Firestore
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", name);
+        user.put("phoneNumber", phoneNumber);
+        user.put("email", email);
+        user.put("password", password);
+        user.put("Confirmpassword", password1);
+
+        // Save to Firestore with UID as document ID
+        db.collection("users")
+                .document(uid) // Use UID as document ID
+                .set(user)
+                .addOnSuccessListener(aVoid ->
+                        Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Failed to save user data", Toast.LENGTH_SHORT).show());
+    }
+
+
 }
