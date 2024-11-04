@@ -62,6 +62,7 @@ public class RegistrationActivity extends AppCompatActivity {
         phoneInput = findViewById(R.id.editTextPhone1);
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         passwordInput2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         // Initialize ViewModel
        // saveUserProfile();
         // Email validation
