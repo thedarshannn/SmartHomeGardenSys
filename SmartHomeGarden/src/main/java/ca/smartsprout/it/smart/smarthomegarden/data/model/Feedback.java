@@ -9,6 +9,8 @@ public class Feedback {
     private String phone;
     private float rating;
     private String description;
+    private String deviceModel; // New field to store device model
+
     public Feedback() {}
     // Constructor
     public Feedback(String name, String email, String phone, float rating, String description) {
@@ -17,9 +19,18 @@ public class Feedback {
         this.phone = phone;
         this.rating = rating;
         this.description = description;
+        this.deviceModel = deviceModel; // Initialize the device model
     }
 
     // Getters and setters (if needed)
+
+    public String getDeviceModel() {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
+    }
     public String getName() {
         return name;
     }

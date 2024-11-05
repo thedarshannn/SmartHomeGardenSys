@@ -2,45 +2,38 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
-import ca.smartsprout.it.smart.smarthomegarden.R;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.FeedbackViewModel;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+
 public class FeedbackActivity extends AppCompatActivity {
     private TextView nameTextView, emailTextView, phoneTextView;
     private RatingBar ratingBar;
     private EditText descriptionEditText;
     private Button submitButton;
-    private FirebaseFirestore firestore;
-    private FirebaseAuth auth;
+    private FeedbackViewModel feedbackViewModel;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance();
-
-        // Initialize Firestore
-        firestore = FirebaseFirestore.getInstance();
+        // Initialize ViewModel
+        feedbackViewModel = new ViewModelProvider(this).get(FeedbackViewModel.class);
 
         // Initialize views
         nameTextView = findViewById(R.id.nameTextView);
@@ -50,80 +43,60 @@ public class FeedbackActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         submitButton = findViewById(R.id.feedbackbutton);
 
-        // Fetch user details
-        fetchUserDetails();
-
-        // Set up the submit button
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitFeedback();
+        // Observe LiveData for user details and feedback status
+        feedbackViewModel.getUserDetails().observe(this, user -> {
+            if (user != null) {
+                nameTextView.setText(user.getName());
+                emailTextView.setText(user.getEmail());
+                phoneTextView.setText(user.getPhone());
+            } else {
+                nameTextView.setText("N/A");
+                emailTextView.setText("N/A");
+                phoneTextView.setText("N/A");
             }
         });
-    }
 
-    private void fetchUserDetails() {
-        // Get the current user
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null) {
-            String userId = currentUser.getUid(); // Get the authenticated user's ID
+        feedbackViewModel.getFeedbackStatus().observe(this, status -> {
+            Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
+            if (status.equals(getString(R.string.feedbacksuccess))) {
+                // Clear the input fields
+                clearInputFields();
+                navigateToSettings();
+            }
+        });
 
-            // Fetch user data from Firestore
-            DocumentReference docRef = firestore.collection("users").document(userId);
-            docRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    String name = task.getResult().getString("name");
-                    String email = task.getResult().getString("email");
-                    String phone = task.getResult().getString("phoneNumber");
+        // Fetch user details when the activity starts
+        feedbackViewModel.fetchUserDetails();
 
-                    nameTextView.setText(name);
-                    emailTextView.setText(email);
-                    phoneTextView.setText(phone);
-                } else {
-                    // Handle case where user data is not found
-                    Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
-                    nameTextView.setText("N/A");
-                    emailTextView.setText("N/A");
-                    phoneTextView.setText("N/A");
-                }
-            });
-        } else {
-            // Handle case where the user is not authenticated
-            Toast.makeText(this, getString(R.string.loggeddata), Toast.LENGTH_SHORT).show();
-            // Redirect to the login activity
-            Intent intent = new Intent(FeedbackActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        // Set up submit button to submit feedback
+        submitButton.setOnClickListener(v -> submitFeedback());
     }
 
     private void submitFeedback() {
         String description = descriptionEditText.getText().toString();
         float rating = ratingBar.getRating();
+
         if (description.isEmpty()) {
             Toast.makeText(this, getString(R.string.entdesc), Toast.LENGTH_SHORT).show();
-            return;
+        } else {
+            feedbackViewModel.submitFeedback(
+                    nameTextView.getText().toString(),
+                    emailTextView.getText().toString(),
+                    phoneTextView.getText().toString(),
+                    rating,
+                    description
+            );
         }
-        // Create a feedback object
-        Feedback feedback = new Feedback(
-                nameTextView.getText().toString(),
-                emailTextView.getText().toString(),
-                phoneTextView.getText().toString(),
-                rating,
-                description
-        );
-
-        // Store feedback in Firestore
-        firestore.collection("feedbacks").add(feedback)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, getString(R.string.feedbacksuccess), Toast.LENGTH_SHORT).show();
-                    // Feedback submitted successfully
-                    descriptionEditText.setText(""); // Clear the input
-                    ratingBar.setRating(0); // Reset rating
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure
-                    Toast.makeText(this, getString(R.string.feebackfail), Toast.LENGTH_SHORT).show();
-                });
     }
+    private void clearInputFields() {
+        descriptionEditText.setText(""); // Clear the description input
+        ratingBar.setRating(0); // Reset the rating
+    }
+    private void navigateToSettings() {
+        // Redirect the user to the SettingsActivity
+        Intent intent = new Intent(FeedbackActivity.this, SettingsActivity.class);
+        startActivity(intent);
+         // Optional: finish the current activity to prevent it from appearing in the back stack
+    }
+
 }
