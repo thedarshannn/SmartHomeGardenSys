@@ -1,11 +1,18 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -81,7 +88,7 @@ public class SettingsActivity extends BaseActivity {
                             notificationViewModel.updateNotificationPermission(true);
                         } else {
                             notificationViewModel.updateNotificationPermission(false);
-                            Util.showSnackbar(requireView(), "Notification permission denied. Please enable it in settings", true);
+                            Util.showSnackbar(requireView(),getString(R.string.notification_permission_snackbar), true);
                         }
                     }
             );
@@ -106,13 +113,11 @@ public class SettingsActivity extends BaseActivity {
                     notificationToggle.setOnPreferenceChangeListener((preference, newValue) -> {
                         boolean isEnabledToggle = (Boolean) newValue;
                         if (isEnabledToggle) {
-                            Log.d(TAG, "Notification toggle enabled, checking permission");
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 checkNotificationPermission();
                             }
                         } else {
-                            Log.d(TAG, "Notification toggle disabled");
-                            notificationViewModel.updateNotificationPermission(false);
+                               notificationViewModel.updateNotificationPermission(false);
                         }
                         return true;
                     });
@@ -138,11 +143,9 @@ public class SettingsActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                             != PackageManager.PERMISSION_GRANTED) {
-                        Log.d(TAG, "Requesting POST_NOTIFICATIONS permission");
-                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                          requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
                     } else {
-                        Log.d(TAG, "POST_NOTIFICATIONS permission already granted");
-                        notificationViewModel.updateNotificationPermission(true);
+                           notificationViewModel.updateNotificationPermission(true);
                     }
                 }
             }
