@@ -32,9 +32,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -89,6 +91,20 @@ public class HomeFragment extends Fragment {
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
         CardView weatherCardView = view.findViewById(R.id.cardView);
+
+        Button buttonAdd = view.findViewById(R.id.buttonAdd);
+        buttonAdd.setOnClickListener(v -> {
+            // Navigate to SearchFragment
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new SearchFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            // Update bottom navigation indicator
+            BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+        });
+
 
         // Observe weather data
         weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), new Observer<WeatherResponse>() {
