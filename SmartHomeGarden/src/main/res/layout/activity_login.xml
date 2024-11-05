@@ -63,7 +63,7 @@
         android:layout_height="36dp"
         android:layout_marginBottom="284dp"
         android:gravity="center"
-        android:text="@string/signin"
+        android:text="@string/signup"
         android:textColor="@color/green"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"

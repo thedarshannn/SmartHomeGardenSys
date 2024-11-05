@@ -39,6 +39,10 @@ import java.util.Map;
 
 
 
+import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
+
+
+
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput,passwordInput2,nameInput,phoneInput;
@@ -76,7 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
-                    emailInput.setError("Invalid email format");
+                    emailInput.setError(getString(R.string.invalidemail));
                 }
             }
         });
@@ -99,59 +103,46 @@ public class RegistrationActivity extends AppCompatActivity {
     private void registerUser() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Email and Password are required", Toast.LENGTH_SHORT).show();
-        } else if (password.length() > 10) {
-            passwordInput.setError("Password cannot exceed 10 characters");
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInput.setError("Enter a valid email");
-        } else {
-
-            authViewModel.registerUser(email, password).observe(this, this::handleRegistrationResult);
-        }
-    }
-
-
-
-    private void handleRegistrationResult(AuthResult authResult) {
-        if (authResult != null) {
-            saveUserDataToFirestore(authResult.getUser().getUid());
-            Toast.makeText(this, "@string/registration", Toast.LENGTH_SHORT).show();
-            // Navigate to the home screen or another activity here
-            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-            startActivity(intent);
-
-        }
-
-        else {
-            Toast.makeText(this, "@string/registration_failed", Toast.LENGTH_SHORT).show();
-        }
-    }
-    private void saveUserDataToFirestore(String uid) {
-        // Collect user data
-        String email = emailInput.getText().toString().trim();
+        String confirmPassword = passwordInput2.getText().toString().trim();
         String name = nameInput.getText().toString().trim();
-        String phoneNumber = phoneInput.getText().toString().trim();
-        String password = passwordInput.getText().toString().trim();
-        String password1 = passwordInput2.getText().toString().trim();
+        String phone = phoneInput.getText().toString().trim();
 
-        // Prepare data for Firestore
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", name);
-        user.put("phoneNumber", phoneNumber);
-        user.put("email", email);
-        user.put("password", password);
-        user.put("Confirmpassword", password1);
+        if (!authViewModel.isValidEmail(email)) {
+            emailInput.setError(getString(R.string.invalidemail));
+            return;
+        }
 
-        // Save to Firestore with UID as document ID
-        db.collection("users")
-                .document(uid) // Use UID as document ID
-                .set(user)
-                .addOnSuccessListener(aVoid ->
-                        Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to save user data", Toast.LENGTH_SHORT).show());
+        if (!authViewModel.isValidPassword(password)) {
+            passwordInput.setError(getString(R.string.exceed));
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            passwordInput2.setError(getString(R.string.match));
+            return;
+        }
+
+        authViewModel.registerUser(email, password).observe(this, authResult -> {
+            if (authResult != null && authResult.getUser() != null) {
+                String uid = authResult.getUser().getUid();
+                User user = new User(name, phone, email, password, confirmPassword);
+                authViewModel.saveUserDataToFirestore(uid, user).observe(this, success -> {
+                    if (success) {
+                        Toast.makeText(this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     }
 
 
-}
+
+
+

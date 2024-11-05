@@ -42,4 +42,5 @@ Members:
     <string name="login_failed">LoginActivity failed!</string>
     <string name="Phone">Phone Number</string>
     <string name="confirm">Confirm Password</string>
+    <string name="valid">Enter an valid email</string>
 </resources>
