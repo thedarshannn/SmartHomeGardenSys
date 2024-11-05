@@ -68,6 +68,13 @@ Members:
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <string name="user_name">John Smith</string>
+    <string name="plants_count">4 plants\n</string>
+    <string name="add_plant">Add plant</string>
+    <string name="plant_pic">Add plant picture</string>
+    <string name="add_task">Add task\n</string>
+
+
     <string name="webclient">204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com</string>
 
     <string name="Phone">Phone Number</string>
@@ -76,4 +83,5 @@ Members:
     <string name="exceed">Password cannot exceed 10 characters</string>
     <string name="match">Password do not match</string>
     <string name="valid">Enter an valid email</string>
+
 </resources>

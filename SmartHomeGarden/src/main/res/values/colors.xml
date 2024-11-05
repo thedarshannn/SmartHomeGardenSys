@@ -11,5 +11,11 @@
     <color name="LowTempColour">#52b788</color>
     <color name="highTempColour">#1b4332</color>
     <color name="bottomNavColour">#31572C</color>
+
+
+    <color name="green_500">#4CAF50</color>
+    <color name="green_700">#388E3C</color>
+
     <color name="lightgreen">#90A955</color>
+
 </resources>
