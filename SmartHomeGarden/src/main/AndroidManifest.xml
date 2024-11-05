@@ -26,9 +26,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.SelectionActivity"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
