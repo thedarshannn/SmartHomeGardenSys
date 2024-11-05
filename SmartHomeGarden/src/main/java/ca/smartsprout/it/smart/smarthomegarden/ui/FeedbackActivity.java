@@ -81,7 +81,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     phoneTextView.setText(phone);
                 } else {
                     // Handle case where user data is not found
-                    Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
                     nameTextView.setText("N/A");
                     emailTextView.setText("N/A");
                     phoneTextView.setText("N/A");
@@ -89,7 +89,7 @@ public class FeedbackActivity extends AppCompatActivity {
             });
         } else {
             // Handle case where the user is not authenticated
-            Toast.makeText(this, "You need to log in first.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.loggeddata), Toast.LENGTH_SHORT).show();
             // Redirect to the login activity
             Intent intent = new Intent(FeedbackActivity.this, SettingsActivity.class);
             startActivity(intent);
@@ -101,7 +101,7 @@ public class FeedbackActivity extends AppCompatActivity {
         String description = descriptionEditText.getText().toString();
         float rating = ratingBar.getRating();
         if (description.isEmpty()) {
-            Toast.makeText(this, "Please enter a description.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.entdesc), Toast.LENGTH_SHORT).show();
             return;
         }
         // Create a feedback object
@@ -116,14 +116,14 @@ public class FeedbackActivity extends AppCompatActivity {
         // Store feedback in Firestore
         firestore.collection("feedbacks").add(feedback)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Feedback submitted successfully.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.feedbacksuccess), Toast.LENGTH_SHORT).show();
                     // Feedback submitted successfully
                     descriptionEditText.setText(""); // Clear the input
                     ratingBar.setRating(0); // Reset rating
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure
-                    Toast.makeText(this, "Failed to submit feedback.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.feebackfail), Toast.LENGTH_SHORT).show();
                 });
     }
 }
