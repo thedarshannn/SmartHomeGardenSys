@@ -117,5 +117,11 @@ Members:
     <string name="match">Password do not match</string>
     <string name="valid">Enter an valid email</string>
 
+    <string name="plant_diagnosis">Plant Diagnosis</string>
+    <string name="plant_name_diagnose">PLANT NAME</string>
+    <string name="health_status">HEALTH STATUS</string>
+    <string name="diagnosis_">DIAGNOSIS</string>
+
+
 
 </resources>
