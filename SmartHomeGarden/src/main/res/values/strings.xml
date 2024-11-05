@@ -18,6 +18,7 @@ Members:
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="start">Get started with sprouting!</string>
     <string name="signin">Already have an account?Sign in</string>
+    <string name="signup">do not have an account?sign up</string>
     <string name="sign">Sign in</string>
     <string name="register">REGISTER</string>
     <string name="date_format">dd MMM, yyyy</string>
@@ -55,19 +56,56 @@ Members:
     <string name="sync_header">Sync</string>
 <string name="login">LoginActivity successful!</string>
     <string name="login_failed">LoginActivity failed!</string>"
+    <string name="faileddata">Failed to save user data</string>
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
-
+<string name="googlesign">Sign in with Google</string>
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
     <string name="plant_name">Plant Name</string>
     <string name="plant_description">Plant Description</string>
     <string name="discover">Discover</string>
     <string name="find_plants">Find Plants</string>
     <string name="search_plants">Search plants...</string>
+
+
+    <string name="enable_notifications">Enable Notifications</string>
+    <string name="notification_summary">Turn notifications on or off</string>
+    <string name="screen_orientation">Screen Orientation</string>
+    <string name="screen_orientation_summary">Select the screen orientation mode</string>
+    <string name="app_theme">App Theme</string>
+    <string name="theme_summary">Choose between light, dark, or system default theme</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_summary">Send us your feedback</string>
+    <string name="log_out">Log Out</string>
+    <string name="logout_summary">Log out from your account</string>
+    <string name="version">SmartSprout v1.0(ca)</string>
+    <string name="mysharedpref">MySharedPref</string>
+    <string name="notification_permission_snackbar">Notification permission denied. Please enable it in settings</string>
+
+
+    <string name="user_name">John Smith</string>
+    <string name="plants_count">4 plants\n</string>
+    <string name="add_plant">Add plant</string>
+    <string name="plant_pic">Add plant picture</string>
+    <string name="add_task">Add task\n</string>
+
+
+    <string name="webclient">204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com</string>
+
+    <string name="Phone">Phone Number</string>
+    <string name="confirm">Confirm Password</string>
+    <string name="invalidemail">Invalid email format</string>
+    <string name="exceed">Password cannot exceed 10 characters</string>
+    <string name="match">Password do not match</string>
+    <string name="valid">Enter an valid email</string>
+
+
+
 </resources>

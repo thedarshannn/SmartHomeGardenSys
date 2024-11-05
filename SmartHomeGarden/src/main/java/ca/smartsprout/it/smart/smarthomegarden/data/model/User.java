@@ -10,4 +10,24 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
 public class User {
+    private String name;
+    private String phoneNumber;
+    private String email;
+    private String password;
+    private String confirmPassword;
+
+    // Constructor, getters, and setters
+    public User(String name, String phoneNumber, String email, String password, String confirmPassword) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+    }
+
+    public String getName() { return name; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public String getConfirmPassword() { return confirmPassword; }
 }
