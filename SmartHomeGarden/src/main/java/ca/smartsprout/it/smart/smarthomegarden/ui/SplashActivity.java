@@ -3,7 +3,7 @@
  * Members:
  * 1. Aditi Patel, n01525570, CENG322-RCB
  * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
+ * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
 
@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, SelectionActivity.class);
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         };

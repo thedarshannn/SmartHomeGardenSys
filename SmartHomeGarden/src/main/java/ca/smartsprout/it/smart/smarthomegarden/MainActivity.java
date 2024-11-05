@@ -3,7 +3,7 @@
  * Members:
  * 1. Aditi Patel, n01525570, CENG322-RCB
  * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
+ * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
 
@@ -20,6 +20,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -33,10 +34,12 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.ProfileFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SearchFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SensorFragment;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NavigationViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ThemeViewModel;
 
 public class MainActivity extends BaseActivity {
 
     private NavigationViewModel navigationViewModel;
+    private ThemeViewModel themeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,23 @@ public class MainActivity extends BaseActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
+        themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
 
+        // Set the theme based on the user's preference
+        themeViewModel.getThemeMode().observe(this, themeMode -> {
+            switch (themeMode) {
+                case "light":
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    break;
+                case "dark":
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    break;
+                case "system":
+                default:
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                    break;
+            }
+        });
         // Set default fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

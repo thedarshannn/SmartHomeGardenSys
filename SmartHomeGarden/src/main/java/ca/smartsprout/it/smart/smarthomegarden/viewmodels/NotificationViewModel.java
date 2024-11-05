@@ -6,23 +6,21 @@
  * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
-
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-// NavigationViewModel.java
-public class NavigationViewModel extends ViewModel {
+public class NotificationViewModel extends ViewModel {
 
-    private final MutableLiveData<Integer> selectedItem = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> notificationPermissionState = new MutableLiveData<>();
 
-    public LiveData<Integer> getSelectedItem() {
-        return selectedItem;
+    public void updateNotificationPermission(boolean isGranted) {
+        notificationPermissionState.setValue(isGranted);
     }
 
-    public void setSelectedItem(int itemId) {
-        selectedItem.setValue(itemId);
+    public LiveData<Boolean> getNotificationPermissionState() {
+        return notificationPermissionState;
     }
 }

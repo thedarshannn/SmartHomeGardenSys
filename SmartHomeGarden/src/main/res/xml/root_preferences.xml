@@ -3,15 +3,15 @@
     <!-- Switch for enabling/disabling notifications -->
     <SwitchPreferenceCompat
         android:key="notifications"
-        android:title="Enable Notifications"
-        android:summary="Turn notifications on or off"
-        android:defaultValue="true" />
+        android:title="@string/enable_notifications"
+        android:summary="@string/notification_summary"
+        android:defaultValue="false" />
 
     <!-- ListPreference for selecting screen orientation -->
     <ListPreference
         android:key="screen_orientation"
-        android:title="Screen Orientation"
-        android:summary="Select the screen orientation mode"
+        android:title="@string/screen_orientation"
+        android:summary="@string/screen_orientation_summary"
         android:entries="@array/orientation_options"
         android:entryValues="@array/orientation_values"
         android:defaultValue="auto" />
@@ -19,17 +19,22 @@
     <!-- ListPreference for selecting app theme -->
     <ListPreference
         android:key="app_theme"
-        android:title="App Theme"
-        android:summary="Choose between light, dark, or system default theme"
+        android:title="@string/app_theme"
+        android:summary="@string/theme_summary"
         android:entries="@array/theme_options"
         android:entryValues="@array/theme_values"
         android:defaultValue="system" />
-
+    <!-- Add feedback option -->
+    <Preference
+        android:key="feedback"
+        android:title="@string/feedback"
+        android:summary="@string/feedback_summary"
+        android:icon="@drawable/ic_feedback" />
     <!-- Log Out option -->
     <Preference
         android:key="logout"
-        android:title="Log Out"
-        android:summary="Log out from your account"
+        android:title="@string/log_out"
+        android:summary="@string/logout_summary"
         android:icon="@drawable/ic_logout" />
 
 </PreferenceScreen>
