@@ -68,6 +68,17 @@ Members:
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <string name="sensor_readings">Sensor Readings</string>
+    <string name="sunlight">Sunlight</string>
+    <string name="_45">45%</string>
+    <string name="temperature">Temperature</string>
+    <string name="_18">18°</string>
+    <string name="moisture">Moisture</string>
+    <string name="_14">14%</string>
+    <string name="health">Health</string>
+    <string name="_60">60%</string>
+
+
     <string name="plant_name">Plant Name</string>
     <string name="plant_description">Plant Description</string>
     <string name="discover">Discover</string>
@@ -105,6 +116,7 @@ Members:
     <string name="exceed">Password cannot exceed 10 characters</string>
     <string name="match">Password do not match</string>
     <string name="valid">Enter an valid email</string>
+
 
 
 
