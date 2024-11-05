@@ -84,9 +84,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        // Build the Google sign-in request
 
-        // Configure Google Sign-In options
 
         // Set click listener for register button
         registerButton.setOnClickListener(v -> registerUser());
