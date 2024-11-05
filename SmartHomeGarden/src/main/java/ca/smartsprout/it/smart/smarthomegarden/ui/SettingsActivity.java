@@ -6,22 +6,32 @@
  * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
+
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
-import android.content.SharedPreferences;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
-
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
-
+import ca.smartsprout.it.smart.smarthomegarden.utils.Util;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.SessionViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ThemeViewModel;
 
 public class SettingsActivity extends BaseActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,42 +63,93 @@ public class SettingsActivity extends BaseActivity {
         return true;
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragmentCompat {
+
+        private static final String TAG = "SettingsFragment";
+        private ActivityResultLauncher<String> requestPermissionLauncher;
+        private NotificationViewModel notificationViewModel;
+        private SessionViewModel sessionViewModel;
+        private ThemeViewModel themeViewModel;
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            // Set up the Log Out option, no functionality yet
-            Preference logoutPreference = findPreference("logout");
-            if (logoutPreference != null) {
-                logoutPreference.setOnPreferenceClickListener(preference -> {
-                    // Log Out click event, functionality can be added later
+
+            sessionViewModel = new ViewModelProvider(this).get(SessionViewModel.class);
+            notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
+            themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
+
+
+            // Initialize the permission launcher
+            requestPermissionLauncher = registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    isGranted -> {
+                        if (isGranted) {
+                            notificationViewModel.updateNotificationPermission(true);
+                        } else {
+                            notificationViewModel.updateNotificationPermission(false);
+                            Util.showSnackbar(requireView(),getString(R.string.notification_permission_snackbar), true);
+                        }
+                    }
+            );
+            ListPreference themePreference = findPreference("app_theme");
+            if (themePreference != null) {
+                themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    String themeValue = (String) newValue;
+                    themeViewModel.setThemeMode(themeValue);
                     return true;
                 });
+                themeViewModel.getThemeMode().observe(this, themeValue -> {
+                    if (themePreference != null) {
+                        themePreference.setValue(themeValue);
+                    }
+                });
             }
-        }
+                SwitchPreferenceCompat notificationToggle = findPreference("notifications");
+                if (notificationToggle != null) {
+                    boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("notifications", false);
+                    notificationViewModel.updateNotificationPermission(isEnabled);
+
+                    notificationToggle.setOnPreferenceChangeListener((preference, newValue) -> {
+                        boolean isEnabledToggle = (Boolean) newValue;
+                        if (isEnabledToggle) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                checkNotificationPermission();
+                            }
+                        } else {
+                               notificationViewModel.updateNotificationPermission(false);
+                        }
+                        return true;
+                    });
+                }
+
+                notificationViewModel.getNotificationPermissionState().observe(this, isGranted -> {
+                    if (notificationToggle != null) {
+                        notificationToggle.setChecked(Boolean.TRUE.equals(isGranted));
+                    }
+                });
 
 
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
-            if (key.equals("screen_orientation")) {
-                // Apply screen orientation settings immediately
-                ((BaseActivity) getActivity()).applyScreenOrientation();
+                Preference logoutPreference = findPreference("logout");
+                if (logoutPreference != null) {
+                    logoutPreference.setOnPreferenceClickListener(preference -> {
+                        sessionViewModel.logOut();
+                        return true;
+                    });
+                }
             }
-        }
 
+            private void checkNotificationPermission () {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                            != PackageManager.PERMISSION_GRANTED) {
+                          requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                    } else {
+                           notificationViewModel.updateNotificationPermission(true);
+                    }
+                }
+            }
 
-        @Override
-        public void onResume() {
-            super.onResume();
-            getPreferenceScreen().getSharedPreferences()
-                    .registerOnSharedPreferenceChangeListener(this);
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            getPreferenceScreen().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener(this);
         }
     }
-}
+
