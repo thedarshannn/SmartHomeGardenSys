@@ -15,6 +15,7 @@
         android:label="@string/SmartHomeGarden"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:configChanges="uiMode|orientation|screenSize"
         android:theme="@style/Theme.SmartHomeGarden"
         tools:targetApi="34">
         <activity
@@ -23,18 +24,27 @@
         <activity
             android:name=".ui.SettingsActivity"
             android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden"
+            android:configChanges="uiMode|orientation|screenSize"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".ui.RegistrationActivity"
+            android:theme="@style/Theme.SmartHomeGarden"
+            android:configChanges="uiMode|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".ui.LoginActivity"
+            android:theme="@style/Theme.SmartHomeGarden"
+            android:configChanges="uiMode|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.SmartHomeGarden"
+            android:configChanges="uiMode|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".ui.SplashActivity"
+            android:configChanges="uiMode|orientation|screenSize"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>

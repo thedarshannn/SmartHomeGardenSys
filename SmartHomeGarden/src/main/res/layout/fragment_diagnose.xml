@@ -1,14 +1,142 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.DiagnoseFragment">
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Title -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/plant_diagnosis"
+        android:textColor="@color/green"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <!-- Image Preview -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/plantImagePreview"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/plant_placeholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:shapeAppearanceOverlay="@style/RoundedImageView" />
+
+    <!-- Scan Button - Floating over the image -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/green"
+        app:layout_constraintBottom_toBottomOf="@id/plantImagePreview"
+        app:layout_constraintEnd_toEndOf="@id/plantImagePreview"
+        app:srcCompat="@drawable/ic_camera"
+        app:tint="@color/white" />
+
+    <!-- Loading Progress -->
+    <ProgressBar
+        android:id="@+id/loadingProgress"
+        style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
+
+    <!-- Results Section -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/plantImagePreview">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:spacing="16dp">
+
+            <!-- Plant Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plant_name_diagnose"
+                android:textColor="@color/green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/plantNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/green_500"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="16dp"
+                android:background="@color/divider" />
+
+            <!-- Health Status -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_status"
+                android:textColor="@color/green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/healthStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/green_500"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="16dp"
+                android:background="@color/divider" />
+
+            <!-- Issues & Solutions -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/diagnosis_"
+                android:textColor="@color/green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/diagnosisText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="8dp"
+                android:textColor="@color/green_500"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
