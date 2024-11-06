@@ -70,7 +70,7 @@ registerswitch=findViewById(R.id.registerswitch);
             @Override
             public void afterTextChanged(Editable s) {
                 if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
-                    emailInput.setError("Invalid email format");
+                    emailInput.setError(getString(R.string.invalidemail));
                 }
             }
         });
@@ -115,11 +115,11 @@ registerswitch=findViewById(R.id.registerswitch);
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Email and Password are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.email_password), Toast.LENGTH_SHORT).show();
         } else if (password.length() > 10) {
-            passwordInput.setError("Password cannot exceed 10 characters");
+            passwordInput.setError(getString(R.string.exceed));
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInput.setError("Enter a valid email");
+            emailInput.setError(getString(R.string.invalidemail));
         } else {
             saveLoginDetails();
             // Observe the login result from ViewModel
@@ -130,12 +130,12 @@ registerswitch=findViewById(R.id.registerswitch);
     private void handleLoginResult(@Nullable AuthResult authResult) {
         if (authResult != null) {
 
-            Toast.makeText(this, "@string/login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.login), Toast.LENGTH_SHORT).show();
             // Navigate to the home screen or another activity here
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
-            Toast.makeText(this, "@string/login_failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
         }
     }
 

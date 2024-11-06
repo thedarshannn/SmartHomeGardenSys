@@ -5,14 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login"
     tools:context=".ui.FeedbackActivity">
 
     <TextView
         android:id="@+id/nameTextView"
-        android:layout_width="306dp"
-        android:layout_height="42dp"
+        android:layout_width="304dp"
+        android:layout_height="36dp"
         android:layout_marginTop="28dp"
-        android:text="Name"
+        android:text="@string/name"
+        android:textColor="#1E90FF"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,17 +25,19 @@
         android:layout_width="303dp"
         android:layout_height="33dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:textColor="#1E90FF"
+        android:text="@string/Phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
     <TextView
         android:id="@+id/EmailfetchtextView2"
-        android:layout_width="304dp"
-        android:layout_height="42dp"
+        android:layout_width="300dp"
+        android:layout_height="38dp"
         android:layout_marginTop="17dp"
-        android:text="TextView"
+        android:text="@string/email"
+        android:textColor="#1E90FF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PhonefetchtextView" />
@@ -55,7 +59,8 @@
         android:layout_height="117dp"
         android:layout_marginTop="26dp"
         android:gravity="top|start"
-        android:hint="Enter your feedback"
+        android:hint="@string/feedbackdesc"
+        android:textColor="#1E90FF"
         android:inputType="textMultiLine"
         android:minHeight="100dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:text="Button"
+        android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />

@@ -59,16 +59,18 @@
 
     <TextView
         android:id="@+id/registerswitch"
-        android:layout_width="278dp"
-        android:layout_height="36dp"
-        android:layout_marginBottom="284dp"
+        android:layout_width="246dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="280dp"
+        android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="@string/signup"
         android:textColor="@color/green"
-        android:textSize="15dp"
+        android:textSize="17dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.639"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
@@ -76,7 +78,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Remember Me"
+        android:text="@string/rememberme"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.094"
         app:layout_constraintStart_toStartOf="parent"
