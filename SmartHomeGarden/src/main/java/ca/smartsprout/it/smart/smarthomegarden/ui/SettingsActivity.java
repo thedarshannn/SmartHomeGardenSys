@@ -10,6 +10,7 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.utils.Util;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
@@ -88,7 +90,7 @@ public class SettingsActivity extends BaseActivity {
                             notificationViewModel.updateNotificationPermission(true);
                         } else {
                             notificationViewModel.updateNotificationPermission(false);
-                            Util.showSnackbar(requireView(),getString(R.string.notification_permission_snackbar), true);
+                            Util.showSnackbar(requireView(), getString(R.string.notification_permission_snackbar), true);
                         }
                     }
             );
@@ -105,40 +107,48 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
             }
-                SwitchPreferenceCompat notificationToggle = findPreference("notifications");
-                if (notificationToggle != null) {
-                    boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("notifications", false);
-                    notificationViewModel.updateNotificationPermission(isEnabled);
+            SwitchPreferenceCompat notificationToggle = findPreference("notifications");
+            if (notificationToggle != null) {
+                boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("notifications", false);
+                notificationViewModel.updateNotificationPermission(isEnabled);
 
-                    notificationToggle.setOnPreferenceChangeListener((preference, newValue) -> {
-                        boolean isEnabledToggle = (Boolean) newValue;
-                        if (isEnabledToggle) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                checkNotificationPermission();
-                            }
-                        } else {
-                               notificationViewModel.updateNotificationPermission(false);
+                notificationToggle.setOnPreferenceChangeListener((preference, newValue) -> {
+                    boolean isEnabledToggle = (Boolean) newValue;
+                    if (isEnabledToggle) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            checkNotificationPermission();
                         }
-                        return true;
-                    });
-                }
-
-                notificationViewModel.getNotificationPermissionState().observe(this, isGranted -> {
-                    if (notificationToggle != null) {
-                        notificationToggle.setChecked(Boolean.TRUE.equals(isGranted));
+                    } else {
+                        notificationViewModel.updateNotificationPermission(false);
                     }
+                    return true;
                 });
-
-
-                Preference logoutPreference = findPreference("logout");
-                if (logoutPreference != null) {
-                    logoutPreference.setOnPreferenceClickListener(preference -> {
-                        sessionViewModel.logOut();
-                        return true;
-                    });
-                }
             }
 
+            notificationViewModel.getNotificationPermissionState().observe(this, isGranted -> {
+                if (notificationToggle != null) {
+                    notificationToggle.setChecked(Boolean.TRUE.equals(isGranted));
+                }
+            });
+
+
+            Preference logoutPreference = findPreference("logout");
+            if (logoutPreference != null) {
+                logoutPreference.setOnPreferenceClickListener(preference -> {
+                    sessionViewModel.logOut();
+                    return true;
+                });
+            }
+
+            Preference Feedback = findPreference("feedback");
+            if (Feedback != null) {
+                Feedback.setOnPreferenceClickListener(preference -> {
+                    startActivity(new Intent(requireActivity(), FeedbackActivity.class));
+                    return true;
+                });
+
+            }
+        }
             private void checkNotificationPermission () {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)

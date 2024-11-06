@@ -17,11 +17,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import android.util.Patterns;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 public class FirebaseRepository {
+    private final FirebaseFirestore firestore;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public FirebaseRepository() {
+        firestore = FirebaseFirestore.getInstance();
+    }
     public LiveData<AuthResult> loginUser(String email, String password) {
         MutableLiveData<AuthResult> loginResult = new MutableLiveData<>();
 
@@ -72,5 +79,45 @@ public class FirebaseRepository {
     // Validation method for password
     public boolean isValidPassword(String password) {
         return password.length() <= 10;
+    }
+
+    // Fetch user details
+    // Fetch user details
+    public void fetchUserDetails(String userId, OnUserFetchedListener listener) {
+        DocumentReference docRef = firestore.collection("users").document(userId);
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String name = documentSnapshot.getString("name");
+                String email = documentSnapshot.getString("email");
+                String phone = documentSnapshot.getString("phoneNumber");
+                listener.onUserFetched(new Feedback(name, email, phone, 0, ""));
+            } else {
+                listener.onUserFetched(null);
+            }
+        });
+    }
+
+    // Submit feedback to Firestore
+    public void submitFeedback(Feedback feedback, OnFeedbackSubmissionListener listener) {
+        // Add device model to the feedback before submitting
+        String deviceModel = getDeviceModel(); // Retrieve device model
+        feedback.setDeviceModel(deviceModel); // Set the device model in the feedback
+
+        firestore.collection("feedbacks").add(feedback)
+                .addOnSuccessListener(documentReference -> listener.onFeedbackSubmitted(true))
+                .addOnFailureListener(e -> listener.onFeedbackSubmitted(false));
+    }
+
+    // Method to retrieve device model programmatically
+    private String getDeviceModel() {
+        return android.os.Build.MODEL; // Get the device model
+    }
+
+    public interface OnUserFetchedListener {
+        void onUserFetched(Feedback user);
+    }
+
+    public interface OnFeedbackSubmissionListener {
+        void onFeedbackSubmitted(boolean isSuccess);
     }
 }
