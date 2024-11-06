@@ -97,7 +97,7 @@ Members:
     <string name="log_out">Log Out</string>
     <string name="logout_summary">Log out from your account</string>
     <string name="version">SmartSprout v1.0(ca)</string>
-    <string name="mysharedpref">MySharedPref</string>
+    <string name="mysharedpref">MySharedPrefTheme</string>
     <string name="notification_permission_snackbar">Notification permission denied. Please enable it in settings</string>
 
 
