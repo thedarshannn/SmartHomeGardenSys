@@ -99,6 +99,7 @@ public class SettingsActivity extends BaseActivity {
                 themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
                     String themeValue = (String) newValue;
                     themeViewModel.setThemeMode(themeValue);
+                    requireActivity().recreate();
                     return true;
                 });
                 themeViewModel.getThemeMode().observe(this, themeValue -> {
