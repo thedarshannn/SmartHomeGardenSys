@@ -9,5 +9,16 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
-public class AccountSettingsActivity {
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import ca.smartsprout.it.smart.smarthomegarden.R;
+
+public class AccountSettingsActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_account_settings);
+    }
 }

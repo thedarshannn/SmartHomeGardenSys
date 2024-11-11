@@ -9,8 +9,10 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 
 
 public class ProfileFragment extends Fragment {
@@ -46,6 +49,13 @@ public class ProfileFragment extends Fragment {
         final FloatingActionButton fabAddPicture = view.findViewById(R.id.camera);
         final FloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
 
+
+        // Set up the profile card click listener
+        CardView profileCardView = view.findViewById(R.id.profileCardView);
+        profileCardView.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+            startActivity(intent);
+        });
         fabMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

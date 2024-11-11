@@ -3,8 +3,8 @@
     <!-- Edit Profile option -->
     <Preference
         android:key="edit_profile"
-        android:title="Account"
-        android:summary="Change your account settings"/>
+        android:title="@string/account"
+        android:summary="@string/summary_account"/>
 
     <!-- Switch for enabling/disabling notifications -->
     <SwitchPreferenceCompat

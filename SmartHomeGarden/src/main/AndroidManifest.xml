@@ -60,6 +60,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.AccountSettingsActivity"
+            android:exported="false"
+            android:configChanges="uiMode|orientation|screenSize"
+            android:theme="@style/Theme.SmartHomeGarden"
+            tools:ignore="Instantiatable" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
