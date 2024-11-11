@@ -7,7 +7,7 @@
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
 
-package ca.smartsprout.it.smart.smarthomegarden.data.repository;
+package ca.smartsprout.it.smart.smarthomegarden.ui;
 
-public class ProfileRepository {
+public class AccountSettingsActivity {
 }
