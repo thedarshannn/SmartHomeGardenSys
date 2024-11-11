@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -160,8 +161,12 @@ public class MainActivity extends BaseActivity {
         } else if (id == R.id.action_translate) {
             // Handle translate action
             return true;
-        } else if (id == R.id.action_theme) {
-            // Handle theme change
+        } else if (id == R.id.help) {
+            // Handle help action
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse(getString(R.string.mailto_smartsprout_gmail_com))); // Replace with your email address
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.help_request));
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
             return true;
         } else if (id == R.id.action_notification) {
             // Handle notification action

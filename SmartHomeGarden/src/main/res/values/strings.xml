@@ -133,8 +133,10 @@ Members:
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
-
-
+    <string name="mailto_smartsprout_gmail_com">mailto:smartsprout@gmail.com</string>
+    <string name="help_request">Help Request</string>
+    <string name="send_email">Send Email</string>
+    <string name="help">Help</string>
 
 
 </resources>
