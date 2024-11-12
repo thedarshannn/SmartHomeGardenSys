@@ -118,14 +118,14 @@ Members:
     <string name="match">Password do not match</string>
     <string name="valid">Enter an valid email</string>
 
-<string name="datauser">User data not found.</string>
-<string name="loggeddata">You need to log in first.</string>
+    <string name="datauser">User data not found.</string>
+    <string name="loggeddata">You need to log in first.</string>
     <string name="entdesc">Please enter a description.</string>
     <string name="feedbacksuccess">Feedback submitted successfully.</string>
     <string name="feebackfail">Failed to submit feedback.</string>
-<string name="email_password">Email and Password are required</string>
-<string name="rememberme">Remember Me</string>
-<string name="feedbackdesc">Enter your feedback</string>
+    <string name="email_password">Email and Password are required</string>
+    <string name="rememberme">Remember Me</string>
+    <string name="feedbackdesc">Enter your feedback</string>
     <string name="submit">Submit</string>
 
 

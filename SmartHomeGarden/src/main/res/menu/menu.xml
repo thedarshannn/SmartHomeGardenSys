@@ -7,12 +7,13 @@
         android:icon="@drawable/settings"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_translate"
-        android:title="@string/translate"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_notification"
         android:title="@string/notification"
+        android:icon="@drawable/bell"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_translate"
+        android:title="@string/translate"
         app:showAsAction="never" />
     <item
         android:id="@+id/help"

@@ -9,39 +9,42 @@
 
     <application
         android:allowBackup="true"
+        android:configChanges="uiMode|orientation|screenSize"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/SmartHomeGarden"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:configChanges="uiMode|orientation|screenSize"
         android:theme="@style/Theme.SmartHomeGarden"
         tools:targetApi="34">
+        <activity
+            android:name=".ui.NotificationActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.FeedbackActivity"
             android:exported="false" />
         <activity
             android:name=".ui.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:label="@string/title_activity_settings" />
+            android:exported="false"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.RegistrationActivity"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.LoginActivity"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.SplashActivity"
             android:configChanges="uiMode|orientation|screenSize"

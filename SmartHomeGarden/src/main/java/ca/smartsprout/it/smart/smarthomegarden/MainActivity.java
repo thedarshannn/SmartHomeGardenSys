@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ca.smartsprout.it.smart.smarthomegarden.ui.BaseActivity;
+import ca.smartsprout.it.smart.smarthomegarden.ui.NotificationActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.DiagnoseFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HomeFragment;
@@ -170,7 +170,10 @@ public class MainActivity extends BaseActivity {
             return true;
         } else if (id == R.id.action_notification) {
             // Handle notification action
+            Intent intent = new Intent(this, NotificationActivity.class);
+            startActivity(intent);
             return true;
+
         } else {
             return super.onOptionsItemSelected(item);
         }
