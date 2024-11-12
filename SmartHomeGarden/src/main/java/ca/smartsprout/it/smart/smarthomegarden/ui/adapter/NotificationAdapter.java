@@ -36,7 +36,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.titleTextView.setText(notification.getTitle());
         holder.messageTextView.setText(notification.getMessage());
         long timestamp = notification.getTimestamp();
-        Log.d("NotificationAdapter", "Timestamp: " + timestamp);
         holder.timestampTextView.setText(formatTimestamp(timestamp));
     }
 

@@ -19,6 +19,15 @@ public class NotificationHelper {
     private static final String CHANNEL_NAME = "Login Notifications";
     private static final String CHANNEL_DESC = "Notifications for user login";
 
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_DESC);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     public static void createNotification(Context context, String title, String message) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 

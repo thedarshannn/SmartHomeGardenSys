@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import androidx.annotation.Nullable;
@@ -64,9 +65,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        sharedPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(getString(R.string.loginprefs), MODE_PRIVATE);
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        databaseReference = FirebaseDatabase.getInstance().getReference("notifications");
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notifications));
 
         registerswitch.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -121,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         if (authResult != null) {
             Toast.makeText(this, getString(R.string.login), Toast.LENGTH_SHORT).show();
             showLoginNotification();
+            onLoginSuccess();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
@@ -136,12 +138,15 @@ public class LoginActivity extends AppCompatActivity {
         long timestamp = System.currentTimeMillis();
 
         // Create the notification object
-        Notification notification = new Notification(notificationId, "Login Successful", "Welcome back!", timestamp);
+        Notification notification = new Notification(notificationId, getString(R.string.login_successful), getString(R.string.welcome_back), timestamp);
 
         // Save the notification to the database
         if (notificationId != null) {
             databaseReference.child(notificationId).setValue(notification);
         }
     }
-
+    private void onLoginSuccess() {
+        // Show login notification
+        NotificationHelper.createNotification(this, getString(R.string.login_successful), getString(R.string.welcome_back));
+    }
 }

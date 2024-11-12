@@ -23,6 +23,7 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.NotificationAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -39,6 +40,9 @@ public class NotificationActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view_notifications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Create notification channel
+        NotificationHelper.createNotificationChannel(this);
 
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         adapter = new NotificationAdapter(notificationList);
