@@ -3,13 +3,15 @@ package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 
 public class NotificationViewModel extends ViewModel {
-
     private final MutableLiveData<Boolean> notificationPermissionState = new MutableLiveData<>();
-    private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
+    private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>(new ArrayList<>());
 
     public void updateNotificationPermission(boolean isGranted) {
         notificationPermissionState.setValue(isGranted);

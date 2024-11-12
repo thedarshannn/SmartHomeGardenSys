@@ -1,13 +1,17 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 
@@ -31,8 +35,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Notification notification = notifications.get(position);
         holder.titleTextView.setText(notification.getTitle());
         holder.messageTextView.setText(notification.getMessage());
-        holder.timestampTextView.setText(String.valueOf(notification.getTimestamp()));
+        long timestamp = notification.getTimestamp();
+        Log.d("NotificationAdapter", "Timestamp: " + timestamp);
+        holder.timestampTextView.setText(formatTimestamp(timestamp));
     }
+
 
     @Override
     public int getItemCount() {
@@ -43,6 +50,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.notifications = notifications != null ? notifications : new ArrayList<>();
         notifyDataSetChanged();
     }
+
+    private String formatTimestamp(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        return sdf.format(new Date(timestamp));
+    }
+
 
     static class NotificationViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
