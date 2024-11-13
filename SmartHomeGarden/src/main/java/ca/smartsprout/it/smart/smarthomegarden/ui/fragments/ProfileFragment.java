@@ -9,7 +9,13 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
+import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
+import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -18,6 +24,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,9 +35,13 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 
 public class ProfileFragment extends Fragment {
 
+
     boolean isOptionsVisible;
+    private ImageView imageView;
+    private SharedPreferences sharedPreferences;
 
     public ProfileFragment() {
+
         // Required empty public constructor
     }
 
@@ -49,6 +61,11 @@ public class ProfileFragment extends Fragment {
         final FloatingActionButton fabAddPicture = view.findViewById(R.id.camera);
         final FloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
 
+        imageView = view.findViewById(R.id.imageView);
+        sharedPreferences = requireContext().getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
+
+        // Load initial user data from SharedPreferences
+        loadUserProfile();
 
         // Set up the profile card click listener
         CardView profileCardView = view.findViewById(R.id.profileCardView);
@@ -98,5 +115,14 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+    private void loadUserProfile() {
+        String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
+        if (uriString != null) {
+            Uri uri = Uri.parse(uriString);
+            imageView.setImageURI(uri); // Load URI directly into CircleImageView
+        } else {
+            imageView.setImageResource(R.drawable.user); // Default image
+        }
     }
 }

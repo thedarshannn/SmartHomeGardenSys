@@ -11,5 +11,8 @@ package ca.smartsprout.it.smart.smarthomegarden.utils;
 
 public class Constants {
 
-    public static final String PREFS_NAME = "user_session_prefs";
+    public static final String PREFS_USER_SESSION = "user_session_prefs";
+    public static final String PREFS_USER_PROFILE = "UserProfilePrefs";
+    public static final String KEY_USER_PIC = "profileImageUri";
+
 }

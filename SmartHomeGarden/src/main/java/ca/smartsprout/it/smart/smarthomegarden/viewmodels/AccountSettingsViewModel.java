@@ -9,5 +9,50 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
-public class AccountSettingsViewModel {
+import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
+import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
+
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
+
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+
+public class AccountSettingsViewModel extends AndroidViewModel {
+
+    private final SharedPreferences sharedPreferences;
+    private final MutableLiveData<Uri> profileImageUri = new MutableLiveData<>();
+    private final MutableLiveData<String> userName = new MutableLiveData<>();
+
+    public AccountSettingsViewModel(Application application) {
+        super(application);
+        sharedPreferences = application.getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
+        loadProfileData();
+
+    }
+    public LiveData<Uri> getProfileImageUri() {
+        return profileImageUri;
+    }
+
+    public LiveData<String> getUserName() {
+        return userName;
+    }
+
+    public void loadProfileData() {
+        String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
+        if (uriString != null) {
+            profileImageUri.setValue(Uri.parse(uriString));
+        }
+    }
+
+    public void saveProfileImageUri(Uri uri) {
+        profileImageUri.setValue(uri);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_USER_PIC, uri.toString());
+        editor.apply();
+    }
 }
