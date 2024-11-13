@@ -15,7 +15,9 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,11 +25,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
+
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.AuthResult;
 
 
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,9 +51,9 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput,passwordInput2,nameInput,phoneInput;
-    private Button registerButton;
+    private Button registerButton,Signingoogle;
     private AuthViewModel authViewModel;
-
+    private GoogleSignInHelper googleSignInHelper;
     private FirebaseFirestore db;
 
 
@@ -60,7 +65,7 @@ public class RegistrationActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.editTextEmail1);
         passwordInput = findViewById(R.id.editTextPassword1);
         registerButton = findViewById(R.id.button2);
-
+Signingoogle=findViewById(R.id.googleButton);
         nameInput = findViewById(R.id.editTextName1);
         passwordInput2=findViewById(R.id.editTextPassword2);
         phoneInput = findViewById(R.id.editTextPhone1);
@@ -70,6 +75,7 @@ public class RegistrationActivity extends AppCompatActivity {
         // Initialize ViewModel
        // saveUserProfile();
         // Email validation
+        googleSignInHelper = new GoogleSignInHelper(this);
         emailInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -87,8 +93,39 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        Log.d("GooglePlayServices", "Google Play Services status: " + status);
+        Signingoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("RegistrationActivity", "Google Sign-In button clicked");
 
-
+                if (!googleSignInHelper.isSignedIn()) {
+                    // Trigger Google Sign-In
+                    googleSignInHelper.signIn(result -> {
+                        Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
+                        if (result) {
+                            // Handle successful sign-in
+                            runOnUiThread(() -> {
+                                Toast.makeText(RegistrationActivity.this, "Sign-In Successful!", Toast.LENGTH_SHORT).show();
+                                // Proceed to the next activity or update the UI
+                                goToHomeScreen();
+                            });
+                        } else {
+                            // Handle sign-in failure
+                            runOnUiThread(() -> {
+                                Toast.makeText(RegistrationActivity.this, "Sign-In Failed. Please try again.", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                        return null;
+                    });
+                } else {
+                    // Already signed in, proceed to the next activity or handle accordingly
+                    Toast.makeText(RegistrationActivity.this, "Already Signed In!", Toast.LENGTH_SHORT).show();
+                    goToHomeScreen();
+                }
+            }
+        });
 
         // Set click listener for register button
         registerButton.setOnClickListener(v -> registerUser());
@@ -97,7 +134,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
 
-
+    private void goToHomeScreen() {
+        // Example: Navigate to HomeActivity after successful sign-in
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 
     private void registerUser() {

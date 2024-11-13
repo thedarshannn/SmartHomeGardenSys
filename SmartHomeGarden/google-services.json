@@ -1,8 +1,9 @@
 {
   "project_info": {
     "project_number": "204065205787",
+    "firebase_url": "https://loginscreen-adfb6-default-rtdb.firebaseio.com",
     "project_id": "loginscreen-adfb6",
-    "storage_bucket": "loginscreen-adfb6.appspot.com"
+    "storage_bucket": "loginscreen-adfb6.firebasestorage.app"
   },
   "client": [
     {

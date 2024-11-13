@@ -1,20 +1,25 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.android)
+
 }
 
 android {
     namespace 'ca.smartsprout.it.smart.smarthomegarden'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "ca.smartsprout.it.smart.smarthomegarden"
         minSdk 29
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -27,9 +32,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.9"
+    }
 }
 
 dependencies {
+
 
     implementation libs.appcompat
     implementation libs.material
@@ -38,6 +50,7 @@ dependencies {
     implementation libs.firebase.auth
     implementation libs.preference
     implementation libs.firebase.firestore
+    implementation libs.core.ktx
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
@@ -49,4 +62,10 @@ dependencies {
     implementation libs.glide
     implementation libs.play.services.location
     implementation libs.firebase.database
+
+    implementation(libs.googleid)
+    implementation libs.credentials.v120alpha01
+    implementation libs.credentials.play.services.auth.v100beta01
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
 }

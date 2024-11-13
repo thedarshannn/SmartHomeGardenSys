@@ -14,20 +14,15 @@ import androidx.lifecycle.ViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.FirebaseRepository;
 import com.google.firebase.auth.AuthResult;
 
-import android.util.Patterns;
-import android.widget.Toast;
-
 
 import androidx.lifecycle.MutableLiveData;
 
 
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 public class AuthViewModel extends ViewModel {
     private final FirebaseRepository firebaseRepository = new FirebaseRepository();
+
+
 
     public LiveData<AuthResult> loginUser(String email, String password) {
         return firebaseRepository.loginUser(email, password);
@@ -48,4 +43,6 @@ public class AuthViewModel extends ViewModel {
     public boolean isValidPassword(String password) {
         return firebaseRepository.isValidPassword(password);
     }
+
+
 }
