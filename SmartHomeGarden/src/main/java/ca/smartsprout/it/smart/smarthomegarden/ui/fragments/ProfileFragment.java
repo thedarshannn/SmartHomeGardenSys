@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private ImageView imageView;
     private TextView userNameTV;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
 
     public ProfileFragment() {
 
@@ -76,6 +77,13 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
             startActivity(intent);
         });
+        // Set up SharedPreferences listener to update UI in real-time
+        preferenceChangeListener = (sharedPreferences, key) -> {
+            if (KEY_USER_NAME.equals(key) || KEY_USER_PIC.equals(key)) {
+                loadUserProfile(); // Reload data if there’s a change
+            }
+        };
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
 
 
         fabMain.setOnClickListener(new View.OnClickListener() {
@@ -132,5 +140,10 @@ public class ProfileFragment extends Fragment {
         } else {
             imageView.setImageResource(R.drawable.user); // Default image
         }
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
 }
