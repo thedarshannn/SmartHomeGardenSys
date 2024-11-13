@@ -12,8 +12,8 @@
         android:icon="@drawable/bell"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_translate"
-        android:title="@string/translate"
+        android:id="@+id/action_toggle_temp"
+        android:title="@string/toggle_temp"
         app:showAsAction="never" />
     <item
         android:id="@+id/help"

@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import ca.smartsprout.it.smart.smarthomegarden.menu.MenuHandler;
 import ca.smartsprout.it.smart.smarthomegarden.ui.BaseActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.NotificationActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
@@ -36,11 +37,14 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SearchFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SensorFragment;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NavigationViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ThemeViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class MainActivity extends BaseActivity {
 
     private NavigationViewModel navigationViewModel;
     private ThemeViewModel themeViewModel;
+    private WeatherViewModel weatherViewModel;
+    private MenuHandler menuHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,9 @@ public class MainActivity extends BaseActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
         themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+
+        menuHandler = new MenuHandler(this, weatherViewModel);
 
         // Set the theme based on the user's preference
         themeViewModel.getThemeMode().observe(this, themeMode -> {
@@ -66,12 +73,14 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         });
+
         // Set default fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, new HomeFragment())
                     .commit();
         }
+
         // Observe the selected item from ViewModel
         navigationViewModel.getSelectedItem().observe(this, itemId -> {
             Fragment selectedFragment = null;
@@ -94,11 +103,25 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+
         // Handle bottom navigation item clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
             navigationViewModel.setSelectedItem(item.getItemId());
             return true;
         });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return menuHandler.handleMenuItem(item) || super.onOptionsItemSelected(item);
     }
 
     // Alert dialog box which shows up when user click on back button.
@@ -141,41 +164,5 @@ public class MainActivity extends BaseActivity {
             }
         });
         builder.create().show();
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            // Handle settings action
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_translate) {
-            // Handle translate action
-            return true;
-        } else if (id == R.id.help) {
-            // Handle help action
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setData(Uri.parse(getString(R.string.mailto_smartsprout_gmail_com))); // Replace with your email address
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.help_request));
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
-            return true;
-        } else if (id == R.id.action_notification) {
-            // Handle notification action
-            Intent intent = new Intent(this, NotificationActivity.class);
-            startActivity(intent);
-            return true;
-
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 }
