@@ -14,5 +14,6 @@ public class Constants {
     public static final String PREFS_USER_SESSION = "user_session_prefs";
     public static final String PREFS_USER_PROFILE = "UserProfilePrefs";
     public static final String KEY_USER_PIC = "profileImageUri";
+    public static final String KEY_USER_NAME = "userName";
 
 }

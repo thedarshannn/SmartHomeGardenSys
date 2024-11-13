@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private AccountSettingsViewModel viewModel;
     private ImageView profileImageView;
+    private EditText editUserName;
     private Uri cameraImageUri; // To store the camera image URI temporarily
 
 
@@ -67,7 +69,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_settings);
+
         profileImageView = findViewById(R.id.editProfilePic);
+        editUserName = findViewById(R.id.editUserName);
         Button saveButton = findViewById(R.id.saveButton);
 
         viewModel = new ViewModelProvider(this).get(AccountSettingsViewModel.class);
@@ -80,12 +84,19 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 profileImageView.setImageResource(R.drawable.user); // default placeholder image
             }
         });
+        viewModel.getUserName().observe(this, name -> {
+            if (name != null) {
+                editUserName.setText(name);
+            }
+        });
+
         // Click listener for profile image edit
         profileImageView.setOnClickListener(v -> showImagePickerDialog());
 
         // Save button click listener
         saveButton.setOnClickListener(v -> {
-
+           String newName = editUserName.getText().toString();
+            viewModel.saveUserName(newName);
             viewModel.saveProfileImageUri(cameraImageUri);
             Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
         });

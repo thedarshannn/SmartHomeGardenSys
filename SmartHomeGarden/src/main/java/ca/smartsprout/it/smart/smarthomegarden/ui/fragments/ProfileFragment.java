@@ -9,6 +9,7 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
+import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_NAME;
 import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
 import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
 
@@ -38,6 +39,7 @@ public class ProfileFragment extends Fragment {
 
     boolean isOptionsVisible;
     private ImageView imageView;
+    private TextView userNameTV;
     private SharedPreferences sharedPreferences;
 
     public ProfileFragment() {
@@ -62,6 +64,7 @@ public class ProfileFragment extends Fragment {
         final FloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
 
         imageView = view.findViewById(R.id.imageView);
+        userNameTV = view.findViewById(R.id.userNameTV);
         sharedPreferences = requireContext().getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
 
         // Load initial user data from SharedPreferences
@@ -73,6 +76,8 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
             startActivity(intent);
         });
+
+
         fabMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +122,9 @@ public class ProfileFragment extends Fragment {
         return view;
     }
     private void loadUserProfile() {
+        String userName = sharedPreferences.getString(KEY_USER_NAME, "Your Name");
+        userNameTV.setText(userName);
+
         String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
         if (uriString != null) {
             Uri uri = Uri.parse(uriString);
