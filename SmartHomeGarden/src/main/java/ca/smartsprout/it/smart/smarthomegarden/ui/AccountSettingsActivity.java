@@ -13,6 +13,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -53,6 +55,14 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 }
             });
 
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImage = result.getData().getData();
+                    profileImageView.setImageURI(selectedImage);
+                    viewModel.saveProfileImageUri(selectedImage); // Save URI to ViewModel
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,23 +87,38 @@ public class AccountSettingsActivity extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
 
             viewModel.saveProfileImageUri(cameraImageUri);
-            Toast.makeText(this, "Profile saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
         });
     }
 
 
 
     private void showImagePickerDialog() {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Choose Option")
-                .setMessage("Select Camera or Gallery")
-                .setPositiveButton("Camera", (dialog, which) -> {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.choose_option)
+                .setMessage(R.string.select_camera_or_gallery)
+                .setPositiveButton(R.string.camera, (dialog, which) -> {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE);
                     } else {
                         openCamera();
                     }
-                }).show();
+                })
+                .setNegativeButton(R.string.gallery, (dialog, which) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 and above
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSION_REQUEST_CODE);
+                } else {
+                    openGallery();
+                }
+            } else { // For Android 12 and below
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                } else {
+                    openGallery();
+                }
+            }
+        }).show();
     }
 
     private void openCamera() {
@@ -105,8 +130,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
             cameraLauncher.launch(intent);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to create image file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.failed_to_create_image, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryLauncher.launch(intent);
     }
 
     private File createImageFile() throws IOException {
@@ -123,8 +153,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (permissions[0].equals(Manifest.permission.CAMERA)) {
                     openCamera();
-                } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                } else if (permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                        permissions[0].equals(Manifest.permission.READ_MEDIA_IMAGES)) {
+                    openGallery();
+                }else {
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                 }
             }
         }
