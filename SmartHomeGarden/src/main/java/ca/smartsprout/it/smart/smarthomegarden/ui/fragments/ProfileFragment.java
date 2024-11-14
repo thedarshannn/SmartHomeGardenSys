@@ -9,7 +9,6 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_NAME;
 import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
 import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
 
@@ -21,6 +20,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 
 
 public class ProfileFragment extends Fragment {
@@ -43,6 +44,8 @@ public class ProfileFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
     private View addPlantContainer, cameraContainer, addTaskContainer;
+    private UserViewModel userViewModel;
+
     public ProfileFragment() {
 
         // Required empty public constructor
@@ -67,7 +70,9 @@ public class ProfileFragment extends Fragment {
         imageView = view.findViewById(R.id.imageView);
         userNameTV = view.findViewById(R.id.userNameTV);
         sharedPreferences = requireContext().getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
+        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
         // Load initial user data from SharedPreferences
         loadUserProfile();
 
@@ -77,13 +82,6 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
             startActivity(intent);
         });
-        // Set up SharedPreferences listener to update UI in real-time
-        preferenceChangeListener = (sharedPreferences, key) -> {
-            if (KEY_USER_NAME.equals(key) || KEY_USER_PIC.equals(key)) {
-                loadUserProfile(); // Reload data if there’s a change
-            }
-        };
-        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
 
 
         fabMain = view.findViewById(R.id.floatingActionButton);
@@ -135,10 +133,8 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-    private void loadUserProfile() {
-        String userName = sharedPreferences.getString(KEY_USER_NAME, "Your Name");
-        userNameTV.setText(userName);
 
+    private void loadUserProfile() {
         String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
         if (uriString != null) {
             Uri uri = Uri.parse(uriString);

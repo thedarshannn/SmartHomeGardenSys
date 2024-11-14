@@ -108,6 +108,29 @@ public class FirebaseRepository {
                 .addOnFailureListener(e -> listener.onFeedbackSubmitted(false));
     }
 
+    // Fetch user details
+    public LiveData<User> fetchUserDetails() {
+        MutableLiveData<User> userDetails = new MutableLiveData<>();
+        String userId = mAuth.getCurrentUser().getUid();
+
+        firestore.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        User user = document.toObject(User.class);
+                        userDetails.setValue(user);
+                    }
+                });
+        return userDetails;
+    }
+
+    // Update user name in Firebase
+    public void updateUserName(String newName) {
+        String userId = mAuth.getCurrentUser().getUid();
+        firestore.collection("users").document(userId)
+                .update("name", newName);
+    }
+
     // Method to retrieve device model programmatically
     private String getDeviceModel() {
         return android.os.Build.MODEL; // Get the device model
