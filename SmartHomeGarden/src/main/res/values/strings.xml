@@ -142,6 +142,8 @@ Members:
     <string name="failed_to_create_image">Failed to create image file</string>
     <string name="permission_denied">Permission Denied</string>
     <string name="profile_saved">Profile saved</string>
+    <string name="photos">Photos</string>
+    <string name="plants">Plants</string>
 
 
 </resources>
