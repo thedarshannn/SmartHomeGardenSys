@@ -148,9 +148,10 @@ Members:
     <string name="describe_your_issue">Describe your issue</string>
     <string name="send">Send</string>
 
-
+    <string name="time_format">hh:mm a</string>
 
     <string name="email_address">smartsprout@gmail.com</string>
     <string name="email_subject">Help Request</string>
     <string name="email_chooser_title">Send email...</string>
+    <string name="notificationsdatbase">notifications</string>
 </resources>

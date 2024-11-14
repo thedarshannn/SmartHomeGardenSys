@@ -49,7 +49,7 @@ public class NotificationActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         // Initialize the database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference("notifications");
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notificationsdatbase));
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
