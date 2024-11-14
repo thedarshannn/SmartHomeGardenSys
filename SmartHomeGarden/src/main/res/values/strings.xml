@@ -144,5 +144,13 @@ Members:
     <string name="toggle_temp">Convert Unit</string>
     <string name="celsius">°C</string>
     <string name="fahrenheit">°F</string>
+    <string name="need_help">Need Help?</string>
+    <string name="describe_your_issue">Describe your issue</string>
+    <string name="send">Send</string>
 
+
+
+    <string name="email_address">smartsprout@gmail.com</string>
+    <string name="email_subject">Help Request</string>
+    <string name="email_chooser_title">Send email...</string>
 </resources>

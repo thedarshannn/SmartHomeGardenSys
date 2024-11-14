@@ -2,12 +2,13 @@ package ca.smartsprout.it.smart.smarthomegarden.menu;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.MenuItem;
+import androidx.fragment.app.FragmentActivity;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.NotificationActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HelpBottomSheetFragment;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class MenuHandler {
@@ -32,10 +33,8 @@ public class MenuHandler {
             weatherViewModel.toggleTemperatureUnit();
             return true;
         } else if (id == R.id.help) {
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setData(Uri.parse(context.getString(R.string.mailto_smartsprout_gmail_com)));
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.help_request));
-            context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_email)));
+            HelpBottomSheetFragment helpBottomSheetFragment = new HelpBottomSheetFragment();
+            helpBottomSheetFragment.show(((FragmentActivity) context).getSupportFragmentManager(), helpBottomSheetFragment.getTag());
             return true;
         } else if (id == R.id.action_notification) {
             Intent intent = new Intent(context, NotificationActivity.class);
