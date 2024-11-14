@@ -12,6 +12,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -52,9 +53,43 @@ class GoogleAuthClient(private val context: Context) {
                 val tokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                 val authCredential = GoogleAuthProvider.getCredential(tokenCredential.idToken, null)
                 val authResult = firebaseAuth.signInWithCredential(authCredential).await()
-                return authResult.user != null
+
+                // Check if sign-in was successful
+                val user = authResult.user
+                if (user != null) {
+                    val firestore = FirebaseFirestore.getInstance()
+                    val userId = user.uid
+                    val userDocRef = firestore.collection("users").document(userId)
+
+                    // Check if user data already exists in Firestore
+                    val userDocSnapshot = userDocRef.get().await()
+                    if (!userDocSnapshot.exists()) {
+                        // If user does not exist, store data
+                        val newUser = hashMapOf(
+                            "name" to (user.displayName ?: ""),
+                            "email" to (user.email ?: ""),
+                            "phoneNumber" to (user.phoneNumber ?: ""),
+                            "password" to "",  // Leave blank as it's Google Sign-In
+                            "confirmPassword" to ""  // Leave blank as it's Google Sign-In
+                        )
+
+                        // Store user data in Firestore
+                        userDocRef.set(newUser).await()
+                        Log.d("GoogleAuthClient", "User data stored in Firestore")
+                    } else {
+                        Log.d("GoogleAuthClient", "User already exists in Firestore")
+                    }
+
+                    return true
+                } else {
+                    Log.e("GoogleAuthClient", "Authentication failed: User is null")
+                    return false
+                }
             } catch (e: GoogleIdTokenParsingException) {
                 Log.e("GoogleAuthClient", "Google ID Token Parsing Exception: ${e.message}")
+                return false
+            } catch (e: Exception) {
+                Log.e("GoogleAuthClient", "Firestore Exception: ${e.message}")
                 return false
             }
         } else {
