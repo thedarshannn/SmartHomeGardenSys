@@ -64,7 +64,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         }
 
         public void bind(Plant plant) {
-            plantName.setText(plant.getName());
+
             plantDescription.setText(plant.getDescription());
         }
     }

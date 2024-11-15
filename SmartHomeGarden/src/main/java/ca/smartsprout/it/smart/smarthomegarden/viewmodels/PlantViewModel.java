@@ -29,13 +29,6 @@ public class PlantViewModel extends ViewModel {
     }
 
     private void loadPlants() {
-        // Dummy data for testing
-        List<Plant> plants = new ArrayList<>();
-        plants.add(new Plant("1", "Golden Pothos", "A hardy plant with heart-shaped leaves."));
-        plants.add(new Plant("2", "Spider Plant", "A resilient plant with long, arching leaves."));
-        plants.add(new Plant("3", "Peace Lily", "Known for its white blooms and air-purifying abilities."));
-
         // Set the dummy data to LiveData
-        plantList.setValue(plants);
     }
 }
