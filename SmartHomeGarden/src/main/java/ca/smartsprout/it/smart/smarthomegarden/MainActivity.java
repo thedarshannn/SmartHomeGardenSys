@@ -11,8 +11,6 @@ package ca.smartsprout.it.smart.smarthomegarden;
 
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -26,10 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import ca.smartsprout.it.smart.smarthomegarden.menu.MenuHandler;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.MenuHandler;
 import ca.smartsprout.it.smart.smarthomegarden.ui.BaseActivity;
-import ca.smartsprout.it.smart.smarthomegarden.ui.NotificationActivity;
-import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.DiagnoseFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HomeFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.ProfileFragment;

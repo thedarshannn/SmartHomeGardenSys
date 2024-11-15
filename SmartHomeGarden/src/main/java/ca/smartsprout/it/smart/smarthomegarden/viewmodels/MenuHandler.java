@@ -1,4 +1,4 @@
-package ca.smartsprout.it.smart.smarthomegarden.menu;
+package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.NotificationActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HelpBottomSheetFragment;
-import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class MenuHandler {
 
