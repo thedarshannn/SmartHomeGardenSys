@@ -19,9 +19,8 @@ import android.util.Patterns;
 import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
+
 public class FirebaseRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
