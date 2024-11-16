@@ -133,8 +133,8 @@ Members:
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
-
-
+    <string name="share_your_thoughts_with_us">Share your thoughts with us</string>
+    <string name="rate_your_experience">Rate your experience</string>
 
 
 </resources>
