@@ -2,9 +2,11 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ public class FeedbackActivity extends AppCompatActivity {
     private EditText descriptionEditText;
     private Button submitButton;
     private FeedbackViewModel feedbackViewModel;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -42,6 +45,8 @@ public class FeedbackActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         submitButton = findViewById(R.id.feedbackbutton);
+        progressBar = findViewById(R.id.progressBar);
+
 
         // Observe LiveData for user details and feedback status
         feedbackViewModel.getUserDetails().observe(this, user -> {
@@ -72,13 +77,34 @@ public class FeedbackActivity extends AppCompatActivity {
         submitButton.setOnClickListener(v -> submitFeedback());
     }
 
-    private void submitFeedback() {
-        String description = descriptionEditText.getText().toString();
-        float rating = ratingBar.getRating();
+//    private void submitFeedback() {
+//        String description = descriptionEditText.getText().toString();
+//        float rating = ratingBar.getRating();
+//
+//        if (description.isEmpty()) {
+//            Toast.makeText(this, getString(R.string.entdesc), Toast.LENGTH_SHORT).show();
+//        } else {
+//            feedbackViewModel.submitFeedback(
+//                    nameTextView.getText().toString(),
+//                    emailTextView.getText().toString(),
+//                    phoneTextView.getText().toString(),
+//                    rating,
+//                    description
+//            );
+//        }
+//    }
+private void submitFeedback() {
+    String description = descriptionEditText.getText().toString();
+    float rating = ratingBar.getRating();
 
-        if (description.isEmpty()) {
-            Toast.makeText(this, getString(R.string.entdesc), Toast.LENGTH_SHORT).show();
-        } else {
+    if (description.isEmpty()) {
+        Toast.makeText(this, getString(R.string.entdesc), Toast.LENGTH_SHORT).show();
+    } else {
+        // Show progress bar
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Delay the submission by 5 seconds
+        new Handler().postDelayed(() -> {
             feedbackViewModel.submitFeedback(
                     nameTextView.getText().toString(),
                     emailTextView.getText().toString(),
@@ -86,8 +112,11 @@ public class FeedbackActivity extends AppCompatActivity {
                     rating,
                     description
             );
-        }
+            // Hide progress bar
+            progressBar.setVisibility(View.GONE);
+        }, 5000);
     }
+}
     private void clearInputFields() {
         descriptionEditText.setText(""); // Clear the description input
         ratingBar.setRating(0); // Reset the rating
