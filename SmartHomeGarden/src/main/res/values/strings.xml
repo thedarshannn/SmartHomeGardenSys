@@ -135,6 +135,9 @@ Members:
     <string name="diagnosis_">DIAGNOSIS</string>
     <string name="share_your_thoughts_with_us">Share your thoughts with us</string>
     <string name="rate_your_experience">Rate your experience</string>
+    <string name="feedbackprefs">FeedbackPrefs</string>
+    <string name="submission_limit">submission limit</string>
+    <string name="next_feedback">Next feedback in: %02d:%02d:%02d</string>
 
 
 </resources>
