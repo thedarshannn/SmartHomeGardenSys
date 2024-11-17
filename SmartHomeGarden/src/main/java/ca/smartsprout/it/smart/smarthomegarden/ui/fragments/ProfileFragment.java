@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -113,7 +114,14 @@ public class ProfileFragment extends Fragment {
         fabAddPlant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Handle adding a new plant
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new SearchFragment()) // Ensure 'R.id.nav_host_fragment' is the container ID
+                        .addToBackStack(null) // Add to back stack for navigation
+                        .commit();
+
+                // Update the bottom navigation indicator
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_search);
             }
         });
 

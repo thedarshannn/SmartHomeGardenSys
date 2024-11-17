@@ -144,6 +144,16 @@ Members:
     <string name="profile_saved">Profile saved</string>
     <string name="photos">Photos</string>
     <string name="plants">Plants</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="full_name">Full Name</string>
+    <string name="current_email">Current Email</string>
+    <string name="new_email">New email</string>
+    <string name="update_email">Update email</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="retype_new_password">Retype new password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="update_password">Update Password</string>
 
 
 </resources>
