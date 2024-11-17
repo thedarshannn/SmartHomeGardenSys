@@ -110,16 +110,20 @@ public class FirebaseRepository {
     // Fetch user details
     public LiveData<User> fetchUserDetails() {
         MutableLiveData<User> userDetails = new MutableLiveData<>();
-        String userId = mAuth.getCurrentUser().getUid();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         firestore.collection("users").document(userId)
-                .get()
-                .addOnSuccessListener(document -> {
-                    if (document.exists()) {
-                        User user = document.toObject(User.class);
-                        userDetails.setValue(user);
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        // Log error
+                        return;
+                    }
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        userDetails.setValue(user); // Notify observers of the change
                     }
                 });
+
         return userDetails;
     }
 
