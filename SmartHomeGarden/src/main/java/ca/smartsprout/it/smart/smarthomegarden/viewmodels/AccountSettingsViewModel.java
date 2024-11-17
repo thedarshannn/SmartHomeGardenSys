@@ -48,21 +48,14 @@ public class AccountSettingsViewModel extends AndroidViewModel {
         if (uriString != null) {
             profileImageUri.setValue(Uri.parse(uriString));
         }
-        String savedUserName = sharedPreferences.getString(KEY_USER_NAME, "Your Name");
-        userName.setValue(savedUserName);
     }
 
     public void saveProfileImageUri(Uri uri) {
-        profileImageUri.setValue(uri);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_USER_PIC, uri.toString());
-        editor.apply();
-    }
-
-    public void saveUserName(String name) {
-        userName.setValue(name);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_USER_NAME, name);
-        editor.apply();
+        if (uri != null) {
+            profileImageUri.setValue(uri);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(KEY_USER_PIC, uri.toString());
+            editor.apply();
+        }
     }
 }

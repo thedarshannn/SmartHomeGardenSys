@@ -39,6 +39,7 @@ import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AccountSettingsViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 
 public class AccountSettingsActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
@@ -47,6 +48,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private ImageView profileImageView;
     private EditText editUserName;
     private Uri cameraImageUri; // To store the camera image URI temporarily
+    private UserViewModel userViewModel;
 
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -84,11 +86,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 profileImageView.setImageResource(R.drawable.user); // default placeholder image
             }
         });
-        viewModel.getUserName().observe(this, name -> {
-            if (name != null) {
-                editUserName.setText(name);
-            }
-        });
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel.getUserName().observe(this, name -> editUserName.setText(name));
 
         // Click listener for profile image edit
         profileImageView.setOnClickListener(v -> showImagePickerDialog());
@@ -96,9 +96,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
         // Save button click listener
         saveButton.setOnClickListener(v -> {
            String newName = editUserName.getText().toString();
-            viewModel.saveUserName(newName);
-            viewModel.saveProfileImageUri(cameraImageUri);
-            Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
+           userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+           userViewModel.updateUserName(newName);
+           viewModel.saveProfileImageUri(cameraImageUri);
+           Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
         });
     }
 
