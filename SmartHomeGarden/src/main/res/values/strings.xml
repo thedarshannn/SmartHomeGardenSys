@@ -133,8 +133,9 @@ Members:
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
-
-
+    <string name="watering_chip">Watering</string>
+    <string name="sunlight_chip">Sunlight</string>
+    <string name="indoor_outdoor_chip">Indoor/Outdoor</string>
 
 
 </resources>
