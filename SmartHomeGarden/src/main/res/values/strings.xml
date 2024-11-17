@@ -144,6 +144,9 @@ Members:
     <string name="profile_saved">Profile saved</string>
     <string name="photos">Photos</string>
     <string name="plants">Plants</string>
+    <string name="watering">Watering</string>
+    <string name="indoor_outdoor">Indoor/Outdoor</string>
+    <string name="sunlight_chip">Sunlight</string>
 
 
 </resources>
