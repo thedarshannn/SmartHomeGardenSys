@@ -31,7 +31,7 @@ import okhttp3.Response;
 
 public class PlantViewModel extends ViewModel {
     private final MutableLiveData<List<Plant>> plantList = new MutableLiveData<>();
-    private static final String API_URL = "https://perenual.com/api/species-list?key=" + BuildConfig.API_KEY;
+    private static final String API_URL = "https://perenual.com/api/species-list?key=sk-lhd4673423e3776287615";
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
 

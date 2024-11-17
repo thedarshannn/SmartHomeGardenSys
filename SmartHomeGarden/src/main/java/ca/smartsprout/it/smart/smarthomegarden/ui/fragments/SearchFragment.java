@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,16 +22,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 
 
 public class SearchFragment extends Fragment {
 
-    private PlantViewModel plantViewModel;
     private PlantAdapter plantAdapter;
 
 
@@ -59,11 +61,14 @@ public class SearchFragment extends Fragment {
         plantAdapter = new PlantAdapter(new ArrayList<>());
         recyclerView.setAdapter(plantAdapter);
 
-        // Set up ViewModel and observe LiveData
-        plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
-        plantViewModel.getPlantList().observe(getViewLifecycleOwner(), plants -> {
-            // Update the adapter's data when the plant list changes
-            plantAdapter.updatePlantList(plants);
+        PlantViewModel plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
+        plantViewModel.getPlantList().observe(getViewLifecycleOwner(), new Observer<List<Plant>>() {
+            @Override
+            public void onChanged(List<Plant> plants) {
+                if (plants != null) {
+                    plantAdapter.updatePlantList(plants);
+                }
+            }
         });
         // Inflate the layout for this fragment
         return view;

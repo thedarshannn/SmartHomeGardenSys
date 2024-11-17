@@ -136,6 +136,7 @@ Members:
     <string name="watering_chip">Watering</string>
     <string name="sunlight_chip">Sunlight</string>
     <string name="indoor_outdoor_chip">Indoor/Outdoor</string>
+    <string name="indoor">Indoor</string>
 
 
 </resources>
