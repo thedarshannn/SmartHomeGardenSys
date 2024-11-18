@@ -138,6 +138,8 @@ Members:
     <string name="feedbackprefs">FeedbackPrefs</string>
     <string name="submission_limit">submission limit</string>
     <string name="next_feedback">Next feedback in: %02d:%02d:%02d</string>
+    <string name="your_feedback">Your Feedback</string>
+    <string name="n_a">N/A</string>
 
 
 </resources>

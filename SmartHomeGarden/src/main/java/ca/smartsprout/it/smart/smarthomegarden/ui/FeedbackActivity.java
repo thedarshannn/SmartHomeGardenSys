@@ -11,6 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -41,6 +44,21 @@ public class FeedbackActivity extends AppCompatActivity {
         // Initialize ViewModel
         feedbackViewModel = new ViewModelProvider(this).get(FeedbackViewModel.class);
 
+
+        // Initialize ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Handle the back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish(); // Close the activity and go back
+            }
+        });
+
         // Initialize views
         nameTextView = findViewById(R.id.nameTextView);
         emailTextView = findViewById(R.id.EmailfetchtextView2);
@@ -67,9 +85,9 @@ public class FeedbackActivity extends AppCompatActivity {
                 emailTextView.setText(user.getEmail());
                 phoneTextView.setText(user.getPhone());
             } else {
-                nameTextView.setText("N/A");
-                emailTextView.setText("N/A");
-                phoneTextView.setText("N/A");
+                nameTextView.setText(R.string.n_a);
+                emailTextView.setText(R.string.n_a);
+                phoneTextView.setText(R.string.n_a);
             }
         });
 
@@ -91,6 +109,13 @@ public class FeedbackActivity extends AppCompatActivity {
         // Check if the user is within the submission interval
         checkSubmissionInterval();
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // Close the activity and go back
+        return true;
+    }
+
 
     private void submitFeedback() {
         String description = descriptionEditText.getText().toString();
