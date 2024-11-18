@@ -10,6 +10,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PasswordViewModel extends ViewModel {
 
@@ -77,41 +81,41 @@ public class PasswordViewModel extends ViewModel {
 
     public void updatePassword(String currentPassword, String newPassword) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        if (user != null) {
-            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
-
-            user.reauthenticate(credential)
-                    .addOnCompleteListener(reauthTask -> {
-                        if (reauthTask.isSuccessful()) {
-                            user.updatePassword(newPassword)
-                                    .addOnCompleteListener(updateTask -> {
-                                        if (updateTask.isSuccessful()) {
-                                            updateStatus.setValue(true);
-                                            Log.d("UpdatePassword", "Password updated successfully");
-                                        } else {
-                                            updateStatus.setValue(false);
-                                            Log.e("UpdatePassword", "Failed to update password: " + updateTask.getException().getMessage());
-                                        }
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        updateStatus.setValue(false);
-                                        Log.e("UpdatePassword", "Error updating password: " + e.getMessage());
-                                    });
-                        } else {
-                            updateStatus.setValue(false);
-                            Log.e("Reauthenticate", "Failed to reauthenticate: " + reauthTask.getException().getMessage());
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        updateStatus.setValue(false);
-                        Log.e("Reauthenticate", "Error during reauthentication: " + e.getMessage());
-                    });
-        } else {
-            updateStatus.setValue(false);
-            Log.e("UpdatePassword", "No user is currently signed in.");
+        if (user == null) {
+            updateStatus.setValue(false); // User is not logged in
+            return;
         }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+
+        user.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
+            if (!reauthTask.isSuccessful()) {
+                updateStatus.setValue(false);
+                return;
+            }
+
+            user.updatePassword(newPassword).addOnCompleteListener(updateTask -> {
+                if (!updateTask.isSuccessful()) {
+                    updateStatus.setValue(false);
+                    return;
+                }
+
+                // Update Firestore with both password and confirmPassword fields
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("password", newPassword);
+                updates.put("confirmPassword", newPassword);
+
+                firestore.collection("users").document(user.getUid())
+                        .update(updates)
+                        .addOnCompleteListener(firestoreTask -> updateStatus.setValue(firestoreTask.isSuccessful()))
+                        .addOnFailureListener(e -> updateStatus.setValue(false));
+            }).addOnFailureListener(e -> updateStatus.setValue(false));
+        }).addOnFailureListener(e -> updateStatus.setValue(false));
     }
+
+
 
     public void handleEmptyPassword() {
         currentPasswordValidation.setValue(false); // Update MutableLiveData value
