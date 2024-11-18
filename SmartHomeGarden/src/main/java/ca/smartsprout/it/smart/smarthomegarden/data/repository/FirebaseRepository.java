@@ -126,6 +126,25 @@ public class FirebaseRepository {
 
         return userDetails;
     }
+    public LiveData<String> fetchUserEmail(String userId) {
+        MutableLiveData<String> emailLiveData = new MutableLiveData<>();
+
+        firestore.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String email = documentSnapshot.getString("email");
+                        emailLiveData.setValue(email); // Pass the email to LiveData
+                    } else {
+                        emailLiveData.setValue(null); // Handle no document case
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    emailLiveData.setValue(null); // Handle failure case
+                });
+
+        return emailLiveData;
+    }
 
     // Update user name in Firebase
     public void updateUserName(String newName) {

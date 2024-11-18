@@ -12,6 +12,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.FirebaseRepository;
 
 
@@ -34,6 +36,11 @@ public class UserViewModel extends ViewModel {
     public LiveData<String> getUserName() {
         return userName;
     }
+    public LiveData<String> getUserEmail() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return firebaseRepository.fetchUserEmail(userId);
+    }
+
 
     public void updateUserName(String newName) {
         firebaseRepository.updateUserName(newName); // Update name in Firebase

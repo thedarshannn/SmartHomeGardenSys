@@ -154,6 +154,7 @@ Members:
     <string name="retype_new_password">Retype new password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="update_password">Update Password</string>
+    <string name="email_not_found">Email not found</string>
 
 
 </resources>

@@ -46,7 +46,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private AccountSettingsViewModel viewModel;
     private ImageView profileImageView;
-    private EditText editUserName;
+    private EditText editUserName,emailEditText;
     private Uri cameraImageUri; // To store the camera image URI temporarily
     private UserViewModel userViewModel;
 
@@ -74,6 +74,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         profileImageView = findViewById(R.id.editProfilePic);
         editUserName = findViewById(R.id.editUserName);
+        emailEditText = findViewById(R.id.etCurrentEmail);
         Button saveButton = findViewById(R.id.saveButton);
 
         viewModel = new ViewModelProvider(this).get(AccountSettingsViewModel.class);
@@ -89,6 +90,14 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         userViewModel.getUserName().observe(this, name -> editUserName.setText(name));
+        // Observe email LiveData
+        userViewModel.getUserEmail().observe(this, email -> {
+            if (email != null) {
+                emailEditText.setText(email);
+            } else {
+                emailEditText.setText(R.string.email_not_found);
+            }
+        });
 
         // Click listener for profile image edit
         profileImageView.setOnClickListener(v -> showImagePickerDialog());
