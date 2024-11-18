@@ -137,6 +137,7 @@ Members:
     <string name="sunlight_chip">Sunlight</string>
     <string name="indoor_outdoor_chip">Indoor/Outdoor</string>
     <string name="indoor">Indoor</string>
+    <string name="no_results_found">No Result Found!</string>
 
 
 </resources>
