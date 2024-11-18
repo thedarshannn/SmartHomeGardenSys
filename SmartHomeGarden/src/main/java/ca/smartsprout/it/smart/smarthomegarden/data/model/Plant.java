@@ -8,6 +8,13 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.annotations.JsonAdapter;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Plant {
@@ -16,7 +23,10 @@ public class Plant {
     private String description;
     private String cycle;
     private String watering;
+
+    @JsonAdapter(SunlightDeserializer.class)
     private List<String> sunlight;
+
 
     public Plant() {
     }
@@ -76,5 +86,22 @@ public class Plant {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    // Custom Deserializer for Sunlight
+    public static class SunlightDeserializer implements JsonDeserializer<List<String>> {
+        @Override
+        public List<String> deserialize(JsonElement json, Type typeOfT, com.google.gson.JsonDeserializationContext context) {
+            List<String> result = new ArrayList<>();
+            if (json.isJsonArray()) {
+                JsonArray jsonArray = json.getAsJsonArray();
+                for (JsonElement element : jsonArray) {
+                    result.add(element.getAsString());
+                }
+            } else if (json.isJsonPrimitive()) {
+                result.add(json.getAsString());
+            }
+            return result;
+        }
     }
 }
