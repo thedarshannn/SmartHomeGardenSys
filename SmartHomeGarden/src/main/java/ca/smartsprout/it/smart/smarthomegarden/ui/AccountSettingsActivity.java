@@ -15,7 +15,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +34,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -39,6 +44,7 @@ import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AccountSettingsViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PasswordViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 
 public class AccountSettingsActivity extends AppCompatActivity {
@@ -46,9 +52,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private AccountSettingsViewModel viewModel;
     private ImageView profileImageView;
-    private EditText editUserName,emailEditText;
+    private EditText editUserName,emailEditText,editcurrentPasswordText,editPasswordText,retypePasswordText;
+    private TextInputLayout currentPasswordLayout, newPasswordLayout, retypePasswordLayout;
     private Uri cameraImageUri; // To store the camera image URI temporarily
     private UserViewModel userViewModel;
+    private PasswordViewModel passwordViewModel;
+    private final Handler handler = new Handler();
+    private Runnable runnable;
 
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -67,6 +77,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
                     viewModel.saveProfileImageUri(selectedImage); // Save URI to ViewModel
                 }
             });
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +87,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.editProfilePic);
         editUserName = findViewById(R.id.editUserName);
         emailEditText = findViewById(R.id.etCurrentEmail);
+        editPasswordText = findViewById(R.id.etNewPassword);
+        editcurrentPasswordText = findViewById(R.id.etCurrentPassword);
+        retypePasswordText = findViewById(R.id.etRetypePassword);
+        currentPasswordLayout = findViewById(R.id.CurrentPasswordLayout);
+        newPasswordLayout = findViewById(R.id.NewPasswordLayout);
+        retypePasswordLayout = findViewById(R.id.retypePasswordLayout);
         Button saveButton = findViewById(R.id.saveButton);
+        Button updatePasswordButton = findViewById(R.id.btnUpdatePassword);
 
         viewModel = new ViewModelProvider(this).get(AccountSettingsViewModel.class);
-
+        passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
         // Observe LiveData from ViewModel to set the profile image and username
         viewModel.getProfileImageUri().observe(this, uri -> {
             if (uri != null) {
@@ -104,16 +123,143 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         // Save button click listener
         saveButton.setOnClickListener(v -> {
-           String newName = editUserName.getText().toString();
-           userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-           userViewModel.updateUserName(newName);
-           viewModel.saveProfileImageUri(cameraImageUri);
-           Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
+            String newName = editUserName.getText().toString();
+            userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+            userViewModel.updateUserName(newName);
+            viewModel.saveProfileImageUri(cameraImageUri);
+            Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
+        });
+
+          // Validate current password
+        editcurrentPasswordText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                handler.removeCallbacks(runnable); // Remove previously queued tasks
+                runnable = () -> {
+                    String currentPassword = s.toString().trim();
+                    if (!currentPassword.isEmpty()) {
+                        passwordViewModel.validateCurrentPassword(currentPassword); // Validate with Firebase
+                    } else {
+                        currentPasswordLayout.setError(getString(R.string.password_cannot_be_empty));
+                        passwordViewModel.handleEmptyPassword();
+                    }
+                };
+                handler.postDelayed(runnable, 500); // Delay validation by 500ms
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        // Observe current password validation and update UI
+        passwordViewModel.getCurrentPasswordValidation().observe(this, isValid -> {
+            if (isValid != null) {
+                if (isValid) {
+                    currentPasswordLayout.setHelperText(getString(R.string.password_is_correct));
+                    currentPasswordLayout.setError(null); // Clear error
+                } else {
+                    currentPasswordLayout.setHelperText(null);
+                    currentPasswordLayout.setError(getString(R.string.incorrect_password));
+                }
+            }
+        });
+
+        // Observe password matching and update UI
+        TextWatcher passwordMatchWatcher = new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String newPassword = editPasswordText.getText().toString();
+                String retypePassword = retypePasswordText.getText().toString();
+                passwordViewModel.checkPasswordsMatch(newPassword, retypePassword);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+
+        editPasswordText.addTextChangedListener(passwordMatchWatcher);
+        retypePasswordText.addTextChangedListener(passwordMatchWatcher);
+
+        passwordViewModel.getPasswordsMatch().observe(this, doPasswordsMatch -> {
+            if (doPasswordsMatch != null) {
+                if (doPasswordsMatch) {
+                    retypePasswordLayout.setHelperText(getString(R.string.passwords_match));
+                    retypePasswordLayout.setError(null); // Clear error
+                } else {
+                    retypePasswordLayout.setHelperText(null);
+                    retypePasswordLayout.setError(getString(R.string.passwords_do_not_match));
+                }
+            }
+        });
+
+        // Add TextWatcher for "New Password" field
+        editPasswordText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Clear error dynamically
+                newPasswordLayout.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // Button click listener for password update
+        updatePasswordButton.setOnClickListener(v -> {
+            String currentPassword = editcurrentPasswordText.getText().toString().trim();
+            String newPassword = editPasswordText.getText().toString().trim();
+            // Regex for password validation
+            String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
+
+            if (currentPassword.isEmpty()) {
+                currentPasswordLayout.setError(getString(R.string.current_password_cannot_be_empty));
+                return;
+            }
+
+            if (newPassword.isEmpty()) {
+                newPasswordLayout.setError(getString(R.string.new_password_cannot_be_empty));
+                return;
+            }
+
+            if (newPassword.equals(currentPassword)) {
+                newPasswordLayout.setError(getString(R.string.cannot_be_same_as_current_password));
+                return;
+            }
+
+            if (!newPassword.matches(passwordPattern)) {
+                newPasswordLayout.setError(getString(R.string.regex));
+                return;
+            }
+
+            passwordViewModel.updatePassword(currentPassword, newPassword);
+        });
+
+        // Observe update status
+        passwordViewModel.getUpdateStatus().observe(this, status -> {
+            if (status != null) {
+                if (status) {
+                    Toast.makeText(this, R.string.password_updated, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.failed_to_update, Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
-
-
-
     private void showImagePickerDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.choose_option)
@@ -126,20 +272,20 @@ public class AccountSettingsActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton(R.string.gallery, (dialog, which) -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 and above
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSION_REQUEST_CODE);
-                } else {
-                    openGallery();
-                }
-            } else { // For Android 12 and below
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-                } else {
-                    openGallery();
-                }
-            }
-        }).show();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 and above
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSION_REQUEST_CODE);
+                        } else {
+                            openGallery();
+                        }
+                    } else { // For Android 12 and below
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                        } else {
+                            openGallery();
+                        }
+                    }
+                }).show();
     }
 
     private void openCamera() {

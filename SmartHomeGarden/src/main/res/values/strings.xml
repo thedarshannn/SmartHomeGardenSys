@@ -155,6 +155,17 @@ Members:
     <string name="forgot_password">Forgot password?</string>
     <string name="update_password">Update Password</string>
     <string name="email_not_found">Email not found</string>
+    <string name="password_cannot_be_empty">Password cannot be empty</string>
+    <string name="password_is_correct">Password is correct</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="passwords_match">Passwords match</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="current_password_cannot_be_empty">Current password cannot be empty</string>
+    <string name="new_password_cannot_be_empty">New password cannot be empty</string>
+    <string name="cannot_be_same_as_current_password">New password cannot be the same as the current password</string>
+    <string name="regex">Password must be at least 6 characters, include an uppercase letter, a digit, and a special character</string>
+    <string name="password_updated">Password updated successfully!</string>
+    <string name="failed_to_update">Failed to update password. Please try again.</string>
 
 
 </resources>

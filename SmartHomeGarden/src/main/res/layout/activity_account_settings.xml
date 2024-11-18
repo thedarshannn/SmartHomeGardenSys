@@ -64,7 +64,7 @@
                     style="@style/Widget.MaterialComponents.Button"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    app:cornerRadius="4dp"/>
+                    app:cornerRadius="25dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -96,31 +96,7 @@
                         android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNewEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/new_email"
-                        android:inputType="textEmailAddress"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnUpdateEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="@string/update_email"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    app:cornerRadius="4dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -138,6 +114,7 @@
                 android:padding="16dp">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/CurrentPasswordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -152,6 +129,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/NewPasswordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -167,6 +145,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/retypePasswordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -201,7 +180,7 @@
                     style="@style/Widget.MaterialComponents.Button"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    app:cornerRadius="4dp"/>
+                    app:cornerRadius="25dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
