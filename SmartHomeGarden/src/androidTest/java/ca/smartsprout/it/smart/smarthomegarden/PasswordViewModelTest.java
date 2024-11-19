@@ -104,4 +104,24 @@ public class PasswordViewModelTest {
         passwordViewModel.getUpdateStatus().observeForever(observer);
         assertNull(passwordViewModel.getUpdateStatus().getValue());
     }
+
+    @Test
+    public void testHandleEmptyPassword() {
+        passwordViewModel.getCurrentPasswordValidation().observeForever(observer);
+        passwordViewModel.handleEmptyPassword();
+
+        // Verify that the LiveData is not null and its value is false
+        assertNotNull(passwordViewModel.getCurrentPasswordValidation().getValue());
+        assertFalse(passwordViewModel.getCurrentPasswordValidation().getValue());
+    }
+
+    @Test
+    public void testValidateCurrentPassword_EmptyPassword() {
+        passwordViewModel.getCurrentPasswordValidation().observeForever(observer);
+        passwordViewModel.validateCurrentPassword("");
+
+        // Verify that the LiveData is not null and its value is false
+        assertNotNull(passwordViewModel.getCurrentPasswordValidation().getValue());
+        assertFalse(passwordViewModel.getCurrentPasswordValidation().getValue());
+    }
 }
