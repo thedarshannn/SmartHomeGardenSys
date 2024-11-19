@@ -6,7 +6,7 @@
  * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
-        package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
+package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
