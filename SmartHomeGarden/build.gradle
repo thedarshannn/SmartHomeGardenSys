@@ -27,6 +27,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -55,4 +59,6 @@ dependencies {
     testImplementation libs.mockito.core
     androidTestImplementation libs.mockito.android
     testImplementation libs.core.testing
+    testImplementation libs.robolectric
+    androidTestImplementation libs.core.testing
 }
