@@ -1,5 +1,11 @@
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -28,6 +34,14 @@ public class NotificationViewModel extends ViewModel {
     public void setNotifications(List<Notification> notificationList) {
         notifications.setValue(notificationList);
     }
+    public boolean isNotificationPermissionGranted(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                    == PackageManager.PERMISSION_GRANTED;
+        }
+        return true; // Notifications are always enabled for older versions
+    }
+
 
     public void addNotification(Notification notification) {
         List<Notification> currentNotifications = notifications.getValue();

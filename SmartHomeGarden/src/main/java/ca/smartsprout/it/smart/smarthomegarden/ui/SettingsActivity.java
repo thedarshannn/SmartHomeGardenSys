@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -72,7 +74,7 @@ public class SettingsActivity extends BaseActivity {
         private NotificationViewModel notificationViewModel;
         private SessionViewModel sessionViewModel;
         private ThemeViewModel themeViewModel;
-
+        private SwitchPreferenceCompat notificationToggle;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -116,19 +118,26 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
             }
-            SwitchPreferenceCompat notificationToggle = findPreference("notifications");
+          notificationToggle = findPreference("notifications");
             if (notificationToggle != null) {
-                boolean isEnabled = getPreferenceManager().getSharedPreferences().getBoolean("notifications", false);
-                notificationViewModel.updateNotificationPermission(isEnabled);
-
                 notificationToggle.setOnPreferenceChangeListener((preference, newValue) -> {
                     boolean isEnabledToggle = (Boolean) newValue;
+
                     if (isEnabledToggle) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                                        != PackageManager.PERMISSION_GRANTED) {
                             checkNotificationPermission();
+                                    return false;
                         }
                     } else {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+                        startActivity(intent);
+
+                        // Reflect disabled state in ViewModel
                         notificationViewModel.updateNotificationPermission(false);
+                        return false;
                     }
                     return true;
                 });
@@ -136,7 +145,13 @@ public class SettingsActivity extends BaseActivity {
 
             notificationViewModel.getNotificationPermissionState().observe(this, isGranted -> {
                 if (notificationToggle != null) {
-                    notificationToggle.setChecked(Boolean.TRUE.equals(isGranted));
+                    boolean currentPermissionState = notificationViewModel.isNotificationPermissionGranted(requireContext());
+                    notificationToggle.setChecked(currentPermissionState);
+
+                    // Update ViewModel only if there's a mismatch
+                    if (isGranted != currentPermissionState) {
+                        notificationViewModel.updateNotificationPermission(currentPermissionState);
+                    }
                 }
             });
 
@@ -156,6 +171,26 @@ public class SettingsActivity extends BaseActivity {
                     return true;
                 });
 
+            }
+        }
+        @Override
+        public void onResume() {
+            super.onResume();
+
+            if (notificationToggle != null) {
+                // Check the current permission state
+                boolean currentPermissionState = notificationViewModel.isNotificationPermissionGranted(requireContext());
+
+                // Update the toggle state
+                notificationToggle.setChecked(currentPermissionState);
+
+                // Ensure ViewModel state is synced
+                notificationViewModel.updateNotificationPermission(currentPermissionState);
+
+                // Show a Toast if notifications were re-enabled
+                if (currentPermissionState) {
+                    Toast.makeText(requireContext(), "Notifications enabled", Toast.LENGTH_SHORT).show();
+                }
             }
         }
             private void checkNotificationPermission () {
