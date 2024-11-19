@@ -134,6 +134,12 @@ Members:
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
 
+    <string name="watering_chip">Watering</string>
+    <string name="sunlight_chip">Sunlight</string>
+    <string name="indoor_outdoor_chip">Indoor/Outdoor</string>
+    <string name="indoor">Indoor</string>
+    <string name="no_results_found">No Result Found!</string>
+
     <string name="share_your_thoughts_with_us">Share your thoughts with us</string>
     <string name="rate_your_experience">Rate your experience</string>
     <string name="feedbackprefs">FeedbackPrefs</string>
@@ -201,5 +207,6 @@ Members:
     <string name="email_subject">Help Request</string>
     <string name="email_chooser_title">Send email...</string>
     <string name="notificationsdatbase">notifications</string>
+
 
 </resources>
