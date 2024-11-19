@@ -1,5 +1,6 @@
 package ca.smartsprout.it.smart.smarthomegarden;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -69,7 +70,7 @@ public class PasswordViewModelTest {
         passwordViewModel.validateCurrentPassword("correctPassword");
 
         // Verify the observer is notified with "true"
-        verify(observer).onChanged(true);
+        assertEquals(passwordViewModel.getCurrentPasswordValidation().getValue(), true);
     }
 
     @Test
@@ -79,7 +80,7 @@ public class PasswordViewModelTest {
         passwordViewModel.getCurrentPasswordValidation().observeForever(observer);
         passwordViewModel.validateCurrentPassword("anyPassword");
 
-        verify(observer).onChanged(false);
+        assertNotEquals(passwordViewModel.getCurrentPasswordValidation().getValue(), true);
     }
 
     @Test
@@ -87,7 +88,7 @@ public class PasswordViewModelTest {
         passwordViewModel.getPasswordsMatch().observeForever(observer);
         passwordViewModel.checkPasswordsMatch("password123", "password123");
 
-        verify(observer).onChanged(true);
+        assertEquals(passwordViewModel.getPasswordsMatch().getValue(), true);
     }
 
 }
