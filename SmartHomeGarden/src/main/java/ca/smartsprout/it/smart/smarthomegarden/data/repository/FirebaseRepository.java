@@ -19,9 +19,8 @@ import android.util.Patterns;
 import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
+
 public class FirebaseRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -106,6 +105,52 @@ public class FirebaseRepository {
         firestore.collection("feedbacks").add(feedback)
                 .addOnSuccessListener(documentReference -> listener.onFeedbackSubmitted(true))
                 .addOnFailureListener(e -> listener.onFeedbackSubmitted(false));
+    }
+
+    // Fetch user details
+    public LiveData<User> fetchUserDetails() {
+        MutableLiveData<User> userDetails = new MutableLiveData<>();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        firestore.collection("users").document(userId)
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        // Log error
+                        return;
+                    }
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        userDetails.setValue(user); // Notify observers of the change
+                    }
+                });
+
+        return userDetails;
+    }
+    public LiveData<String> fetchUserEmail(String userId) {
+        MutableLiveData<String> emailLiveData = new MutableLiveData<>();
+
+        firestore.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String email = documentSnapshot.getString("email");
+                        emailLiveData.setValue(email); // Pass the email to LiveData
+                    } else {
+                        emailLiveData.setValue(null); // Handle no document case
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    emailLiveData.setValue(null); // Handle failure case
+                });
+
+        return emailLiveData;
+    }
+
+    // Update user name in Firebase
+    public void updateUserName(String newName) {
+        String userId = mAuth.getCurrentUser().getUid();
+        firestore.collection("users").document(userId)
+                .update("name", newName);
     }
 
     // Method to retrieve device model programmatically

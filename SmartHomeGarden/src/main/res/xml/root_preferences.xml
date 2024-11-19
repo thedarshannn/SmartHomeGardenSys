@@ -1,5 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Edit Profile option -->
+    <Preference
+        android:key="edit_profile"
+        android:title="@string/account"
+        android:summary="@string/summary_account"/>
+
     <!-- Switch for enabling/disabling notifications -->
     <SwitchPreferenceCompat
         android:key="notifications"

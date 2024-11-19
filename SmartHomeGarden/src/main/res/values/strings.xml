@@ -133,6 +133,44 @@ Members:
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
+
+    <string name="account">Account</string>
+    <string name="summary_account">Change your account settings</string>
+    <string name="choose_option">Choose Option</string>
+    <string name="select_camera_or_gallery">Select Camera or Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="failed_to_create_image">Failed to create image file</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="profile_saved">Profile saved</string>
+    <string name="photos">Photos</string>
+    <string name="plants">Plants</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="full_name">Full Name</string>
+    <string name="current_email">Current Email</string>
+    <string name="new_email">New email</string>
+    <string name="update_email">Update email</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="retype_new_password">Retype new password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="update_password">Update Password</string>
+    <string name="email_not_found">Email not found</string>
+    <string name="password_cannot_be_empty">Password cannot be empty</string>
+    <string name="password_is_correct">Password is correct</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="passwords_match">Passwords match</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="current_password_cannot_be_empty">Current password cannot be empty</string>
+    <string name="new_password_cannot_be_empty">New password cannot be empty</string>
+    <string name="cannot_be_same_as_current_password">New password cannot be the same as the current password</string>
+    <string name="regex">Password must be at least 6 characters, include an uppercase letter, a digit, and a special character</string>
+    <string name="password_updated">Password updated successfully!</string>
+    <string name="failed_to_update">Failed to update password. Please try again.</string>
+    <string name="name_cannot_empty">Full Name cannot be empty</string>
+    <string name="valid_full_name">Please enter a valid Full Name</string>
+
+
     <string name="mailto_smartsprout_gmail_com">mailto:smartsprout@gmail.com</string>
     <string name="help_request">Help Request</string>
     <string name="send_email">Send Email</string>
@@ -154,4 +192,5 @@ Members:
     <string name="email_subject">Help Request</string>
     <string name="email_chooser_title">Send email...</string>
     <string name="notificationsdatbase">notifications</string>
+
 </resources>

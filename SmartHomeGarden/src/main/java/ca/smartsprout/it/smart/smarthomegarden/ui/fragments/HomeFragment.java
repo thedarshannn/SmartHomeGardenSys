@@ -41,13 +41,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class HomeFragment extends Fragment {
 
     private WeatherViewModel weatherViewModel;
     private TextView tvHighTemp, tvLowTemp;
-
+    private UserViewModel userViewModel;
     // Handle location permission result
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -64,6 +65,7 @@ public class HomeFragment extends Fragment {
                     handlePermissionDenied();
                 }
             });
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -86,8 +88,10 @@ public class HomeFragment extends Fragment {
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
         TextView greetingTextView = view.findViewById(R.id.greetingTextView);
-        String username = getString(R.string.sir);
-        greetingTextView.setText(getString(R.string.hello) + username);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
+        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> greetingTextView.setText(getString(R.string.hello) + name));
+
 
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);

@@ -81,6 +81,14 @@ public class SettingsActivity extends BaseActivity {
             notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
             themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
 
+            Preference editProfilePref = findPreference("edit_profile");
+            if (editProfilePref != null) {
+                editProfilePref.setOnPreferenceClickListener(preference -> {
+                    Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                    startActivity(intent);
+                    return true;
+                });
+            }
 
             // Initialize the permission launcher
             requestPermissionLauncher = registerForActivityResult(
