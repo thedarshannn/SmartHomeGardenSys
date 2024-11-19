@@ -124,9 +124,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
         // Save button click listener
         saveButton.setOnClickListener(v -> {
             String newName = editUserName.getText().toString();
-            userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-            userViewModel.updateUserName(newName);
+
             viewModel.saveProfileImageUri(cameraImageUri);
+            if (newName.isEmpty()) {
+                editUserName.setError(getString(R.string.name_cannot_empty));
+                Toast.makeText(this, R.string.valid_full_name, Toast.LENGTH_SHORT).show();
+                return; // Stop further execution
+            }
+
+            // Save the valid full name
+            userViewModel.updateUserName(newName);
+
             Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
         });
 

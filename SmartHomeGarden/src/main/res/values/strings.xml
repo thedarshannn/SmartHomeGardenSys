@@ -166,6 +166,8 @@ Members:
     <string name="regex">Password must be at least 6 characters, include an uppercase letter, a digit, and a special character</string>
     <string name="password_updated">Password updated successfully!</string>
     <string name="failed_to_update">Failed to update password. Please try again.</string>
+    <string name="name_cannot_empty">Full Name cannot be empty</string>
+    <string name="valid_full_name">Please enter a valid Full Name</string>
 
 
 </resources>

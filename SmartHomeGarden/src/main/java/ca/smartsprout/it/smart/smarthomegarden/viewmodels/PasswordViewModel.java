@@ -48,25 +48,20 @@ public class PasswordViewModel extends ViewModel {
         if (user != null) {
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
 
-            // Log details for debugging
-            Log.d("ValidatePassword", "Email: " + user.getEmail() + ", CurrentPassword: " + currentPassword);
-
             user.reauthenticate(credential)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Log.d("Reauthenticate", "Reauthentication successful");
+
                             currentPasswordValidation.setValue(true); // Notify successful validation
                         } else {
-                            Log.e("Reauthenticate", "Failed to reauthenticate: " + task.getException().getMessage());
+
                             currentPasswordValidation.setValue(false);
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Log.e("Reauthenticate", "Error during reauthentication: " + e.getMessage());
                         currentPasswordValidation.setValue(false);
                     });
         } else {
-            Log.e("ValidatePassword", "No user is currently signed in.");
             currentPasswordValidation.setValue(false); // Notify no user logged in
         }
     }
