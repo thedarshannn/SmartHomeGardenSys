@@ -91,4 +91,17 @@ public class PasswordViewModelTest {
         assertEquals(passwordViewModel.getPasswordsMatch().getValue(), true);
     }
 
+    @Test
+    public void testCheckPasswordsMatch_NoMatch() {
+        passwordViewModel.getPasswordsMatch().observeForever(observer);
+        passwordViewModel.checkPasswordsMatch("password123", "password456");
+
+        assertFalse(passwordViewModel.getPasswordsMatch().getValue());
+    }
+
+    @Test
+    public void testUpdatePassword_NoUser() {
+        passwordViewModel.getUpdateStatus().observeForever(observer);
+        assertNull(passwordViewModel.getUpdateStatus().getValue());
+    }
 }
