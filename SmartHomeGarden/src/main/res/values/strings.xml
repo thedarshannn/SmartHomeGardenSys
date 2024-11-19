@@ -118,14 +118,14 @@ Members:
     <string name="match">Password do not match</string>
     <string name="valid">Enter an valid email</string>
 
-<string name="datauser">User data not found.</string>
-<string name="loggeddata">You need to log in first.</string>
+    <string name="datauser">User data not found.</string>
+    <string name="loggeddata">You need to log in first.</string>
     <string name="entdesc">Please enter a description.</string>
     <string name="feedbacksuccess">Feedback submitted successfully.</string>
     <string name="feebackfail">Failed to submit feedback.</string>
-<string name="email_password">Email and Password are required</string>
-<string name="rememberme">Remember Me</string>
-<string name="feedbackdesc">Enter your feedback</string>
+    <string name="email_password">Email and Password are required</string>
+    <string name="rememberme">Remember Me</string>
+    <string name="feedbackdesc">Enter your feedback</string>
     <string name="submit">Submit</string>
 
 
@@ -133,6 +133,7 @@ Members:
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
+
     <string name="account">Account</string>
     <string name="summary_account">Change your account settings</string>
     <string name="choose_option">Choose Option</string>
@@ -169,5 +170,27 @@ Members:
     <string name="name_cannot_empty">Full Name cannot be empty</string>
     <string name="valid_full_name">Please enter a valid Full Name</string>
 
+
+    <string name="mailto_smartsprout_gmail_com">mailto:smartsprout@gmail.com</string>
+    <string name="help_request">Help Request</string>
+    <string name="send_email">Send Email</string>
+    <string name="help">Help</string>
+    <string name="loginprefs">loginPrefs</string>
+    <string name="notifications">notifications</string>
+    <string name="login_successful">Login Successful</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="toggle_temp">Convert Unit</string>
+    <string name="celsius">°C</string>
+    <string name="fahrenheit">°F</string>
+    <string name="need_help">Need Help?</string>
+    <string name="describe_your_issue">Describe your issue</string>
+    <string name="send">Send</string>
+
+    <string name="time_format">hh:mm a</string>
+
+    <string name="email_address">smartsprout@gmail.com</string>
+    <string name="email_subject">Help Request</string>
+    <string name="email_chooser_title">Send email...</string>
+    <string name="notificationsdatbase">notifications</string>
 
 </resources>
