@@ -160,4 +160,5 @@ Members:
     <string name="email_chooser_title">Send email...</string>
     <string name="notificationsdatbase">notifications</string>
     <string name="security_exception">"Security exception: "</string>
+    <string name="location_service_not_available">Location service not available</string>
 </resources>

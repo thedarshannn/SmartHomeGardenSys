@@ -26,9 +26,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +56,8 @@ public class HomeFragment extends Fragment {
     private TextView tvHighTemp, tvLowTemp;
     private static final String PERMISSION_PREFS = "permission_preferences";
     private static final String PERMISSION_GRANTED_KEY = "permission_granted";
+    FragmentManager fragmentManager;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -78,7 +85,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "MissingInflatedId"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -92,9 +99,26 @@ public class HomeFragment extends Fragment {
 
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
-        CardView weatherCardView = view.findViewById(R.id.cardView);
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
 
-        // Set click listener on CardView for initial permission request
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Check if conditions are met for refreshing (permission granted and location enabled)
+            if (isPermissionPreviouslyGranted() && isLocationEnabled()) {
+                // Reload the HomeFragment by replacing it with itself
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.nav_host_fragment, new HomeFragment()); // Replace the current fragment
+                transaction.addToBackStack(null); // Optionally add to back stack if you want to preserve navigation
+                transaction.commit();
+
+                // Stop the swipe refresh animation
+                swipeRefreshLayout.setRefreshing(false);
+            } else {
+                swipeRefreshLayout.setRefreshing(false); // Stop refreshing if conditions aren't met
+            }
+        });
+
+
+        CardView weatherCardView = view.findViewById(R.id.cardView);
         weatherCardView.setOnClickListener(v -> {
             if (!isPermissionPreviouslyGranted()) {
                 requestPermissionLauncher.launch(new String[]{
@@ -120,12 +144,6 @@ public class HomeFragment extends Fragment {
         weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherResponse -> {
             if (weatherResponse != null && weatherResponse.main != null) {
                 updateTemperatureDisplay(weatherResponse);
-            }
-        });
-
-        weatherViewModel.getIsCelsius().observe(getViewLifecycleOwner(), isCelsius -> {
-            if (weatherViewModel.getWeatherData().getValue() != null) {
-                updateTemperatureDisplay(weatherViewModel.getWeatherData().getValue());
             }
         });
 
@@ -162,6 +180,12 @@ public class HomeFragment extends Fragment {
         }
 
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (locationManager == null) {
+            Log.e(getString(R.string.weatherfragment),getString(R.string.location_service_not_available));
+            return;
+        }
+
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             try {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300000, 1000, new LocationListener() {
@@ -228,18 +252,15 @@ public class HomeFragment extends Fragment {
 
     private void updateTemperatureDisplay(WeatherResponse weatherResponse) {
         boolean isCelsius = weatherViewModel.getIsCelsius().getValue() != null && weatherViewModel.getIsCelsius().getValue();
-        float tempMax = weatherResponse.main.temp_max - 273.15f;
-        float tempMin = weatherResponse.main.temp_min - 273.15f;
+        tvHighTemp.setText(formatTemperature(weatherResponse.main.temp_max, isCelsius, getString(R.string.high)));
+        tvLowTemp.setText(formatTemperature(weatherResponse.main.temp_min, isCelsius, getString(R.string.low)));
+    }
 
+    private String formatTemperature(float kelvinTemp, boolean isCelsius, String label) {
+        float temp = kelvinTemp - 273.15f;
         if (!isCelsius) {
-            tempMax = tempMax * 9/5 + 32;
-            tempMin = tempMin * 9/5 + 32;
+            temp = temp * 9 / 5 + 32;
         }
-
-        String tempMaxFormatted = String.format(getString(R.string.tempFormat), tempMax);
-        String tempMinFormatted = String.format(getString(R.string.tempFormat), tempMin);
-
-        tvHighTemp.setText(getString(R.string.high) + tempMaxFormatted + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit)));
-        tvLowTemp.setText(getString(R.string.low) + tempMinFormatted + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit)));
+        return label + String.format(getString(R.string.tempFormat), temp) + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit));
     }
 }
