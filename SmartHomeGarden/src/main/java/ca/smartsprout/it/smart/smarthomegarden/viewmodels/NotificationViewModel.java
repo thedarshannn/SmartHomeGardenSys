@@ -1,20 +1,17 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class NotificationViewModel extends ViewModel {
+import java.util.ArrayList;
+import java.util.List;
 
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
+
+public class NotificationViewModel extends ViewModel {
     private final MutableLiveData<Boolean> notificationPermissionState = new MutableLiveData<>();
+    private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>(new ArrayList<>());
 
     public void updateNotificationPermission(boolean isGranted) {
         notificationPermissionState.setValue(isGranted);
@@ -22,5 +19,21 @@ public class NotificationViewModel extends ViewModel {
 
     public LiveData<Boolean> getNotificationPermissionState() {
         return notificationPermissionState;
+    }
+
+    public LiveData<List<Notification>> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notificationList) {
+        notifications.setValue(notificationList);
+    }
+
+    public void addNotification(Notification notification) {
+        List<Notification> currentNotifications = notifications.getValue();
+        if (currentNotifications != null) {
+            currentNotifications.add(notification);
+            notifications.setValue(currentNotifications);
+        }
     }
 }

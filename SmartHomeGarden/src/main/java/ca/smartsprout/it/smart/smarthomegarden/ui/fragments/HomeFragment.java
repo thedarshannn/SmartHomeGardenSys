@@ -41,13 +41,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class HomeFragment extends Fragment {
 
     private WeatherViewModel weatherViewModel;
     private TextView tvHighTemp, tvLowTemp;
-
+    private UserViewModel userViewModel;
     // Handle location permission result
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -64,6 +65,7 @@ public class HomeFragment extends Fragment {
                     handlePermissionDenied();
                 }
             });
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -83,10 +85,13 @@ public class HomeFragment extends Fragment {
 
         TextClock clockTC = view.findViewById(R.id.textClock);
         clockTC.setFormat12Hour(getString(R.string.date_format));
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
         TextView greetingTextView = view.findViewById(R.id.greetingTextView);
-        String username = getString(R.string.sir);
-        greetingTextView.setText(getString(R.string.hello) + username);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
+        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> greetingTextView.setText(getString(R.string.hello) + name));
+
 
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
@@ -105,23 +110,21 @@ public class HomeFragment extends Fragment {
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         });
 
-
-        // Observe weather data
-        weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), new Observer<WeatherResponse>() {
-            @Override
-            public void onChanged(WeatherResponse weatherResponse) {
-                if (weatherResponse != null && weatherResponse.main != null) {
-                    float tempMaxCelsius = weatherResponse.main.temp_max - 273.15f;
-                    float tempMinCelsius = weatherResponse.main.temp_min - 273.15f;
-
-                    String tempMaxFormatted = String.format(getString(R.string.tempFormat), tempMaxCelsius);
-                    String tempMinFormatted = String.format(getString(R.string.tempFormat), tempMinCelsius);
-
-                    tvHighTemp.setText(getString(R.string.high) + tempMaxFormatted + getString(R.string.celius));
-                    tvLowTemp.setText(getString(R.string.low) + tempMinFormatted + getString(R.string.celius));
-                }
+        weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherResponse -> {
+            if (weatherResponse != null && weatherResponse.main != null) {
+                updateTemperatureDisplay(weatherResponse);
             }
         });
+
+        // Add the observer for isCelsius here
+        weatherViewModel.getIsCelsius().observe(getViewLifecycleOwner(), isCelsius -> {
+            if (weatherViewModel.getWeatherData().getValue() != null) {
+                updateTemperatureDisplay(weatherViewModel.getWeatherData().getValue());
+            }
+        });
+
+        // Fetch weather data automatically when the fragment is created
+        fetchWeatherData();
 
         // Set onClickListener on the weatherCardView
         weatherCardView.setOnClickListener(v -> {
@@ -187,5 +190,22 @@ public class HomeFragment extends Fragment {
             intent.setData(uri);
             startActivity(intent);
         }
+    }
+
+    private void updateTemperatureDisplay(WeatherResponse weatherResponse) {
+        boolean isCelsius = weatherViewModel.getIsCelsius().getValue() != null && weatherViewModel.getIsCelsius().getValue();
+        float tempMax = weatherResponse.main.temp_max - 273.15f;
+        float tempMin = weatherResponse.main.temp_min - 273.15f;
+
+        if (!isCelsius) {
+            tempMax = tempMax * 9/5 + 32;
+            tempMin = tempMin * 9/5 + 32;
+        }
+
+        String tempMaxFormatted = String.format(getString(R.string.tempFormat), tempMax);
+        String tempMinFormatted = String.format(getString(R.string.tempFormat), tempMin);
+
+        tvHighTemp.setText(getString(R.string.high) + tempMaxFormatted + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit)));
+        tvLowTemp.setText(getString(R.string.low) + tempMinFormatted + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit)));
     }
 }

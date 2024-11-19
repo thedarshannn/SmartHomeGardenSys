@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -9,39 +16,42 @@
 
     <application
         android:allowBackup="true"
+        android:configChanges="uiMode|orientation|screenSize"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/SmartHomeGarden"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:configChanges="uiMode|orientation|screenSize"
         android:theme="@style/Theme.SmartHomeGarden"
         tools:targetApi="34">
+        <activity
+            android:name=".ui.NotificationActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.FeedbackActivity"
             android:exported="false" />
         <activity
             android:name=".ui.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:label="@string/title_activity_settings" />
+            android:exported="false"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.RegistrationActivity"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.LoginActivity"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.SmartHomeGarden"
             android:configChanges="uiMode|orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.SplashActivity"
             android:configChanges="uiMode|orientation|screenSize"
@@ -53,6 +63,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.AccountSettingsActivity"
+            android:exported="false"
+            android:configChanges="uiMode|orientation|screenSize"
+            android:theme="@style/Theme.SmartHomeGarden"
+            tools:ignore="Instantiatable" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
 </manifest>

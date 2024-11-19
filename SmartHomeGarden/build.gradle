@@ -54,4 +54,5 @@ dependencies {
     implementation libs.glide
     implementation libs.play.services.location
     implementation libs.firebase.database
+    implementation libs.circleimageview
 }
