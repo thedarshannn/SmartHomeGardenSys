@@ -14,31 +14,38 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.FirebaseRepository;
 
 
 public class UserViewModel extends ViewModel {
-    private FirebaseRepository firebaseRepository;
+    public FirebaseRepository firebaseRepository;
     private MutableLiveData<String> userName;
 
-    public UserViewModel() {
-        firebaseRepository = new FirebaseRepository();
-        userName = new MutableLiveData<>();
+    public UserViewModel(FirebaseRepository firebaseRepository) {
+        this.firebaseRepository = firebaseRepository;
+        this.userName = new MutableLiveData<>();
 
         // Fetch user details from Firebase
-        firebaseRepository.fetchUserDetails().observeForever(user -> {
-            if (user != null) {
-                userName.setValue(user.getName());
-            }
-        });
+        LiveData<User> userDetails = this.firebaseRepository.fetchUserDetails();
+        if (userDetails != null) {
+            userDetails.observeForever(user -> {
+                if (user != null) {
+                    userName.setValue(user.getName());
+                }
+            });
+        }
     }
 
     public LiveData<String> getUserName() {
         return userName;
     }
     public LiveData<String> getUserEmail() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        return firebaseRepository.fetchUserEmail(userId);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            return firebaseRepository.fetchUserEmail(userId);
+        }
+        return null;
     }
 
 
