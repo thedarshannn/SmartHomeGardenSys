@@ -19,6 +19,9 @@ import androidx.lifecycle.ViewModelProvider;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.FeedbackViewModel;
 import android.graphics.Color;
+import android.content.DialogInterface;
+import androidx.appcompat.app.AlertDialog;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -97,6 +100,9 @@ public class FeedbackActivity extends AppCompatActivity {
                 // Clear the input fields
                 clearInputFields();
                 navigateToSettings();
+
+                // Show the confirmation dialog
+                showConfirmationDialog();
             }
         });
 
@@ -135,6 +141,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
                 // Delay the submission by 5 seconds
                 new Handler().postDelayed(() -> {
+                    // Submit the feedback
                     feedbackViewModel.submitFeedback(
                             nameTextView.getText().toString(),
                             emailTextView.getText().toString(),
@@ -142,6 +149,7 @@ public class FeedbackActivity extends AppCompatActivity {
                             rating,
                             description
                     );
+
                     // Hide progress bar
                     progressBar.setVisibility(View.GONE);
 
@@ -154,12 +162,13 @@ public class FeedbackActivity extends AppCompatActivity {
                     // Disable input fields and submit button
                     setFieldsEnabled(false);
 
-                    // Start the countdown timer
-                    startCountdownTimer(SUBMISSION_INTERVAL);
+                    // Show the confirmation dialog
+                    showConfirmationDialog();
                 }, 5000);
             }
         }
     }
+
 
     private void clearInputFields() {
         descriptionEditText.setText(""); // Clear the description input
@@ -227,5 +236,19 @@ public class FeedbackActivity extends AppCompatActivity {
                 }
             }
         }, 1000);
+    }
+    private void showConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_submitted)  // Title of the dialog
+                .setMessage(getString(R.string.thank_you_for_your_feedback_your_submission_has_been_successfully_recorded))  // Message to display
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Dismiss the dialog when OK is pressed
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)  // Make sure dialog is not dismissable outside
+                .show();  // Show the dialog
     }
 }
