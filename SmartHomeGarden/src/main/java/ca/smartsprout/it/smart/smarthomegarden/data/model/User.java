@@ -25,6 +25,10 @@ public class User {
         this.confirmPassword = confirmPassword;
     }
 
+    public User() {
+        // Default constructor required for Firebase
+    }
+
     public String getName() { return name; }
     public String getPhoneNumber() { return phoneNumber; }
     public String getEmail() { return email; }

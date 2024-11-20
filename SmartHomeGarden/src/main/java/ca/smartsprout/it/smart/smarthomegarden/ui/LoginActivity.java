@@ -1,11 +1,3 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
@@ -25,39 +17,48 @@ import android.widget.Toast;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.lifecycle.ViewModelProvider;
-
-
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
     private Button loginButton,googlesignin;
     private AuthViewModel authViewModel;
+
 private TextView registerswitch;
     private GoogleSignInHelper googleSignInHelpers;
+
+    private TextView registerswitch;
+
     private CheckBox rememberMeCheckbox;
     private SharedPreferences sharedPreferences;
+    private DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);  // Set your activity's layout
+        setContentView(R.layout.activity_login);
 
         // Initialize UI elements
         emailInput = findViewById(R.id.editTextEmail);
         passwordInput = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.button);
-registerswitch=findViewById(R.id.registerswitch);
+        registerswitch = findViewById(R.id.registerswitch);
         rememberMeCheckbox = findViewById(R.id.rememberMeCheckbox);
+
         googlesignin=findViewById(R.id.googlesignin);
         googleSignInHelpers = new GoogleSignInHelper(this);
+
         // Initialize ViewModel
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         emailInput.addTextChangedListener(new TextWatcher() {
@@ -67,11 +68,6 @@ registerswitch=findViewById(R.id.registerswitch);
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-
-
-            // Check for saved credentials
-
-
             @Override
             public void afterTextChanged(Editable s) {
                 if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
@@ -79,15 +75,18 @@ registerswitch=findViewById(R.id.registerswitch);
                 }
             }
         });
-        sharedPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        registerswitch.setOnClickListener(v -> {
-            // Call the method to load RegistrationFragment
 
+        sharedPreferences = getSharedPreferences(getString(R.string.loginprefs), MODE_PRIVATE);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notifications));
+
+        registerswitch.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
             startActivity(intent);
         });
+
         loadLoginDetails();
+
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
@@ -124,11 +123,11 @@ registerswitch=findViewById(R.id.registerswitch);
             }
         });
 
+
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
-
-
     }
+
 
     private void goToHomeScreen() {
         // Example: Navigate to HomeActivity after successful sign-in
@@ -136,6 +135,7 @@ registerswitch=findViewById(R.id.registerswitch);
         startActivity(intent);
         finish();
     }
+
     private void loadLoginDetails() {
         boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
         if (rememberMe) {
@@ -170,16 +170,15 @@ registerswitch=findViewById(R.id.registerswitch);
             emailInput.setError(getString(R.string.invalidemail));
         } else {
             saveLoginDetails();
-            // Observe the login result from ViewModel
             authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
         }
     }
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
         if (authResult != null) {
-
             Toast.makeText(this, getString(R.string.login), Toast.LENGTH_SHORT).show();
-            // Navigate to the home screen or another activity here
+            showLoginNotification();
+            onLoginSuccess();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
@@ -187,6 +186,23 @@ registerswitch=findViewById(R.id.registerswitch);
         }
     }
 
+    private void showLoginNotification() {
+        // Generate a unique ID for the notification
+        String notificationId = databaseReference.push().getKey();
 
+        // Get the current timestamp
+        long timestamp = System.currentTimeMillis();
 
+        // Create the notification object
+        Notification notification = new Notification(notificationId, getString(R.string.login_successful), getString(R.string.welcome_back), timestamp);
+
+        // Save the notification to the database
+        if (notificationId != null) {
+            databaseReference.child(notificationId).setValue(notification);
+        }
+    }
+    private void onLoginSuccess() {
+        // Show login notification
+        NotificationHelper.createNotification(this, getString(R.string.login_successful), getString(R.string.welcome_back));
+    }
 }

@@ -1,6 +1,11 @@
 package ca.smartsprout.it.smart.smarthomegarden;
 
+
 import android.content.Intent;
+
+
+import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -8,15 +13,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.MenuHandler;
 import ca.smartsprout.it.smart.smarthomegarden.ui.BaseActivity;
-import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.DiagnoseFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HomeFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.ProfileFragment;
@@ -24,11 +28,14 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SearchFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SensorFragment;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NavigationViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ThemeViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class MainActivity extends BaseActivity {
 
     private NavigationViewModel navigationViewModel;
     private ThemeViewModel themeViewModel;
+    private WeatherViewModel weatherViewModel;
+    private MenuHandler menuHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,9 @@ public class MainActivity extends BaseActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
         themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+
+        menuHandler = new MenuHandler(this, weatherViewModel);
 
         // Set the theme based on the user's preference
         themeViewModel.getThemeMode().observe(this, themeMode -> {
@@ -55,9 +65,14 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+
         // Check if the "openHomeFragment" extra is passed in the Intent
         if (getIntent().getBooleanExtra("openHomeFragment", false)) {
             // If true, open the HomeFragment directly
+
+        // Set default fragment
+        if (savedInstanceState == null) {
+
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, new HomeFragment())
                     .commit();
@@ -92,6 +107,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+
         // Handle bottom navigation item clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
             navigationViewModel.setSelectedItem(item.getItemId());
@@ -99,7 +115,24 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+
     // Alert dialog box which shows up when user clicks on the back button.
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return menuHandler.handleMenuItem(item) || super.onOptionsItemSelected(item);
+    }
+
+    // Alert dialog box which shows up when user click on back button.
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -130,6 +163,7 @@ public class MainActivity extends BaseActivity {
         builder.create().show();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -159,4 +193,5 @@ public class MainActivity extends BaseActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
 }
