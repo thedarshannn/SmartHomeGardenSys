@@ -1,20 +1,10 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -24,38 +14,30 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import android.content.Intent;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.auth.AuthResult;
-
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
-import java.util.Map;
-
-
-
+import com.google.firebase.auth.AuthResult;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 
-
-
 public class RegistrationActivity extends AppCompatActivity {
 
-    private EditText emailInput, passwordInput,passwordInput2,nameInput,phoneInput;
-    private Button registerButton,Signingoogle;
+    private EditText emailInput, passwordInput, passwordInput2, nameInput, phoneInput;
+    private Button registerButton, Signingoogle;
     private AuthViewModel authViewModel;
     private GoogleSignInHelper googleSignInHelper;
     private FirebaseFirestore db;
 
+    // Password pattern for validation: minimum 6 chars, at least one uppercase, one digit, and one special char
+    private final String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{6,}$";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +47,20 @@ public class RegistrationActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.editTextEmail1);
         passwordInput = findViewById(R.id.editTextPassword1);
         registerButton = findViewById(R.id.button2);
-Signingoogle=findViewById(R.id.googleButton);
+        Signingoogle = findViewById(R.id.googleButton);
         nameInput = findViewById(R.id.editTextName1);
-        passwordInput2=findViewById(R.id.editTextPassword2);
+        passwordInput2 = findViewById(R.id.editTextPassword2);
         phoneInput = findViewById(R.id.editTextPhone1);
+
+        // Set filters for inputs
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         passwordInput2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+
         // Initialize ViewModel
-       // saveUserProfile();
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         // Email validation
-        googleSignInHelper = new GoogleSignInHelper(this);
         emailInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -91,28 +76,22 @@ Signingoogle=findViewById(R.id.googleButton);
             }
         });
 
-
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
-        Log.d("GooglePlayServices", "Google Play Services status: " + status);
+        // Set click listener for Google Sign-In button
+        googleSignInHelper = new GoogleSignInHelper(this);
         Signingoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("RegistrationActivity", "Google Sign-In button clicked");
 
                 if (!googleSignInHelper.isSignedIn()) {
-                    // Trigger Google Sign-In
                     googleSignInHelper.signIn(result -> {
-                        Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
+                        Log.d("RegistrationActivity", "Sign-In result: " + result);
                         if (result) {
-                            // Handle successful sign-in
                             runOnUiThread(() -> {
                                 Toast.makeText(RegistrationActivity.this, "Sign-In Successful!", Toast.LENGTH_SHORT).show();
-                                // Proceed to the next activity or update the UI
                                 goToHomeScreen();
                             });
                         } else {
-                            // Handle sign-in failure
                             runOnUiThread(() -> {
                                 Toast.makeText(RegistrationActivity.this, "Sign-In Failed. Please try again.", Toast.LENGTH_SHORT).show();
                             });
@@ -120,7 +99,6 @@ Signingoogle=findViewById(R.id.googleButton);
                         return null;
                     });
                 } else {
-                    // Already signed in, proceed to the next activity or handle accordingly
                     Toast.makeText(RegistrationActivity.this, "Already Signed In!", Toast.LENGTH_SHORT).show();
                     goToHomeScreen();
                 }
@@ -130,17 +108,51 @@ Signingoogle=findViewById(R.id.googleButton);
         // Set click listener for register button
         registerButton.setOnClickListener(v -> registerUser());
 
+        // Password validation during typing
+        passwordInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String password = s.toString();
+                if (!password.matches(passwordPattern)) {
+                    passwordInput.setError("Password must be at least 6 characters, include an uppercase letter, a digit, and a special character.");
+                } else {
+                    passwordInput.setError(null); // Clear error if valid
+                }
+            }
+        });
+
+        // Confirm password validation
+        passwordInput2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String confirmPassword = s.toString();
+                String password = passwordInput.getText().toString();
+                if (!confirmPassword.equals(password)) {
+                    passwordInput2.setError("Passwords do not match.");
+                } else {
+                    passwordInput2.setError(null); // Clear error if match
+                }
+            }
+        });
     }
 
-
-
     private void goToHomeScreen() {
-        // Example: Navigate to HomeActivity after successful sign-in
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
-
 
     private void registerUser() {
         String email = emailInput.getText().toString().trim();
@@ -149,21 +161,25 @@ Signingoogle=findViewById(R.id.googleButton);
         String name = nameInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
 
+        // Check if email is valid
         if (!authViewModel.isValidEmail(email)) {
             emailInput.setError(getString(R.string.invalidemail));
             return;
         }
 
-        if (!authViewModel.isValidPassword(password)) {
-            passwordInput.setError(getString(R.string.exceed));
+        // Check if password is valid
+        if (!password.matches(passwordPattern)) {
+            passwordInput.setError("Password must be at least 6 characters, include an uppercase letter, a digit, and a special character.");
             return;
         }
 
+        // Check if passwords match
         if (!password.equals(confirmPassword)) {
-            passwordInput2.setError(getString(R.string.match));
+            passwordInput2.setError("Passwords do not match.");
             return;
         }
 
+        // Register the user
         authViewModel.registerUser(email, password).observe(this, authResult -> {
             if (authResult != null && authResult.getUser() != null) {
                 String uid = authResult.getUser().getUid();
@@ -182,9 +198,4 @@ Signingoogle=findViewById(R.id.googleButton);
             }
         });
     }
-    }
-
-
-
-
-
+}
