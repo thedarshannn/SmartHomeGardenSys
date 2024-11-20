@@ -85,21 +85,21 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 if (!googleSignInHelper.isSignedIn()) {
                     googleSignInHelper.signIn(result -> {
-                        Log.d("RegistrationActivity", "Sign-In result: " + result);
+                      //  Log.d("RegistrationActivity", "Sign-In result: " + result);
                         if (result) {
                             runOnUiThread(() -> {
-                                Toast.makeText(RegistrationActivity.this, "Sign-In Successful!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistrationActivity.this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
                                 goToHomeScreen();
                             });
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(RegistrationActivity.this, "Sign-In Failed. Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistrationActivity.this, getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
                             });
                         }
                         return null;
                     });
                 } else {
-                    Toast.makeText(RegistrationActivity.this, "Already Signed In!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistrationActivity.this, getString(R.string.signedin), Toast.LENGTH_SHORT).show();
                     goToHomeScreen();
                 }
             }
@@ -120,7 +120,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String password = s.toString();
                 if (!password.matches(passwordPattern)) {
-                    passwordInput.setError("Password must be at least 6 characters, include an uppercase letter, a digit, and a special character.");
+                    passwordInput.setError(getString(R.string.regex));
                 } else {
                     passwordInput.setError(null); // Clear error if valid
                 }
@@ -140,7 +140,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String confirmPassword = s.toString();
                 String password = passwordInput.getText().toString();
                 if (!confirmPassword.equals(password)) {
-                    passwordInput2.setError("Passwords do not match.");
+                    passwordInput2.setError(getString(R.string.invalidpasswords));
                 } else {
                     passwordInput2.setError(null); // Clear error if match
                 }
@@ -169,13 +169,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
         // Check if password is valid
         if (!password.matches(passwordPattern)) {
-            passwordInput.setError("Password must be at least 6 characters, include an uppercase letter, a digit, and a special character.");
+            passwordInput.setError(getString(R.string.regex));
             return;
         }
 
         // Check if passwords match
         if (!password.equals(confirmPassword)) {
-            passwordInput2.setError("Passwords do not match.");
+            passwordInput2.setError(getString(R.string.invalidpasswords));
             return;
         }
         if (phone.isEmpty() || !phone.matches("^[0-9]{10}$")) { // Check if phone is valid

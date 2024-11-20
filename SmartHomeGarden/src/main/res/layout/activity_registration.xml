@@ -81,7 +81,8 @@
         android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPhone1">
+        app:layout_constraintTop_toBottomOf="@id/editTextPhone1"
+        app:boxStrokeWidth="0dp"> <!-- This removes the underline -->
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword1"
@@ -97,6 +98,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordLayout2"
         android:layout_width="0dp"
@@ -109,7 +111,8 @@
         android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout1">
+        app:layout_constraintTop_toBottomOf="@id/passwordLayout1"
+        app:boxStrokeWidth="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword2"

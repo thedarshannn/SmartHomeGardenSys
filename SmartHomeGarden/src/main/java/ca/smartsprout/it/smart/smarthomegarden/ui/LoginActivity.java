@@ -95,30 +95,30 @@ registerswitch=findViewById(R.id.registerswitch);
         googlesignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("RegistrationActivity", "Google Sign-In button clicked");
+               Log.d("RegistrationActivity", "Google Sign-In button clicked");
 
                 if (!googleSignInHelpers.isSignedIn()) {
                     // Trigger Google Sign-In
                     googleSignInHelpers.signIn(result -> {
-                        Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
+                       Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
                         if (result) {
                             // Handle successful sign-in
                             runOnUiThread(() -> {
-                                Toast.makeText(LoginActivity.this, "Sign-In Successful!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, getString(R.string.login), Toast.LENGTH_SHORT).show();
                                 // Proceed to the next activity or update the UI
                                 goToHomeScreen();
                             });
                         } else {
                             // Handle sign-in failure
                             runOnUiThread(() -> {
-                                Toast.makeText(LoginActivity.this, "Sign-In Failed. Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
                             });
                         }
                         return null;
                     });
                 } else {
                     // Already signed in, proceed to the next activity or handle accordingly
-                    Toast.makeText(LoginActivity.this, "Already Signed In!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.signedin), Toast.LENGTH_SHORT).show();
                     goToHomeScreen();
                 }
             }
