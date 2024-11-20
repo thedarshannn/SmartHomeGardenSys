@@ -8,83 +8,191 @@
     android:background="@drawable/login"
     tools:context=".ui.RegistrationActivity">
 
-    <EditText
-        android:id="@+id/editTextName1"
-        android:layout_width="351dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="48dp"
-        android:hint="@string/name"
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="174dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/sprout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextEmail1"
-        android:layout_width="355dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
+        android:id="@+id/editTextName1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_person"
+        android:drawablePadding="12dp"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:textColorHint="@color/hint_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName1" />
+        app:layout_constraintTop_toBottomOf="@id/logoImage" />
+
+    <EditText
+        android:id="@+id/editTextEmail1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="12dp"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
+        android:textColorHint="@color/hint_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextName1" />
 
     <EditText
         android:id="@+id/editTextPhone1"
-        android:layout_width="353dp"
-        android:layout_height="49dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_phone"
+        android:drawablePadding="12dp"
         android:hint="@string/Phone"
         android:inputType="phone"
+        android:padding="16dp"
+        android:textColorHint="@color/hint_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmail1" />
+        app:layout_constraintTop_toBottomOf="@id/editTextEmail1" />
 
-    <EditText
-        android:id="@+id/editTextPassword1"
-        android:layout_width="353dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="76dp"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmail1" />
-
-    <EditText
-        android:id="@+id/editTextPassword2"
-        android:layout_width="353dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="12dp"
-        android:hint="@string/confirm"
-        android:inputType="textPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordLayout1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="false"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/hint_color"
+        android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword1" />
+        app:layout_constraintTop_toBottomOf="@id/editTextPhone1"
+        app:boxStrokeWidth="0dp"> <!-- This removes the underline -->
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextPassword1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_background"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawablePadding="12dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColorHint="@color/hint_color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        app:hintEnabled="false"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/hint_color"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordLayout1"
+        app:boxStrokeWidth="0dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextPassword2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_background"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawablePadding="12dp"
+            android:hint="@string/confirm"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColorHint="@color/hint_color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button2"
-        android:layout_width="134dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="84dp"
-        android:backgroundTint="@color/green"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/primary_button_background"
+        android:padding="16dp"
         android:text="@string/register"
-        android:textColor="@color/text"
+        android:textColor="@color/white"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword1" />
+        app:layout_constraintTop_toBottomOf="@id/passwordLayout2" />
 
-    <Button
-        android:id="@+id/googleButton"
-        android:layout_width="165dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="172dp"
-        android:backgroundTint="@color/green"
-        android:text="@string/googlesign"
-        android:textColor="@color/text"
+    <View
+        android:id="@+id/dividerLeft"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/divider_color"
+        app:layout_constraintBottom_toBottomOf="@id/orText"
+        app:layout_constraintEnd_toStartOf="@id/orText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/orText" />
+
+    <TextView
+        android:id="@+id/orText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="OR"
+        android:textColor="@color/text_secondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword1" />
+        app:layout_constraintTop_toBottomOf="@id/button2" />
+
+    <View
+        android:id="@+id/dividerRight"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/divider_color"
+        app:layout_constraintBottom_toBottomOf="@id/orText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/orText"
+        app:layout_constraintTop_toTopOf="@id/orText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/googleButton"
+        android:layout_width="286dp"
+        android:layout_height="42dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/google_button_background"
+        android:drawableStart="@drawable/ic_google"
+        android:drawablePadding="2dp"
+        android:padding="6dp"
+        android:text="@string/googlesign"
+        android:textColor="@color/text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

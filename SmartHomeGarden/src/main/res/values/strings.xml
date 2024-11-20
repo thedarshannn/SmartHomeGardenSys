@@ -49,8 +49,8 @@ Members:
     <string name="password">Password</string>
     <string name="name">Full Name</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="registration">RegistrationActivity successful!</string>
-    <string name="registration_failed">RegistrationActivity failed!</string>
+    <string name="registration">Registration successful!</string>
+    <string name="registration_failed">Registration failed!</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -127,12 +127,17 @@ Members:
     <string name="rememberme">Remember Me</string>
     <string name="feedbackdesc">Enter your feedback</string>
     <string name="submit">Submit</string>
-
+<string name="regex">Password must be at least 6 characters, include an uppercase letter, a digit, and a special character.</string>
 
     <string name="plant_diagnosis">Plant Diagnosis</string>
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
+
+<string name="invalidpasswords">Passwords do not match.</string>
+<string name="invalidphone">Phone Number is Invalid!</string>
+<string name="signedin">Already Signed In!</string>
+
 
     <string name="watering_chip">Watering</string>
     <string name="sunlight_chip">Sunlight</string>
@@ -219,6 +224,7 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
+
 
 
 </resources>
