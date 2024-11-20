@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.kotlin.android)
-
 }
 
 android {
@@ -12,7 +11,7 @@ android {
     defaultConfig {
         applicationId "ca.smartsprout.it.smart.smarthomegarden"
         minSdk 29
-        targetSdk 35
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -25,9 +24,8 @@ android {
         buildConfigField "String", "API_URL", "\"${project.hasProperty('API_URL') ? project.properties['API_URL'] : 'https://default-url.com'}\""
     }
 
-    buildFeatures{
+    buildFeatures {
         buildConfig = true
-
     }
 
     buildTypes {
@@ -36,6 +34,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -44,23 +43,18 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.9"
-
+    }
 
     testOptions {
         unitTests.includeAndroidResources = true
-
     }
 }
 
 dependencies {
-
-
-
-
     implementation libs.swiperefreshlayout
-
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -69,7 +63,6 @@ dependencies {
     implementation libs.preference
     implementation libs.firebase.firestore
     implementation libs.core.ktx
-
     implementation libs.lottie
     implementation libs.material
     implementation libs.retrofit
@@ -77,14 +70,11 @@ dependencies {
     implementation libs.glide
     implementation libs.play.services.location
     implementation libs.firebase.database
-
-
     implementation(libs.googleid)
     implementation libs.credentials.v120alpha01
     implementation libs.credentials.play.services.auth.v100beta01
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
-
     implementation libs.circleimageview
 
     // Test dependencies
@@ -96,5 +86,4 @@ dependencies {
     testImplementation libs.core.testing
     testImplementation libs.robolectric
     androidTestImplementation libs.core.testing
-
 }

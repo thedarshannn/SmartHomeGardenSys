@@ -9,8 +9,6 @@ firebaseAuthVersion = "23.1.0"
 
 circleimageview = "3.1.0"
 coreTesting = "2.2.0"
-firebaseAuthVersion = "21.0.1"
-
 firebaseDatabase = "21.0.0"
 glide = "4.16.0"
 googleid = "1.1.1"
@@ -42,21 +40,15 @@ robolectric = "4.10"
 
 [libraries]
 
-androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentialsPlayServicesAuth" }
-androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
 credentials-play-services-auth-v100beta01 = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuthVersion" }
 credentials-v120alpha01 = { module = "androidx.credentials:credentials", version.ref = "credentialsVersion" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
 
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 
-firebase-auth-v2101 = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuthVersion" }
 firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebaseDatabase" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
@@ -70,7 +62,6 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoCore" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
-play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
@@ -87,5 +78,4 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-gms-google-services = { id = "com.google.gms.google-services", version.ref = "gmsGoogleServices" }
 

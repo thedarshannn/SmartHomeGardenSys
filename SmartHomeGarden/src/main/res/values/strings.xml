@@ -127,8 +127,6 @@ Members:
     <string name="rememberme">Remember Me</string>
     <string name="feedbackdesc">Enter your feedback</string>
     <string name="submit">Submit</string>
-<string name="regex">Password must be at least 6 characters, include an uppercase letter, a digit, and a special character.</string>
-
     <string name="plant_diagnosis">Plant Diagnosis</string>
     <string name="plant_name_diagnose">PLANT NAME</string>
     <string name="health_status">HEALTH STATUS</string>
