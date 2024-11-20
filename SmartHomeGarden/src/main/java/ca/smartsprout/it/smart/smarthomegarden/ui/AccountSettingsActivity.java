@@ -24,9 +24,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -95,6 +97,20 @@ public class AccountSettingsActivity extends AppCompatActivity {
         retypePasswordLayout = findViewById(R.id.retypePasswordLayout);
         Button saveButton = findViewById(R.id.saveButton);
         Button updatePasswordButton = findViewById(R.id.btnUpdatePassword);
+
+        // Initialize ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Handle the back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish(); // Close the activity and go back
+            }
+        });
 
         viewModel = new ViewModelProvider(this).get(AccountSettingsViewModel.class);
         passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
@@ -267,6 +283,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // Close the activity and go back
+        return true;
     }
     private void showImagePickerDialog() {
         new AlertDialog.Builder(this)
