@@ -20,8 +20,21 @@ import ca.smartsprout.it.smart.smarthomegarden.data.repository.FirebaseRepositor
 
 public class UserViewModel extends ViewModel {
     public FirebaseRepository firebaseRepository;
-    private MutableLiveData<String> userName;
+    private final MutableLiveData<String> userName;
 
+    public UserViewModel() {
+        firebaseRepository = new FirebaseRepository();
+        userName = new MutableLiveData<>();
+
+        // Fetch user details from Firebase
+        firebaseRepository.fetchUserDetails().observeForever(user -> {
+            if (user != null) {
+                userName.setValue(user.getName());
+            }
+        });
+    }
+
+    // Constructor for testing
     public UserViewModel(FirebaseRepository firebaseRepository) {
         this.firebaseRepository = firebaseRepository;
         this.userName = new MutableLiveData<>();
@@ -36,6 +49,8 @@ public class UserViewModel extends ViewModel {
             });
         }
     }
+
+
 
     public LiveData<String> getUserName() {
         return userName;

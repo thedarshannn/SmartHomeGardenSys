@@ -23,8 +23,13 @@ public class PasswordViewModel extends ViewModel {
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
     public FirebaseAuth firebaseAuth;
 
-    public PasswordViewModel(FirebaseAuth firebaseAuth ) {
+    public PasswordViewModel() {
         firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    // Constructor for testing
+    public PasswordViewModel(FirebaseAuth firebaseAuth) {
+        this.firebaseAuth = firebaseAuth;
     }
 
     public LiveData<Boolean> getCurrentPasswordValidation() {
