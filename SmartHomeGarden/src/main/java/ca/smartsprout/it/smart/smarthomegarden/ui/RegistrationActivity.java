@@ -56,7 +56,7 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         passwordInput2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
-
+        phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         // Initialize ViewModel
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
@@ -178,6 +178,11 @@ public class RegistrationActivity extends AppCompatActivity {
             passwordInput2.setError("Passwords do not match.");
             return;
         }
+        if (phone.isEmpty() || !phone.matches("^[0-9]{10}$")) { // Check if phone is valid
+            phoneInput.setError(getString(R.string.invalidphone));
+            return;
+        }
+
 
         // Register the user
         authViewModel.registerUser(email, password).observe(this, authResult -> {

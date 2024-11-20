@@ -134,7 +134,7 @@ Members:
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
 
-
+<string name="invalidphone">Phone Number is Invalid!</string>
 
 
 </resources>
