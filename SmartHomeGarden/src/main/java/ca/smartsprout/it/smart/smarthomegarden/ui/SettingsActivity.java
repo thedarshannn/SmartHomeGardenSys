@@ -187,11 +187,7 @@ public class SettingsActivity extends BaseActivity {
                 // Ensure ViewModel state is synced
                 notificationViewModel.updateNotificationPermission(currentPermissionState);
 
-                // Show a Toast if notifications were re-enabled
-                if (currentPermissionState) {
-                    Toast.makeText(requireContext(), "Notifications enabled", Toast.LENGTH_SHORT).show();
-                }
-            }
+                 }
         }
             private void checkNotificationPermission () {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
