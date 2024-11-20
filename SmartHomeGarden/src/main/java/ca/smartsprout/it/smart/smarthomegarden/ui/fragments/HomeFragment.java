@@ -48,16 +48,21 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class HomeFragment extends Fragment {
 
     private WeatherViewModel weatherViewModel;
     private TextView tvHighTemp, tvLowTemp;
+
     private static final String PERMISSION_PREFS = "permission_preferences";
     private static final String PERMISSION_GRANTED_KEY = "permission_granted";
     FragmentManager fragmentManager;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private UserViewModel userViewModel;
+    // Handle location permission result
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -73,6 +78,11 @@ public class HomeFragment extends Fragment {
                     handlePermissionDenied();
                 }
             });
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,8 +104,10 @@ public class HomeFragment extends Fragment {
         clockTC.setFormat12Hour(getString(R.string.date_format));
 
         TextView greetingTextView = view.findViewById(R.id.greetingTextView);
-        String username = getString(R.string.sir);
-        greetingTextView.setText(getString(R.string.hello) + username);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
+        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> greetingTextView.setText(getString(R.string.hello) + name));
+
 
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);

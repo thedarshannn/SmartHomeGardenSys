@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="ca.smartsprout.it.smart.smarthomegarden" />
+                  <option name="mobileSdkAppId" value="1:204065205787:android:cd5d3cbbd78040a0fd12be" />
+                  <option name="projectId" value="loginscreen-adfb6" />
+                  <option name="projectNumber" value="204065205787" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

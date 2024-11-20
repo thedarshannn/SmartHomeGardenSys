@@ -15,6 +15,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_URL", "\"${project.hasProperty('API_URL') ? project.properties['API_URL'] : 'https://default-url.com'}\""
+    }
+
+    buildFeatures{
+        buildConfig = true
     }
 
     buildTypes {
@@ -26,6 +31,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
     }
 }
 
@@ -39,9 +48,6 @@ dependencies {
     implementation libs.preference
     implementation libs.firebase.firestore
 
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
     implementation libs.lottie
     implementation libs.material
     implementation libs.retrofit
@@ -49,4 +55,15 @@ dependencies {
     implementation libs.glide
     implementation libs.play.services.location
     implementation libs.firebase.database
+    implementation libs.circleimageview
+
+    // Test dependencies
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    testImplementation libs.mockito.core
+    androidTestImplementation libs.mockito.android
+    testImplementation libs.core.testing
+    testImplementation libs.robolectric
+    androidTestImplementation libs.core.testing
 }

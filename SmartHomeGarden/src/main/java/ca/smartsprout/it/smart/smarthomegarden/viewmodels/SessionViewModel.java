@@ -19,7 +19,7 @@ import ca.smartsprout.it.smart.smarthomegarden.utils.Constants;
 
 public class SessionViewModel extends AndroidViewModel {
 
-    private final String PREFS_NAME  = Constants.PREFS_NAME;
+    private final String PREFS_USER_SESSION  = Constants.PREFS_USER_SESSION;
 
 
 
@@ -29,7 +29,7 @@ public class SessionViewModel extends AndroidViewModel {
 
     public void logOut() {
         // Clear session data
-        SharedPreferences sharedPreferences = getApplication().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences(Constants.PREFS_USER_PROFILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
