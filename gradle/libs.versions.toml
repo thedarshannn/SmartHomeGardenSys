@@ -21,7 +21,11 @@ playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 preference = "1.2.1"
 firebaseFirestore = "25.1.1"
+
+swiperefreshlayout = "1.1.0"
+
 robolectric = "4.10"
+
 
 [libraries]
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
@@ -46,7 +50,11 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+
+swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
