@@ -14,15 +14,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PasswordViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> currentPasswordValidation = new MutableLiveData<>();
     private final MutableLiveData<Boolean> passwordsMatch = new MutableLiveData<>();
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
-    private final FirebaseAuth firebaseAuth;
+    public FirebaseAuth firebaseAuth;
 
-    public PasswordViewModel() {
+    public PasswordViewModel(FirebaseAuth firebaseAuth ) {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -46,7 +47,7 @@ public class PasswordViewModel extends ViewModel {
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
-            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+            AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(user.getEmail()), currentPassword);
 
             user.reauthenticate(credential)
                     .addOnCompleteListener(task -> {
@@ -83,7 +84,7 @@ public class PasswordViewModel extends ViewModel {
             return;
         }
 
-        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+        AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(user.getEmail()), currentPassword);
 
         user.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
             if (!reauthTask.isSuccessful()) {

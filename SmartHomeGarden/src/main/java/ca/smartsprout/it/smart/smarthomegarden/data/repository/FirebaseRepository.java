@@ -19,6 +19,9 @@ import android.util.Patterns;
 import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
 import com.google.firebase.firestore.DocumentReference;
+
+import java.util.Objects;
+
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 
 public class FirebaseRepository {
@@ -110,7 +113,7 @@ public class FirebaseRepository {
     // Fetch user details
     public LiveData<User> fetchUserDetails() {
         MutableLiveData<User> userDetails = new MutableLiveData<>();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         firestore.collection("users").document(userId)
                 .addSnapshotListener((documentSnapshot, e) -> {
