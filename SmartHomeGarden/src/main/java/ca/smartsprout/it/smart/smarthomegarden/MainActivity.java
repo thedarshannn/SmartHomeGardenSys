@@ -1,16 +1,5 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
-
 package ca.smartsprout.it.smart.smarthomegarden;
 
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -65,12 +54,22 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         });
-        // Set default fragment
-        if (savedInstanceState == null) {
+
+        // Check if the "openHomeFragment" extra is passed in the Intent
+        if (getIntent().getBooleanExtra("openHomeFragment", false)) {
+            // If true, open the HomeFragment directly
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, new HomeFragment())
                     .commit();
+        } else {
+            // Set default fragment if the extra is not passed
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new HomeFragment())
+                        .commit();
+            }
         }
+
         // Observe the selected item from ViewModel
         navigationViewModel.getSelectedItem().observe(this, itemId -> {
             Fragment selectedFragment = null;
@@ -100,7 +99,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    // Alert dialog box which shows up when user click on back button.
+    // Alert dialog box which shows up when user clicks on the back button.
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -121,26 +120,16 @@ public class MainActivity extends BaseActivity {
      * <p>The dialog is non-cancelable, meaning the user must explicitly choose either "Yes" or "No".</p>
      */
     public void showExitConfirmationDialog() {
-        AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.exit);
         builder.setIcon(R.drawable.alert);
         builder.setMessage(R.string.do_you_want_to_exit_the_application);
         builder.setCancelable(false);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        builder.setPositiveButton(R.string.yes, (dialogInterface, i) -> finish());
+        builder.setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();

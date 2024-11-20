@@ -11,18 +11,21 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
+    private SharedPreferences sharedPreferences;
     /**
      * Displays a splash screen and navigates to MainActivity after a delay.
      */
@@ -35,16 +38,33 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
-
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        };
-        handler.postDelayed(runnable, 3000);
+        sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
+        if (rememberMe) {
+            // If "Remember Me" is true, skip the login and go directly to MainActivity with HomeFragment
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    intent.putExtra("openHomeFragment", true); // Add extra to open HomeFragment
+                    startActivity(intent);
+                    finish();
+                }
+            }, 3000); // 3-second delay for splash screen
+        } else {
+            // If "Remember Me" is false, proceed to the login screen
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            };
+            handler.postDelayed(runnable, 3000); // 3-second delay for splash screen
+        }
     }
+
 
 
 
