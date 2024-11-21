@@ -40,7 +40,7 @@ private TextView registerswitch;
 
 
     private CheckBox rememberMeCheckbox;
-    private SharedPreferences sharedPreferences;
+
     private DatabaseReference databaseReference;
 
     @Override
@@ -75,7 +75,7 @@ private TextView registerswitch;
             }
         });
 
-        sharedPreferences = getSharedPreferences(getString(R.string.loginprefs), MODE_PRIVATE);
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notifications));
 
@@ -84,7 +84,7 @@ private TextView registerswitch;
             startActivity(intent);
         });
 
-        loadLoginDetails();
+
 
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -122,7 +122,15 @@ private TextView registerswitch;
             }
         });
 
+// Observe the login status
+        authViewModel.getLoginStatus().observe(this, loggedIn -> {
+            if (loggedIn) {
+                goToHomeScreen();
+            }
+        });
 
+        // Check if user is already logged in
+        authViewModel.checkLoggedInStatus();
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
     }
@@ -135,28 +143,9 @@ private TextView registerswitch;
         finish();
     }
 
-    private void loadLoginDetails() {
-        boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
-        if (rememberMe) {
-            String savedEmail = sharedPreferences.getString("email", "");
-            String savedPassword = sharedPreferences.getString("password", "");
-            emailInput.setText(savedEmail);
-            passwordInput.setText(savedPassword);
-            rememberMeCheckbox.setChecked(true);
-        }
-    }
 
-    private void saveLoginDetails() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (rememberMeCheckbox.isChecked()) {
-            editor.putBoolean("rememberMe", true);
-            editor.putString("email", emailInput.getText().toString().trim());
-            editor.putString("password", passwordInput.getText().toString().trim());
-        } else {
-            editor.clear();
-        }
-        editor.apply();
-    }
+
+
 
     private void loginUser() {
         String email = emailInput.getText().toString().trim();
@@ -168,7 +157,7 @@ private TextView registerswitch;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError(getString(R.string.invalidemail));
         } else {
-            saveLoginDetails();
+
             authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
         }
     }

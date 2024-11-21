@@ -8,11 +8,14 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
+import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.FirebaseRepository;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 import androidx.lifecycle.MutableLiveData;
@@ -21,11 +24,26 @@ import androidx.lifecycle.MutableLiveData;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 public class AuthViewModel extends ViewModel {
     private final FirebaseRepository firebaseRepository = new FirebaseRepository();
+    private MutableLiveData<Boolean> isLoggedIn = new MutableLiveData<>();
+
+//    public AuthViewModel(Application application) {
+//        super();
+//    }
 
 
-
+    public LiveData<Boolean> getLoginStatus() {
+        return isLoggedIn;
+    }
     public LiveData<AuthResult> loginUser(String email, String password) {
         return firebaseRepository.loginUser(email, password);
+    }
+    public void checkLoggedInStatus() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            isLoggedIn.setValue(true);  // User is logged in
+        } else {
+            isLoggedIn.setValue(false); // No user logged in
+        }
     }
 
     public LiveData<AuthResult> registerUser(String email, String password) {
