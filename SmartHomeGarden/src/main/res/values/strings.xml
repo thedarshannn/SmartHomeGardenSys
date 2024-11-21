@@ -18,7 +18,7 @@ Members:
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="start">Get started with sprouting!</string>
     <string name="signin">Already have an account?Sign in</string>
-    <string name="signup">Do not have an account?sign up</string>
+    <string name="signup">Do not have an account?Sign up</string>
     <string name="sign">Sign in</string>
     <string name="register">REGISTER</string>
     <string name="date_format">dd MMM, yyyy</string>
@@ -222,7 +222,8 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
-
+<string name="or">or</string>
+    <string name="continuewith">or continue with</string>
 
 
 </resources>
