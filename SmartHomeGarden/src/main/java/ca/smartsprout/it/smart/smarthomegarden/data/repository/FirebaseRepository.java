@@ -16,10 +16,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import android.util.Patterns;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
@@ -28,9 +31,17 @@ public class FirebaseRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private MutableLiveData<Boolean> isResetEmailSent;
+    private MutableLiveData<String> resetEmailError;
+
     public FirebaseRepository() {
         firestore = FirebaseFirestore.getInstance();
+
+        isResetEmailSent = new MutableLiveData<>();
+        resetEmailError = new MutableLiveData<>();
     }
+
+
     public LiveData<AuthResult> loginUser(String email, String password) {
         MutableLiveData<AuthResult> loginResult = new MutableLiveData<>();
 
@@ -167,5 +178,53 @@ public class FirebaseRepository {
 
     public interface OnFeedbackSubmissionListener {
         void onFeedbackSubmitted(boolean isSuccess);
+    }
+
+
+    // Method to send password reset email
+    public void sendPasswordResetEmail(String email) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        isResetEmailSent.setValue(true);
+                    } else {
+                        isResetEmailSent.setValue(false);
+                        if (task.getException() != null) {
+                            resetEmailError.setValue(task.getException().getMessage());
+                        }
+                    }
+                });
+    }
+
+    // LiveData for observing the email reset status
+    public LiveData<Boolean> getIsResetEmailSent() {
+        return isResetEmailSent;
+    }
+
+    // LiveData for observing errors during reset
+    public LiveData<String> getResetEmailError() {
+        return resetEmailError;
+    }
+
+    // Method to update Firestore when the password changes
+    public void updatePasswordChangeTimestamp() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            Map<String, Object> update = new HashMap<>();
+            update.put("passwordUpdatedAt", System.currentTimeMillis());
+
+
+            firestore.collection("users").document(userId)
+                    .update(update)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Handle success if needed
+                        } else {
+                            // Handle failure if needed
+                        }
+                    });
+        }
+
     }
 }

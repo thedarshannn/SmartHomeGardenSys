@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
@@ -27,6 +29,7 @@ import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -35,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton,googlesignin;
     private AuthViewModel authViewModel;
 
-private TextView registerswitch;
+private TextView registerswitch,forgotpassword;
     private GoogleSignInHelper googleSignInHelpers;
 
 
@@ -54,10 +57,9 @@ private TextView registerswitch;
         loginButton = findViewById(R.id.button);
         registerswitch = findViewById(R.id.registerswitch);
         rememberMeCheckbox = findViewById(R.id.rememberMeCheckbox);
-
+        forgotpassword=findViewById(R.id.forgotPassword);
         googlesignin=findViewById(R.id.googlesignin);
         googleSignInHelpers = new GoogleSignInHelper(this);
-
         // Initialize ViewModel
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         emailInput.addTextChangedListener(new TextWatcher() {
@@ -133,6 +135,11 @@ private TextView registerswitch;
         authViewModel.checkLoggedInStatus();
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
+
+        forgotpassword.setOnClickListener(v -> showForgotPasswordDialog());
+
+        // Observe the LiveData from ViewModel
+        observeViewModel();
     }
 
 
@@ -192,5 +199,46 @@ private TextView registerswitch;
     private void onLoginSuccess() {
         // Show login notification
         NotificationHelper.createNotification(this, getString(R.string.login_successful), getString(R.string.welcome_back));
+    }
+
+    private void showForgotPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Reset Password");
+
+        final EditText inputEmail = new EditText(this);
+        inputEmail.setHint("Enter your registered email");
+        inputEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        builder.setView(inputEmail);
+
+        builder.setPositiveButton("Send", (dialog, which) -> {
+            String email = inputEmail.getText().toString().trim();
+            if (!TextUtils.isEmpty(email)) {
+                authViewModel.sendPasswordResetEmail(email);
+            } else {
+                Toast.makeText(this, "Please enter an email", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    private void observeViewModel() {
+        authViewModel.getIsResetEmailSent().observe(this, isSent -> {
+            if (isSent) {
+                Toast.makeText(this, "Password reset email sent!", Toast.LENGTH_LONG).show();
+                // Update Firestore with password change timestamp
+                authViewModel.updatePasswordChangeTimestamp();
+
+            } else {
+                Toast.makeText(this, "Failed to send reset email. Try again.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        authViewModel.getResetEmailError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

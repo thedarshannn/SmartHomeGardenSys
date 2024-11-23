@@ -23,12 +23,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 public class AuthViewModel extends ViewModel {
-    private final FirebaseRepository firebaseRepository = new FirebaseRepository();
+    private final FirebaseRepository firebaseRepository ;
     private MutableLiveData<Boolean> isLoggedIn = new MutableLiveData<>();
+    private LiveData<Boolean> isResetEmailSent;
+    private LiveData<String> resetEmailError;
+    public AuthViewModel() {
+        firebaseRepository = new FirebaseRepository();
+        isResetEmailSent = firebaseRepository.getIsResetEmailSent();
+        resetEmailError = firebaseRepository.getResetEmailError();
+    }
 
-//    public AuthViewModel(Application application) {
-//        super();
-//    }
 
 
     public LiveData<Boolean> getLoginStatus() {
@@ -62,5 +66,24 @@ public class AuthViewModel extends ViewModel {
         return firebaseRepository.isValidPassword(password);
     }
 
+    // Expose the method to send password reset email
+    public void sendPasswordResetEmail(String email) {
+        firebaseRepository.sendPasswordResetEmail(email);
+    }
+
+    // Expose LiveData for reset email status
+    public LiveData<Boolean> getIsResetEmailSent() {
+        return isResetEmailSent;
+    }
+
+    // Expose LiveData for reset email error
+    public LiveData<String> getResetEmailError() {
+        return resetEmailError;
+    }
+
+    // Method to update Firestore after password change
+    public void updatePasswordChangeTimestamp() {
+        firebaseRepository.updatePasswordChangeTimestamp();
+    }
 
 }
