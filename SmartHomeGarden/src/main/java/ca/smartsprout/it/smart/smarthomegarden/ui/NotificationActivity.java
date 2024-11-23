@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
@@ -42,6 +43,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view_notifications);
         Button btnClearAll = findViewById(R.id.btn_clear_all);
+        ImageView imgNoNotifications = findViewById(R.id.img_no_notifications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Create notification channel
@@ -78,11 +80,13 @@ public class NotificationActivity extends AppCompatActivity {
                 }
                 adapter.notifyDataSetChanged();
 
-                // Show or hide the "Clear All" button based on notifications count
+                // Toggle visibility of the "No Notifications" image and "Clear All" button
                 if (notificationList.isEmpty()) {
                     btnClearAll.setVisibility(View.GONE);
+                    imgNoNotifications.setVisibility(View.VISIBLE);
                 } else {
                     btnClearAll.setVisibility(View.VISIBLE);
+                    imgNoNotifications.setVisibility(View.GONE);
                 }
             }
 
@@ -92,18 +96,17 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
+
         // Handle "Clear All" button click
         btnClearAll.setOnClickListener(v -> {
-            // Remove all notifications from the database
             databaseReference.removeValue();
-
-            // Clear the local list and update the adapter
             notificationList.clear();
             adapter.notifyDataSetChanged();
 
-            // Hide the button
             btnClearAll.setVisibility(View.GONE);
+            imgNoNotifications.setVisibility(View.VISIBLE); // Show the image
         });
+
 
         // Add ItemTouchHelper for swipe-to-dismiss functionality
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -117,19 +120,16 @@ public class NotificationActivity extends AppCompatActivity {
                 int position = viewHolder.getAdapterPosition();
                 Notification notification = notificationList.get(position);
 
-                // Check if notification ID is not null
                 if (notification.getId() != null) {
-                    // Remove the notification from the database
                     databaseReference.child(notification.getId()).removeValue();
                 }
 
-                // Remove the notification from the list
                 notificationList.remove(position);
                 adapter.notifyItemRemoved(position);
 
-                // Update "Clear All" button visibility
                 if (notificationList.isEmpty()) {
                     btnClearAll.setVisibility(View.GONE);
+                    imgNoNotifications.setVisibility(View.VISIBLE); // Show the image
                 }
             }
         });
