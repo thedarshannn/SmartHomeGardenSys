@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -137,14 +138,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(AccountSettingsViewModel.class);
         passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
-        // Observe LiveData from ViewModel to set the profile image and username
-        viewModel.getProfileImageUri().observe(this, uri -> {
-            if (uri != null) {
-                Glide.with(this).load(uri).into(profileImageView);
-            }
-        });
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getProfilePictureUrl().observe(this, profilePictureUrl -> {
+            if (profilePictureUrl != null) {
+                Glide.with(this)
+                        .load(profilePictureUrl)
+                        .placeholder(R.drawable.user)
+                        .into(profileImageView);
+            }
+        });
         userViewModel.getUserName().observe(this, name -> editUserName.setText(name));
         // Observe email LiveData
         userViewModel.getUserEmail().observe(this, email -> {

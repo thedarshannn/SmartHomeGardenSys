@@ -9,13 +9,8 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -28,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,8 +38,6 @@ public class ProfileFragment extends Fragment {
     boolean isOptionsVisible;
     private ImageView imageView;
     private TextView userNameTV;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
 
@@ -70,12 +64,21 @@ public class ProfileFragment extends Fragment {
 
         imageView = view.findViewById(R.id.imageView);
         userNameTV = view.findViewById(R.id.userNameTV);
-        sharedPreferences = requireContext().getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
-        // Load initial user data from SharedPreferences
-        loadUserProfile();
+        // load profile picture and load with glide and update the image view from firebase
+        userViewModel.getProfilePictureUrl().observe(getViewLifecycleOwner(), profilePictureUrl -> {
+            if (profilePictureUrl != null) {
+                Glide.with(requireActivity())
+                        .load(profilePictureUrl)
+                        .placeholder(R.drawable.user)
+                        .into(imageView);
+            } else {
+                // Clear the image if the URL is null
+                imageView.setImageResource(R.drawable.user);
+            }
+        });
 
         // Set up the profile card click listener
         CardView profileCardView = view.findViewById(R.id.profileCardView);
@@ -142,18 +145,8 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void loadUserProfile() {
-        String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
-        if (uriString != null) {
-            Uri uri = Uri.parse(uriString);
-            imageView.setImageURI(uri); // Load URI directly into CircleImageView
-        } else {
-            imageView.setImageResource(R.drawable.user); // Default image
-        }
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
 }

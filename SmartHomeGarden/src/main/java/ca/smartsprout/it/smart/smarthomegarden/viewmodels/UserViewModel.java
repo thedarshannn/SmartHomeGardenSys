@@ -75,4 +75,12 @@ public class UserViewModel extends ViewModel {
         }
         return null;
     }
+
+    public LiveData<String> getProfilePictureUrl() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            return firebaseRepository.getProfilePictureUrl(userId);
+        }
+        return null;
+    }
 }
