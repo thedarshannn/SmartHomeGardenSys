@@ -40,6 +40,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
@@ -146,6 +148,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 Glide.with(this)
                         .load(profilePictureUrl)
                         .placeholder(R.drawable.user)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(profileImageView);
             }
         });

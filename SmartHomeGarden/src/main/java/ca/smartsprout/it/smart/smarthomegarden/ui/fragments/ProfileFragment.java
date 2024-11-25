@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -73,6 +74,7 @@ public class ProfileFragment extends Fragment {
                 Glide.with(requireActivity())
                         .load(profilePictureUrl)
                         .placeholder(R.drawable.user)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             } else {
                 // Clear the image if the URL is null
