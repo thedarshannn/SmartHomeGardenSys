@@ -76,6 +76,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation libs.circleimageview
+    implementation libs.firebase.storage.ktx
+    implementation libs.core
+
 
     // Test dependencies
     testImplementation libs.junit

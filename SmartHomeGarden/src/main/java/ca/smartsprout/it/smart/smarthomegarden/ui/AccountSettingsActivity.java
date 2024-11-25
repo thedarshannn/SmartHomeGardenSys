@@ -12,6 +12,8 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
@@ -63,20 +66,40 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private Runnable runnable;
 
 
+
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    profileImageView.setImageURI(cameraImageUri);
-                    viewModel.saveProfileImageUri(cameraImageUri); // Save URI to ViewModel
+                    profileImageView.setImageURI(cameraImageUri); // Update ImageView
+
+                    // Use ImageDecoder to get Bitmap
+                    try {
+                        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.getContentResolver(), cameraImageUri));
+                        viewModel.uploadProfilePicture(bitmap, userViewModel.getUserId()); // Upload image
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
+
+
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri selectedImage = result.getData().getData();
-                    profileImageView.setImageURI(selectedImage);
-                    viewModel.saveProfileImageUri(selectedImage); // Save URI to ViewModel
+                if (result.getResultCode() == RESULT_OK) {
+                    assert result.getData() != null;
+                    Uri selectedImageUri = result.getData().getData();
+                    profileImageView.setImageURI(selectedImageUri); // Update ImageView
+
+                    // Use ImageDecoder to get Bitmap
+                    try {
+                        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.getContentResolver(), selectedImageUri));
+                        viewModel.uploadProfilePicture(bitmap, userViewModel.getUserId()); // Upload image
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -117,9 +140,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         // Observe LiveData from ViewModel to set the profile image and username
         viewModel.getProfileImageUri().observe(this, uri -> {
             if (uri != null) {
-                profileImageView.setImageURI(uri);
-            } else {
-                profileImageView.setImageResource(R.drawable.user); // default placeholder image
+                Glide.with(this).load(uri).into(profileImageView);
             }
         });
 
@@ -140,13 +161,30 @@ public class AccountSettingsActivity extends AppCompatActivity {
         // Save button click listener
         saveButton.setOnClickListener(v -> {
             String newName = editUserName.getText().toString();
+            Uri selectedImageUri = viewModel.getProfileImageUri().getValue();
 
-            viewModel.saveProfileImageUri(cameraImageUri);
             if (newName.isEmpty()) {
                 editUserName.setError(getString(R.string.name_cannot_empty));
                 Toast.makeText(this, R.string.valid_full_name, Toast.LENGTH_SHORT).show();
                 return; // Stop further execution
             }
+
+            if (selectedImageUri != null) {
+                try {
+                    Bitmap bitmap;
+
+                    bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), selectedImageUri));
+
+                    // Upload the profile picture
+                    viewModel.uploadProfilePicture(bitmap, userViewModel.getUserId());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
 
             // Save the valid full name
             userViewModel.updateUserName(newName);

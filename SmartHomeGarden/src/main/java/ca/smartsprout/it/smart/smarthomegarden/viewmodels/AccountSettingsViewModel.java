@@ -9,61 +9,105 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_NAME;
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.test.core.app.ApplicationProvider;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.FirebaseRepository;
 
 
 public class AccountSettingsViewModel extends AndroidViewModel {
 
-    private final SharedPreferences sharedPreferences;
-    private final MutableLiveData<Uri> profileImageUri = new MutableLiveData<>();
+    private final MutableLiveData<Bitmap> profilePictureLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> userName = new MutableLiveData<>();
+    private final FirebaseRepository firebaseRepository = new FirebaseRepository();
+    private MutableLiveData<Uri> profileImageUri;
 
     public AccountSettingsViewModel(Application application) {
         super(application);
-        sharedPreferences = application.getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
-        loadProfileData();
-
+        // Fetch user details from Firebase
+        firebaseRepository.fetchUserDetails().observeForever(user -> {
+            if (user != null) {
+                userName.setValue(user.getName());
+            }
+        });
     }
-    public LiveData<Uri> getProfileImageUri() {
-        return profileImageUri;
+
+    public LiveData<Bitmap> getProfilePictureLiveData() {
+        return profilePictureLiveData;
     }
 
     public LiveData<String> getUserName() {
         return userName;
     }
 
-    public void loadProfileData() {
-        String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
-        if (uriString != null) {
-            try{
-                profileImageUri.setValue(Uri.parse(uriString));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public LiveData<Uri> getProfileImageUri() {
+        if (profileImageUri == null) {
+            profileImageUri = new MutableLiveData<>();
         }
+        return profileImageUri;
     }
 
+
     public void saveProfileImageUri(Uri uri) {
-        if (uri != null) {
-            try {
-                profileImageUri.setValue(uri);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(KEY_USER_PIC, uri.toString());
-                editor.apply();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        profileImageUri.setValue(uri);
     }
+
+    public void uploadProfilePicture(Bitmap bitmap, String userId) {
+        if (bitmap == null || userId == null || userId.isEmpty()) {
+            return;
+        }
+
+        firebaseRepository.uploadProfilePicture(bitmap, userId, task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String downloadUrl = task.getResult().toString();
+                firebaseRepository.saveProfilePictureUrl(userId, downloadUrl);
+                fetchProfilePicture(userId); // Refresh after upload
+            }
+        });
+    }
+
+
+    public void fetchProfilePicture(String userId) {
+        if (userId == null || userId.isEmpty()) {
+            return; // Avoid unnecessary calls
+        }
+
+        firebaseRepository.getProfilePictureUrl(userId).observeForever(url -> {
+            if (url != null && !url.isEmpty()) {
+                Glide.with(getApplication().getApplicationContext())
+                        .asBitmap()
+                        .load(url)
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                profilePictureLiveData.setValue(resource);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                // Optional: handle if needed
+                            }
+                        });
+            } else {
+                // Set a default placeholder image
+                profilePictureLiveData.setValue(null); // Or set a placeholder Bitmap
+            }
+        });
+    }
+
+
 }
