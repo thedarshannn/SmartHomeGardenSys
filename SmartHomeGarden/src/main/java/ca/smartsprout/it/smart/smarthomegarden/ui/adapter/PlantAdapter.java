@@ -23,12 +23,13 @@ import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
 
-    private List<Plant> plantList;
+    private List<PlantDetail> plantList;
 
-    public PlantAdapter(List<Plant> plantList) {
+    public PlantAdapter(List<PlantDetail> plantList) {
         this.plantList = plantList;
     }
 
@@ -41,19 +42,16 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
-        Plant plant = plantList.get(position);
+        PlantDetail plant = plantList.get(position);
 
         // Set plant name and description (cycle information in place of description)
-        holder.plantName.setText(plant.getCommon_name());
-        holder.plantDescription.setText(plant.getCycle());
+        holder.plantName.setText(plant.getCommonNames().get(0));
+        holder.plantDescription.setText(plant.getDescription().getValue());
 
-        // Set the watering Chip text and visibility
-        holder.wateringChip.setText(plant.getWatering());
+        // Set watering chip
+        holder.wateringChip.setText(plant.getWatering().toString());
         holder.wateringChip.setVisibility(plant.getWatering() != null ? View.VISIBLE : View.GONE);
 
-        // Example: For simplicity, setting static values to sunlightChip and indoorOutdoorChip as placeholders
-        holder.sunlightChip.setText(plant.getSunlight().get(0));  // Customize as needed based on actual data
-        holder.indoorOutdoorChip.setText(R.string.indoor);  // Placeholder text
     }
 
     @Override
@@ -61,7 +59,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         return plantList != null ? plantList.size() : 0;
     }
 
-    public void updatePlantList(List<Plant> plants) {
+    public void updatePlantList(List<PlantDetail> plants) {
         this.plantList.clear();
         this.plantList.addAll(plants);
         notifyDataSetChanged();
@@ -76,8 +74,6 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
             plantName = itemView.findViewById(R.id.plantNameTV);
             plantDescription = itemView.findViewById(R.id.plantDescriptionTV);
             wateringChip = itemView.findViewById(R.id.wateringChip);
-            sunlightChip = itemView.findViewById(R.id.sunlightChip);
-            indoorOutdoorChip = itemView.findViewById(R.id.indoorOutdoorChip);
         }
     }
 }

@@ -25,10 +25,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 
@@ -39,6 +42,7 @@ public class SearchFragment extends Fragment {
     private TextView noResultsTextView;
     private ExecutorService executorService;
     private Handler mainHandler;
+    private final List<PlantDetail> searchHistory = new ArrayList<>();
 
     public SearchFragment() {
         // Required empty public constructor
@@ -67,37 +71,34 @@ public class SearchFragment extends Fragment {
         // Initialize ViewModel
         plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
 
-        // Observe LiveData for plant list updates
-        plantViewModel.getPlantList().observe(getViewLifecycleOwner(), plants -> {
-            executorService.submit(() -> mainHandler.post(() -> {
-                if (plants != null && !plants.isEmpty()) {
-                    noResultsTextView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    plantAdapter.updatePlantList(plants);
-                } else {
-                    noResultsTextView.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }
-            }));
+        plantViewModel.getPlantDetail().observe(getViewLifecycleOwner(), plantDetail -> {
+            if (plantDetail != null) {
+                executorService.submit(() -> mainHandler.post(() -> {
+                    searchHistory.add(plantDetail); // Add the new plant detail to the history
+                    plantAdapter.updatePlantList(searchHistory); // Update adapter with the updated list
+                }));
+            }
         });
+
 
         // Initialize SearchView
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                executorService.submit(() -> plantViewModel.searchPlants(query)); // Perform search in a thread
+                executorService.submit(() -> plantViewModel.searchAndFetchPlantDetail(query));
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    executorService.submit(() -> plantViewModel.loadPlants()); // Load default plants in a thread
+                    plantAdapter.updatePlantList(new ArrayList<>()); // Clear results
                 }
                 return true;
             }
         });
+
 
         return view;
     }

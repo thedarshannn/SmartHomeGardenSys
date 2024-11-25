@@ -60,24 +60,6 @@
                 android:text="@string/watering_chip"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/green_700"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/sunlightChip"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sunlight_chip"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/green_700"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/indoorOutdoorChip"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/indoor_outdoor_chip"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/green_700"/>
         </com.google.android.material.chip.ChipGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
