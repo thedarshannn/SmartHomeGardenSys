@@ -27,7 +27,8 @@
         tools:targetApi="34">
         <activity
             android:name=".ui.NotificationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Notifications"/>
         <activity
             android:name=".ui.FeedbackActivity"
             android:exported="false" />
