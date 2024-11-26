@@ -39,10 +39,8 @@ public class SearchFragment extends Fragment {
 
     private PlantAdapter plantAdapter;
     private PlantViewModel plantViewModel;
-    private TextView noResultsTextView;
     private ExecutorService executorService;
     private Handler mainHandler;
-    private final List<PlantDetail> searchHistory = new ArrayList<>();
 
     public SearchFragment() {
         // Required empty public constructor
@@ -66,19 +64,10 @@ public class SearchFragment extends Fragment {
         recyclerView.setAdapter(plantAdapter);
 
         // Initialize TextView for empty state
-        noResultsTextView = view.findViewById(R.id.noResultsTextView);
+        TextView noResultsTextView = view.findViewById(R.id.noResultsTextView);
 
         // Initialize ViewModel
         plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
-
-        plantViewModel.getPlantDetail().observe(getViewLifecycleOwner(), plantDetail -> {
-            if (plantDetail != null) {
-                executorService.submit(() -> mainHandler.post(() -> {
-                    searchHistory.add(plantDetail); // Add the new plant detail to the history
-                    plantAdapter.updatePlantList(searchHistory); // Update adapter with the updated list
-                }));
-            }
-        });
 
 
         // Initialize SearchView

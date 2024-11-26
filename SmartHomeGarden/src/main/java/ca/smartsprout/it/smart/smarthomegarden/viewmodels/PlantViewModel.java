@@ -52,6 +52,7 @@ public class PlantViewModel extends ViewModel {
                 String searchUrl = SEARCH_URL + "?q=" + query + "&limit=1";
                 Request searchRequest = new Request.Builder()
                         .url(searchUrl)
+                        .addHeader("Content-Type", "application/json")
                         .addHeader("Api-Key", API_KEY)
                         .build();
 
@@ -90,7 +91,7 @@ public class PlantViewModel extends ViewModel {
         executorService.execute(() -> {
             try {
                 // Construct the detail API URL
-                String detailUrl = DETAIL_URL + accessToken + "?details=common_names,url,description,watering,propagation_methods&language=en";
+                String detailUrl = DETAIL_URL + accessToken + "?details=common_names,url,description,image,watering,propagation_methods&language=en";
 
                 // Build the GET request
                 Request detailRequest = new Request.Builder()

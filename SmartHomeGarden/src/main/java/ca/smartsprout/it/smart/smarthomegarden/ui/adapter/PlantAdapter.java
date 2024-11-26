@@ -12,11 +12,13 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 
 import java.util.List;
@@ -46,11 +48,27 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
         // Set plant name and description (cycle information in place of description)
         holder.plantName.setText(plant.getCommonNames().get(0));
-        holder.plantDescription.setText(plant.getDescription().getValue());
 
-        // Set watering chip
-        holder.wateringChip.setText(plant.getWatering().toString());
-        holder.wateringChip.setVisibility(plant.getWatering() != null ? View.VISIBLE : View.GONE);
+        // if description is not available, invisible the description text view and set the user friendly message
+        if (plant.getDescription() != null && plant.getDescription().getValue() != null) {
+            holder.plantDescription.setText(plant.getDescription().getValue());
+        } else {
+            holder.plantDescription.setVisibility(View.GONE);
+        }
+
+        // Bind thumbnail image using Glide
+        if (plant.getImage() != null && plant.getImage().getValue() != null) {
+            Glide.with(holder.ivThumbnail.getContext())
+                    .load(plant.getImage().getValue())
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(holder.ivThumbnail);
+        } else {
+            holder.ivThumbnail.setImageResource(R.drawable.image_placeholder);
+        }
+
+//        // Set watering chip
+//        holder.wateringChip.setText(plant.getWatering().toString());
+//        holder.wateringChip.setVisibility(plant.getWatering() != null ? View.VISIBLE : View.GONE);
 
     }
 
@@ -67,13 +85,13 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
     static class PlantViewHolder extends RecyclerView.ViewHolder {
         TextView plantName, plantDescription;
-        Chip wateringChip, sunlightChip, indoorOutdoorChip;
+        private final ImageView ivThumbnail;
 
         public PlantViewHolder(@NonNull View itemView) {
             super(itemView);
-            plantName = itemView.findViewById(R.id.plantNameTV);
-            plantDescription = itemView.findViewById(R.id.plantDescriptionTV);
-            wateringChip = itemView.findViewById(R.id.wateringChip);
+            plantName = itemView.findViewById(R.id.tvName);
+            plantDescription = itemView.findViewById(R.id.tvDescription);
+            ivThumbnail = itemView.findViewById(R.id.ivThumbnail);
         }
     }
 }
