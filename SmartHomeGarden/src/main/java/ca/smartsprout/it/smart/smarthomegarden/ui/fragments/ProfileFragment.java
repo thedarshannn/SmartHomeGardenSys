@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -135,7 +136,19 @@ public class ProfileFragment extends Fragment {
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Handle adding a task for the plant
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new HomeFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+                // Update the bottom navigation indicator
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+
+                View bottomSheetView = getLayoutInflater().inflate(R.layout.fragment_custom_bottom_sheet, null);
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
             }
         });
 

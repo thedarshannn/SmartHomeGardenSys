@@ -132,9 +132,9 @@ Members:
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
 
-<string name="invalidpasswords">Passwords do not match.</string>
-<string name="invalidphone">Phone Number is Invalid!</string>
-<string name="signedin">Already Signed In!</string>
+    <string name="invalidpasswords">Passwords do not match.</string>
+    <string name="invalidphone">Phone Number is Invalid!</string>
+    <string name="signedin">Already Signed In!</string>
 
 
     <string name="watering_chip">Watering</string>
@@ -222,7 +222,6 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
-
 
 
 </resources>
