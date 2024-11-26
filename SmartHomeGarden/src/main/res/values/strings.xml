@@ -222,7 +222,16 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
-
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_required_message">" Please grant the required permission from your device's settings.\n"</string>
+    <string name="go_to_settings">Go to Settings\n</string>
+    <string name="failed_to_load_image">Failed to load image</string>
+    <string name="camera_permission_required_message">
+    Camera access is required to take pictures. Please enable it from Settings.
+</string>
+    <string name="gallery_permission_required_message">
+    Gallery access is required to select pictures. Please enable it from Settings.
+</string>
 
 
 </resources>
