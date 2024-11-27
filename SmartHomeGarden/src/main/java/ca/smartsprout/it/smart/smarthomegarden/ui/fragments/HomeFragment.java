@@ -71,7 +71,6 @@ public class HomeFragment extends Fragment {
     private PlantTaskViewModel viewModel;
     private PlantTaskAdapter adapter;
     private RecyclerView recyclerView;
-    // Handle location permission result
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -98,6 +97,8 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         viewModel = new ViewModelProvider(this).get(PlantTaskViewModel.class);
+
+
 
 
         // If permission was previously granted, start updates
@@ -132,6 +133,14 @@ public class HomeFragment extends Fragment {
         viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
             adapter.updateTasks(tasks);
             adapter.notifyDataSetChanged();
+        });
+
+        // Add listener to the checkbox
+        adapter.setOnCheckedChangeListener((task, isChecked) -> {
+            if (isChecked) {
+                viewModel.removeTask(task);
+                adapter.removeTask(task);
+            }
         });
 
         viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
@@ -181,6 +190,15 @@ public class HomeFragment extends Fragment {
                 updateTemperatureDisplay(weatherResponse);
             }
         });
+
+        // Add listener to the checkbox
+        adapter.setOnCheckedChangeListener((task, isChecked) -> {
+            if (isChecked) {
+                viewModel.removeTask(task);
+                adapter.removeTask(task);
+            }
+        });
+
 
         return view;
     }

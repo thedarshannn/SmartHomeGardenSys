@@ -49,4 +49,8 @@ public class PlantTaskViewModel extends ViewModel {
     public void addTask(PlantTask task) {
         databaseReference.child(String.valueOf(task.getId())).setValue(task);
     }
+
+    public void removeTask(PlantTask task) {
+        databaseReference.child(String.valueOf(task.getId())).removeValue();
+    }
 }

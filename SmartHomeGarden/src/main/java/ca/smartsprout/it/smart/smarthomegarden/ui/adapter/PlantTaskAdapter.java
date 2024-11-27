@@ -1,8 +1,11 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,13 +16,19 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantTask;
 
 public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.TaskViewHolder> {
     private List<PlantTask> tasks;
+    private OnCheckedChangeListener onCheckedChangeListener;
 
     public PlantTaskAdapter(List<PlantTask> tasks) {
         this.tasks = tasks;
     }
 
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
+        this.onCheckedChangeListener = listener;
+    }
+
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView plantName, taskName, date, time, recurrence, notes;
+        CheckBox checkBox;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -29,6 +38,22 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
             time = itemView.findViewById(R.id.time);
             recurrence = itemView.findViewById(R.id.recurrence);
             notes = itemView.findViewById(R.id.notes);
+            checkBox = itemView.findViewById(R.id.checkBox);
+        }
+
+        void bind(PlantTask task, OnCheckedChangeListener listener) {
+            plantName.setText(task.getPlantName());
+            taskName.setText(task.getTaskName());
+            date.setText(task.getDate());
+            time.setText(task.getTime());
+            recurrence.setText(task.getRecurrence());
+            notes.setText(task.getNotes());
+
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (listener != null) {
+                    listener.onCheckedChanged(task, isChecked);
+                }
+            });
         }
     }
 
@@ -41,12 +66,7 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         PlantTask task = tasks.get(position);
-        holder.plantName.setText(task.getPlantName());
-        holder.taskName.setText(task.getTaskName());
-        holder.date.setText(task.getDate());
-        holder.time.setText(task.getTime());
-        holder.recurrence.setText(task.getRecurrence());
-        holder.notes.setText(task.getNotes());
+        holder.bind(task, onCheckedChangeListener);
     }
 
     @Override
@@ -58,5 +78,16 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
         tasks.clear();
         tasks.addAll(newTasks);
         notifyDataSetChanged();
+    }
+
+    public void removeTask(PlantTask task) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            tasks.remove(task);
+            notifyDataSetChanged();
+        }, 2000);
+    }
+
+    public interface OnCheckedChangeListener {
+        void onCheckedChanged(PlantTask task, boolean isChecked);
     }
 }
