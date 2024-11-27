@@ -101,11 +101,17 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         Calendar calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireContext(),
-                (view, hourOfDay, minute) -> buttonSetTime.setText(String.format("%02d:%02d", hourOfDay, minute)),
+                (view, hourOfDay, minute) -> {
+                    String amPm = (hourOfDay >= 12) ? "PM" : "AM";
+                    int hour = (hourOfDay > 12) ? hourOfDay - 12 : hourOfDay;
+                    hour = (hour == 0) ? 12 : hour; // handle midnight and noon
+                    buttonSetTime.setText(String.format("%02d:%02d %s", hour, minute, amPm));
+                },
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
-                true
+                false // Set to false to use 12-hour format
         );
         timePickerDialog.show();
     }
+
 }

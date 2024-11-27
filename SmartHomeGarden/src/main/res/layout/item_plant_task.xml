@@ -1,56 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp"
+    app:cardBackgroundColor="#E6F3E6">
 
-    <TextView
-        android:id="@+id/plant_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Plant Name"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/task_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Task Name"
-        android:textSize="16sp"
-        android:textColor="@color/black"/>
+        <!-- Horizontal LinearLayout for Plant Name and Checkbox -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical">
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Date"
-        android:textSize="14sp"
-        android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/plant_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plant Name"
+                android:textColor="#2E7D32"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Time"
-        android:textSize="14sp"
-        android:textColor="@color/black"/>
+            <!-- Checkbox next to Plant Name -->
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#388E3C"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/recurrence"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Recurrence"
-        android:textSize="14sp"
-        android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/task_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Name"
+            android:textColor="#388E3C"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Notes"
-        android:textSize="14sp"
-        android:textColor="@color/black"/>
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <!-- Label for Date -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date:"
+                android:textColor="#43A047"
+                android:textSize="16sp"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Date"
+                android:textColor="#43A047"
+                android:textSize="14sp" />
+
+            <!-- Label for Time -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time:"
+                android:textColor="#43A047"
+                android:textSize="16sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Time"
+                android:textColor="#43A047"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <!-- Label for Recurrence -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recurrence:"
+                android:textColor="#4CAF50"
+                android:textSize="16sp"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/recurrence"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Recurrence"
+                android:textColor="#4CAF50"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Label for Notes -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notes:"
+            android:textColor="#66BB6A"
+            android:textSize="16sp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="4dp" />
+
+        <TextView
+            android:id="@+id/notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notes"
+            android:textColor="#66BB6A"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
