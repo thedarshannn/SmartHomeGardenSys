@@ -145,12 +145,12 @@ public class ProfileFragment extends Fragment {
                 BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_home);
 
-                View bottomSheetView = getLayoutInflater().inflate(R.layout.fragment_custom_bottom_sheet, null);
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
-                bottomSheetDialog.setContentView(bottomSheetView);
-                bottomSheetDialog.show();
+                // Show the CustomBottomSheetFragment
+                CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+                bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
             }
         });
+
 
         return view;
     }

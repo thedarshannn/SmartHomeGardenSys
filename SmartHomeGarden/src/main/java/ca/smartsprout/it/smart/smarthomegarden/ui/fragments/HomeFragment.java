@@ -30,6 +30,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
@@ -48,6 +50,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantTaskAdapter;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
@@ -62,6 +66,9 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private UserViewModel userViewModel;
+    private PlantTaskViewModel viewModel;
+    private PlantTaskAdapter adapter;
+    private RecyclerView recyclerView;
     // Handle location permission result
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
@@ -88,6 +95,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PlantTaskViewModel.class);
+
 
         // If permission was previously granted, start updates
         if (isPermissionPreviouslyGranted()) {
@@ -112,6 +121,13 @@ public class HomeFragment extends Fragment {
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        adapter = new PlantTaskAdapter(viewModel.getTasks().getValue());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             // Check if conditions are met for refreshing (permission granted and location enabled)
