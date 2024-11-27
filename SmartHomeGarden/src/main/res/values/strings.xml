@@ -227,6 +227,8 @@ Members:
     <string name="check_connection_message">It seems you're offline. Turn on Wi-Fi or Mobile Data to reconnect.</string>
     <string name="retry_connection">Try Again</string>
     <string name="offline_image">Offline State Illustration</string>
+    <string name="internet_connection_restored">Internet connection restored!</string>
+    <string name="still_no_internet_connection">Still no internet connection.</string>
 
 
 </resources>

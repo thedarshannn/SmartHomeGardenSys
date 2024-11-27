@@ -9,10 +9,19 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import ca.smartsprout.it.smart.smarthomegarden.R;
 
 
 public class NetworkUtils {
@@ -39,4 +48,42 @@ public class NetworkUtils {
         }
         return false;
     }
+
+    /**
+     * Show a dialog to inform the user that there is no internet connection.
+     *
+     * @param context The context of the application.
+     */
+    public static void showNoInternetDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // Inflate custom layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.dialog_no_internet, null);
+        builder.setView(dialogView);
+
+        // Find views in custom layout
+        ImageView icon = dialogView.findViewById(R.id.dialog_icon);
+        TextView title = dialogView.findViewById(R.id.dialog_title);
+        TextView message = dialogView.findViewById(R.id.dialog_message);
+
+        // Set dialog buttons
+        dialogView.findViewById(R.id.button_retry).setOnClickListener(v -> {
+            if (isInternetAvailable(context)) {
+                Toast.makeText(context, R.string.internet_connection_restored, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, R.string.still_no_internet_connection, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialogView.findViewById(R.id.button_settings).setOnClickListener(v -> {
+            context.startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+        });
+
+        // Create and show dialog
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 }
