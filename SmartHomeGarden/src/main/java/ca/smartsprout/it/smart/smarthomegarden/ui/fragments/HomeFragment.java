@@ -48,6 +48,8 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantTaskAdapter;
@@ -123,9 +125,14 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        adapter = new PlantTaskAdapter(viewModel.getTasks().getValue());
+        adapter = new PlantTaskAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
+            adapter.updateTasks(tasks);
+            adapter.notifyDataSetChanged();
+        });
 
         viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
 

@@ -11,40 +11,46 @@
         android:layout_height="wrap_content"
         android:text="Plant Name"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/task_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Task Name"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Date"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Time"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/recurrence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Recurrence"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Notes"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
 </LinearLayout>

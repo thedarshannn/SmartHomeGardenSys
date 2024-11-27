@@ -53,5 +53,10 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
     public int getItemCount() {
         return tasks.size();
     }
-}
 
+    public void updateTasks(List<PlantTask> newTasks) {
+        tasks.clear();
+        tasks.addAll(newTasks);
+        notifyDataSetChanged();
+    }
+}

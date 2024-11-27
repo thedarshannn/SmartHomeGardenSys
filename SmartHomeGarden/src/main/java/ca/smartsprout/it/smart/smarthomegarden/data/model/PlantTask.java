@@ -9,7 +9,11 @@ public class PlantTask {
     private String recurrence;
     private String notes;
 
-    // Constructor, getters, and setters
+    // No-argument constructor
+    public PlantTask() {
+    }
+
+    // Constructor with arguments
     public PlantTask(long id, String plantName, String taskName, String date, String time, String recurrence, String notes) {
         this.id = id;
         this.plantName = plantName;
@@ -20,6 +24,7 @@ public class PlantTask {
         this.notes = notes;
     }
 
+    // Getters and setters
     public long getId() {
         return id;
     }
@@ -76,4 +81,3 @@ public class PlantTask {
         this.notes = notes;
     }
 }
-
