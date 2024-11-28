@@ -49,7 +49,10 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
             recurrence.setText(task.getRecurrence());
             notes.setText(task.getNotes());
 
+            checkBox.setOnCheckedChangeListener(null); // Clear previous listener
+            checkBox.setChecked(task.isChecked()); // Set checkbox state based on task
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                task.setChecked(isChecked); // Update task state
                 if (listener != null) {
                     listener.onCheckedChanged(task, isChecked);
                 }
@@ -84,7 +87,7 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             tasks.remove(task);
             notifyDataSetChanged();
-        }, 2000);
+        }, 3000); // 3-second delay
     }
 
     public interface OnCheckedChangeListener {

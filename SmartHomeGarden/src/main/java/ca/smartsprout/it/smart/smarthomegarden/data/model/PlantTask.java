@@ -8,6 +8,7 @@ public class PlantTask {
     private String time;
     private String recurrence;
     private String notes;
+    private boolean isChecked;
 
     // No-argument constructor
     public PlantTask() {
@@ -22,6 +23,7 @@ public class PlantTask {
         this.time = time;
         this.recurrence = recurrence;
         this.notes = notes;
+        this.isChecked = false;
     }
 
     // Getters and setters
@@ -79,5 +81,13 @@ public class PlantTask {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

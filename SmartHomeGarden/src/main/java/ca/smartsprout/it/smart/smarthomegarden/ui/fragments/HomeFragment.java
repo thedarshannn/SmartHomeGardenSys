@@ -191,13 +191,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Add listener to the checkbox
-        adapter.setOnCheckedChangeListener((task, isChecked) -> {
-            if (isChecked) {
-                viewModel.removeTask(task);
-                adapter.removeTask(task);
-            }
-        });
 
 
         return view;

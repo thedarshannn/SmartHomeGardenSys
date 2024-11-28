@@ -8,7 +8,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp"
-    app:cardBackgroundColor="#E6F3E6">
+    app:cardBackgroundColor="#F5F9F5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Plant Name"
-                android:textColor="#2E7D32"
+                android:textColor="@color/bottomNavColour"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_weight="1"/>
@@ -47,7 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Task Name"
-            android:textColor="#388E3C"
+            android:textStyle="bold"
+            android:textColor="#313030"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -61,7 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date:"
-                android:textColor="#43A047"
+                android:textStyle="bold"
+                android:textColor="#717171"
                 android:textSize="16sp"
                 android:layout_marginEnd="4dp" />
 
@@ -71,15 +73,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Date"
-                android:textColor="#43A047"
-                android:textSize="14sp" />
+                android:textColor="#717171"
+                android:textSize="16sp" />
 
             <!-- Label for Time -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Time:"
-                android:textColor="#43A047"
+                android:textStyle="bold"
+                android:textColor="#717171"
                 android:textSize="16sp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="4dp" />
@@ -90,8 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Time"
-                android:textColor="#43A047"
-                android:textSize="14sp" />
+                android:textColor="#717171"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,7 +110,8 @@
                 android:text="Recurrence:"
                 android:textColor="#4CAF50"
                 android:textSize="16sp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/recurrence"
@@ -116,26 +120,39 @@
                 android:layout_weight="1"
                 android:text="Recurrence"
                 android:textColor="#4CAF50"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
 
-        <!-- Label for Notes -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notes:"
-            android:textColor="#66BB6A"
-            android:textSize="16sp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="4dp" />
-
-        <TextView
-            android:id="@+id/notes"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notes"
-            android:textColor="#66BB6A"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
+
+            <!-- Label for Notes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notes:"
+                android:textColor="#717171"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Notes"
+                android:textColor="#717171"
+                android:textSize="14sp"
+                android:textStyle="italic"/>
+
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
