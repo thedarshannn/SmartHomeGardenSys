@@ -198,8 +198,44 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
             Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_SHORT).show();
         });
+        // Observe current password validation and update UI
+        passwordViewModel.getCurrentPasswordValidation().observe(this, isValid -> {
+            if (isValid != null) {
+                if (isValid) {
+                    currentPasswordLayout.setHelperText(getString(R.string.password_is_correct));
+                    currentPasswordLayout.setError(null); // Clear error
+                } else {
+                    currentPasswordLayout.setHelperText(null);
+                    currentPasswordLayout.setError(getString(R.string.incorrect_password));
+                }
+            }
+        });
 
-          // Validate current password
+        // Observe password matching
+        passwordViewModel.getPasswordsMatch().observe(this, doPasswordsMatch -> {
+            if (doPasswordsMatch != null) {
+                if (doPasswordsMatch) {
+                    retypePasswordLayout.setHelperText(getString(R.string.passwords_match));
+                    retypePasswordLayout.setError(null); // Clear error
+                } else {
+                    retypePasswordLayout.setHelperText(null);
+                    retypePasswordLayout.setError(getString(R.string.passwords_do_not_match));
+                }
+            }
+        });
+
+        // Observe update status
+        passwordViewModel.getUpdateStatus().observe(this, status -> {
+            if (status != null) {
+                if (status) {
+                    Toast.makeText(this, R.string.password_updated, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.failed_to_update, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Validate current password
         editcurrentPasswordText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -225,19 +261,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Observe current password validation and update UI
-        passwordViewModel.getCurrentPasswordValidation().observe(this, isValid -> {
-            if (isValid != null) {
-                if (isValid) {
-                    currentPasswordLayout.setHelperText(getString(R.string.password_is_correct));
-                    currentPasswordLayout.setError(null); // Clear error
-                } else {
-                    currentPasswordLayout.setHelperText(null);
-                    currentPasswordLayout.setError(getString(R.string.incorrect_password));
-                }
-            }
-        });
-
         // Observe password matching and update UI
         TextWatcher passwordMatchWatcher = new TextWatcher() {
             @Override
@@ -258,18 +281,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         editPasswordText.addTextChangedListener(passwordMatchWatcher);
         retypePasswordText.addTextChangedListener(passwordMatchWatcher);
-
-        passwordViewModel.getPasswordsMatch().observe(this, doPasswordsMatch -> {
-            if (doPasswordsMatch != null) {
-                if (doPasswordsMatch) {
-                    retypePasswordLayout.setHelperText(getString(R.string.passwords_match));
-                    retypePasswordLayout.setError(null); // Clear error
-                } else {
-                    retypePasswordLayout.setHelperText(null);
-                    retypePasswordLayout.setError(getString(R.string.passwords_do_not_match));
-                }
-            }
-        });
 
         // Add TextWatcher for "New Password" field
         editPasswordText.addTextChangedListener(new TextWatcher() {
@@ -292,42 +303,42 @@ public class AccountSettingsActivity extends AppCompatActivity {
         updatePasswordButton.setOnClickListener(v -> {
             String currentPassword = editcurrentPasswordText.getText().toString().trim();
             String newPassword = editPasswordText.getText().toString().trim();
-            // Regex for password validation
-            String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
-
+            // Check for empty current password
             if (currentPassword.isEmpty()) {
-                currentPasswordLayout.setError(getString(R.string.current_password_cannot_be_empty));
+                Toast.makeText(this, R.string.current_password_cannot_be_empty, Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Check for empty new password
             if (newPassword.isEmpty()) {
-                newPasswordLayout.setError(getString(R.string.new_password_cannot_be_empty));
+                Toast.makeText(this, R.string.new_password_cannot_be_empty, Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Check if current and new passwords are the same
             if (newPassword.equals(currentPassword)) {
-                newPasswordLayout.setError(getString(R.string.cannot_be_same_as_current_password));
+                Toast.makeText(this, R.string.cannot_be_same_as_current_password, Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (!newPassword.matches(passwordPattern)) {
+            // Validate regex for new password
+            if (!newPassword.matches(passwordViewModel.getPasswordPattern())) {
                 newPasswordLayout.setError(getString(R.string.regex));
-                return;
+                 return;
             }
-
             passwordViewModel.updatePassword(currentPassword, newPassword);
         });
-
-        // Observe update status
-        passwordViewModel.getUpdateStatus().observe(this, status -> {
-            if (status != null) {
-                if (status) {
-                    Toast.makeText(this, R.string.password_updated, Toast.LENGTH_SHORT).show();
+        // Observe Regex Validation for New Password
+        passwordViewModel.getPasswordRegexValidation().observe(this, isValid -> {
+            if (isValid != null) {
+                if (!isValid) {
+                    newPasswordLayout.setError(getString(R.string.regex));
                 } else {
-                    Toast.makeText(this, R.string.failed_to_update, Toast.LENGTH_SHORT).show();
+                    newPasswordLayout.setError(null);
                 }
             }
         });
+
     }
     @Override
     public boolean onSupportNavigateUp() {
