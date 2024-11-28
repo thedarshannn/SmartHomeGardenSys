@@ -26,6 +26,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding true
     }
 
     buildTypes {
@@ -76,6 +77,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation libs.circleimageview
+    implementation libs.legacy.support.v4
+    implementation libs.recyclerview
 
     // Test dependencies
     testImplementation libs.junit
