@@ -7,4 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.FAQActivity">
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/faqRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="?android:attr/windowBackground" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
