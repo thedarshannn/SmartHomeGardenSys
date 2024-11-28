@@ -14,7 +14,7 @@
         android:defaultValue="false" />
 
     <SwitchPreferenceCompat
-        android:key="action_toggle_temp"
+        android:key="action_toggle_units"
         android:title="@string/Units"
         android:summary="@string/Units_summary"
         android:defaultValue="false" />
