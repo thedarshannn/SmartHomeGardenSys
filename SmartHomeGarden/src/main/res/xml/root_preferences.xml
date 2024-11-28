@@ -13,6 +13,12 @@
         android:summary="@string/notification_summary"
         android:defaultValue="false" />
 
+    <SwitchPreferenceCompat
+        android:key="action_toggle_temp"
+        android:title="@string/Units"
+        android:summary="@string/Units_summary"
+        android:defaultValue="false" />
+
     <!-- ListPreference for selecting screen orientation -->
     <ListPreference
         android:key="screen_orientation"

@@ -232,6 +232,8 @@ Members:
     <string name="gallery_permission_required_message">
     Gallery access is required to select pictures. Please enable it from Settings.
 </string>
+    <string name="Units">Convert Units</string>
+    <string name="Units_summary">Switch between Metric and Imperial Units.</string>
 
 
 </resources>
