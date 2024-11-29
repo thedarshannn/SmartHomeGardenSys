@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +33,8 @@ public class NotificationActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private List<Notification> notificationList = new ArrayList<>();
     private NotificationAdapter adapter;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -48,25 +52,18 @@ public class NotificationActivity extends AppCompatActivity {
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
 
-        // Initialize the database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notificationsdatbase));
+        // Initialize FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                notificationList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Notification notification = snapshot.getValue(Notification.class);
-                    notificationList.add(0, notification); // Add to the top of the list
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle possible errors.
-            }
-        });
+        // Get current user
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
+            loadNotifications();
+        } else {
+            // Handle the case where there is no authenticated user
+        }
 
         // Handle back button press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -101,5 +98,37 @@ public class NotificationActivity extends AppCompatActivity {
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    // Method to add a notification
+    private void addNotification(Notification notification) {
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference userNotificationsRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
+            String notificationId = userNotificationsRef.push().getKey();
+            if (notificationId != null) {
+                notification.setId(notificationId);
+                userNotificationsRef.child(notificationId).setValue(notification);
+            }
+        }
+    }
+
+    private void loadNotifications() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                notificationList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Notification notification = snapshot.getValue(Notification.class);
+                    notificationList.add(0, notification); // Add to the top of the list
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors.
+            }
+        });
     }
 }

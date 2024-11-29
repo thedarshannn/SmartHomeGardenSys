@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantTask;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,12 +17,20 @@ import java.util.ArrayList;
 public class PlantTaskViewModel extends ViewModel {
     private MutableLiveData<List<PlantTask>> tasks;
     private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
 
     public PlantTaskViewModel() {
         tasks = new MutableLiveData<>(new ArrayList<>());
+        mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("plant_tasks");
-        loadTasks();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            databaseReference = firebaseDatabase.getReference("Users").child(userId).child("plant_tasks");
+            loadTasks();
+        } else {
+            // Handle the case where there is no authenticated user
+        }
     }
 
     public LiveData<List<PlantTask>> getTasks() {
@@ -52,5 +62,9 @@ public class PlantTaskViewModel extends ViewModel {
 
     public void removeTask(PlantTask task) {
         databaseReference.child(String.valueOf(task.getId())).removeValue();
+    }
+
+    public void updateTask(PlantTask task) {
+        databaseReference.child(String.valueOf(task.getId())).setValue(task);
     }
 }
