@@ -1,4 +1,5 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +28,15 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FAQViewHolder holder, int position) {
         FAQ faq = faqList.get(position);
+        Log.d("FAQAdapter", "Question: " + faq.getQuestion() + ", Answer: " + faq.getAnswer());
         holder.questionTextView.setText(faq.getQuestion());
         holder.answerTextView.setText(faq.getAnswer());
-        // holder.answerTextView.setVisibility(faq.isExpanded() ? View.VISIBLE : View.GONE);
+         holder.answerTextView.setVisibility(faq.isExpanded() ? View.VISIBLE : View.GONE);
 
-//        holder.itemView.setOnClickListener(v -> {
-//            faq.setExpanded(!faq.isExpanded());
-//            notifyItemChanged(position);
-//        });
+        holder.itemView.setOnClickListener(v -> {
+            faq.setExpanded(!faq.isExpanded());
+            notifyItemChanged(position);
+        });
     }
 
     @Override
