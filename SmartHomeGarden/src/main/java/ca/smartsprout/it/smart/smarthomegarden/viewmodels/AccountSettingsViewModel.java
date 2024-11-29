@@ -34,7 +34,7 @@ public class AccountSettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<Bitmap> profilePictureLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> userName = new MutableLiveData<>();
     private final FirebaseRepository firebaseRepository = new FirebaseRepository();
-    private MutableLiveData<Uri> profileImageUri;
+    private MutableLiveData<Uri> profileImageUri = new MutableLiveData<>();
 
     public AccountSettingsViewModel(Application application) {
         super(application);
@@ -55,9 +55,6 @@ public class AccountSettingsViewModel extends AndroidViewModel {
     }
 
     public LiveData<Uri> getProfileImageUri() {
-        if (profileImageUri == null) {
-            profileImageUri = new MutableLiveData<>();
-        }
         return profileImageUri;
     }
 
@@ -110,4 +107,7 @@ public class AccountSettingsViewModel extends AndroidViewModel {
     }
 
 
+    public void setProfileImageUri(Uri uri)
+    { profileImageUri.setValue(uri);
+    }
 }
