@@ -225,6 +225,9 @@ Members:
     <string name="propagation_division">Propagation: Division</string>
     <string name="low_watering">Low Watering</string>
     <string name="short_description_placeholder">Short description of the plant...</string>
+    <string name="watering_info_not_available">Watering info not available</string>
+    <string name="propagation">"Propagation: "</string>
+    <string name="propagation_info_not_available">Propagation info not available</string>
 
 
 </resources>

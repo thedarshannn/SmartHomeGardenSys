@@ -10,9 +10,11 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class PlantDetail {
+public class PlantDetail implements Serializable {
 
     @SerializedName("common_names")
     private List<String> commonNames;

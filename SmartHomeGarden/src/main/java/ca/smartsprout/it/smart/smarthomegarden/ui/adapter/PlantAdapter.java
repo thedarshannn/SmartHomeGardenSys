@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.PlantDetailsBottomSheetFragment;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
 
@@ -65,6 +67,12 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         } else {
             holder.ivThumbnail.setImageResource(R.drawable.image_placeholder);
         }
+
+
+        holder.itemView.setOnClickListener(v -> {
+            PlantDetailsBottomSheetFragment fragment = PlantDetailsBottomSheetFragment.newInstance(plant);
+            fragment.show(((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager(), "PlantDetailsBottomSheet");
+        });
 
 //        // Set watering chip
 //        holder.wateringChip.setText(plant.getWatering().toString());
