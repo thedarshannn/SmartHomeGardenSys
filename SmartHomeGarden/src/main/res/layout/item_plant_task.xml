@@ -95,6 +95,8 @@
                 android:text="Time"
                 android:textColor="#717171"
                 android:textSize="16sp" />
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -142,13 +144,23 @@
 
             <TextView
                 android:id="@+id/notes"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Notes"
                 android:textColor="#717171"
                 android:textSize="14sp"
                 android:textStyle="italic"/>
 
+            <!-- Edit Button -->
+            <ImageView
+                android:id="@+id/edit_button"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/edit"
+                android:contentDescription="@string/edit_button"
+                android:layout_marginStart="8dp"
+                android:tint="#717171"/>
 
 
         </LinearLayout>

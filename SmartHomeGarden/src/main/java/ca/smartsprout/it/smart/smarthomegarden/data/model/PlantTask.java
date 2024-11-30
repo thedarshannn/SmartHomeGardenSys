@@ -1,7 +1,10 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
-public class PlantTask {
+import java.io.Serializable;
+
+public class PlantTask implements Serializable {
     private long id;
+    private long taskTime;
     private String plantName;
     private String taskName;
     private String date;
@@ -15,8 +18,9 @@ public class PlantTask {
     }
 
     // Constructor with arguments
-    public PlantTask(long id, String plantName, String taskName, String date, String time, String recurrence, String notes) {
+    public PlantTask(long id, long taskTime, String plantName, String taskName, String date, String time, String recurrence, String notes) {
         this.id = id;
+        this.taskTime = taskTime;
         this.plantName = plantName;
         this.taskName = taskName;
         this.date = date;
@@ -33,6 +37,14 @@ public class PlantTask {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getTaskTime() {
+        return taskTime;
+    }
+
+    public void setTaskTime(long taskTime) {
+        this.taskTime = taskTime;
     }
 
     public String getPlantName() {

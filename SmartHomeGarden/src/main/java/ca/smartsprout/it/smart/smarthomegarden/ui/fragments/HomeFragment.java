@@ -14,7 +14,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,18 +23,14 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,15 +86,11 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         viewModel = new ViewModelProvider(this).get(PlantTaskViewModel.class);
-
-
-
 
         // If permission was previously granted, start updates
         if (isPermissionPreviouslyGranted()) {
@@ -143,6 +134,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        adapter.setOnEditButtonClickListener(task -> {
+            CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+
+            // Pass the task to the bottom sheet fragment
+            Bundle args = new Bundle();
+            args.putSerializable("task", task);
+            bottomSheetFragment.setArguments(args);
+
+            bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
+        });
         viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -160,7 +161,6 @@ public class HomeFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false); // Stop refreshing if conditions aren't met
             }
         });
-
 
         CardView weatherCardView = view.findViewById(R.id.cardView);
         weatherCardView.setOnClickListener(v -> {
@@ -190,8 +190,6 @@ public class HomeFragment extends Fragment {
                 updateTemperatureDisplay(weatherResponse);
             }
         });
-
-
 
         return view;
     }
