@@ -68,7 +68,21 @@ public class SearchFragment extends Fragment {
 
         // Initialize ViewModel
         plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
-
+        plantViewModel.getPlantDetail().observe(getViewLifecycleOwner(), plantDetail -> {
+            if (plantDetail != null) {
+                mainHandler.post(() -> {
+                    List<PlantDetail> plantList = new ArrayList<>();
+                    plantList.add(plantDetail);
+                    plantAdapter.updatePlantList(plantList);
+                    noResultsTextView.setVisibility(View.GONE);
+                });
+            } else {
+                mainHandler.post(() -> {
+                    plantAdapter.updatePlantList(new ArrayList<>());
+                    noResultsTextView.setVisibility(View.VISIBLE);
+                });
+            }
+        });
 
         // Initialize SearchView
         SearchView searchView = view.findViewById(R.id.searchView);
