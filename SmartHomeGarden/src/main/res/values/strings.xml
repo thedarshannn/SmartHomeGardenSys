@@ -222,7 +222,9 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
-
+    <string name="propagation_division">Propagation: Division</string>
+    <string name="low_watering">Low Watering</string>
+    <string name="short_description_placeholder">Short description of the plant...</string>
 
 
 </resources>
