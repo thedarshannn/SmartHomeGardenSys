@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import java.io.File;
@@ -36,6 +37,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AccountSettingsViewModel;
 
 public class ImagePickerHandler {
@@ -44,8 +46,7 @@ public class ImagePickerHandler {
     public static void showImagePickerDialog(
             AppCompatActivity activity,
             ActivityResultLauncher<Intent> cameraLauncher,
-            ActivityResultLauncher<Intent> galleryLauncher,
-            AccountSettingsViewModel viewModel
+            ActivityResultLauncher<Intent> galleryLauncher
     ) {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.choose_option)
@@ -53,7 +54,7 @@ public class ImagePickerHandler {
                 .setPositiveButton(R.string.camera, (dialog, which) -> {
                     if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
                             == PackageManager.PERMISSION_GRANTED) {
-                        openCamera(activity, cameraLauncher, viewModel);
+                        openCamera(activity, cameraLauncher);
                     } else {
                         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, 100);
                     }
@@ -73,13 +74,18 @@ public class ImagePickerHandler {
                 .show();
     }
 
-    public static void openCamera(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher, AccountSettingsViewModel viewModel) {
+    public static void openCamera(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher) {
         try {
             File photoFile = createImageFile(activity);
             Uri cameraImageUri = FileProvider.getUriForFile(activity,
                     activity.getApplicationContext().getPackageName() + ".fileprovider",
                     photoFile);
-            viewModel.setProfileImageUri(cameraImageUri);
+
+            if (activity instanceof AccountSettingsActivity){
+                AccountSettingsViewModel viewModel = new ViewModelProvider(activity).get(AccountSettingsViewModel.class);
+                viewModel.saveProfileImageUri(cameraImageUri);
+            }
+
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);

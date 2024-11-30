@@ -162,7 +162,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         // Click listener for profile image edit
         profileImageView.setOnClickListener(v -> {
-            ImagePickerHandler.showImagePickerDialog(this, cameraLauncher, galleryLauncher, viewModel);
+            ImagePickerHandler.showImagePickerDialog(this, cameraLauncher, galleryLauncher);
         });
 
         // Save button click listener

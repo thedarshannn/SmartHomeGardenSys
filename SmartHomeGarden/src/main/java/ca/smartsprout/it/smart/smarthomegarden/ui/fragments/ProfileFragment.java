@@ -13,6 +13,9 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -30,11 +34,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 
 
 public class ProfileFragment extends Fragment {
 
+     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == requireActivity().RESULT_OK && result.getData() != null) {
+                    // Handle the image captured by the camera
+                    Toast.makeText(requireContext(), "Camera image captured.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == requireActivity().RESULT_OK && result.getData() != null) {
+                    // Handle the image selected from the gallery
+                    Toast.makeText(requireContext(), "Gallery image selected.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     boolean isOptionsVisible;
     private ImageView imageView;
@@ -56,6 +76,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
 
 
         FloatingActionButton fabMain = view.findViewById(R.id.floatingActionButton);
@@ -134,6 +155,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Handle adding a picture of a plant
+                ImagePickerHandler.showImagePickerDialog(
+                        (AppCompatActivity) requireActivity(),
+                        cameraLauncher,
+                        galleryLauncher
+                );
             }
         });
 
