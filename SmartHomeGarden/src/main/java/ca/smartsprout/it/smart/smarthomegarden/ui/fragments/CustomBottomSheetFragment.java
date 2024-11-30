@@ -15,12 +15,19 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import java.util.Calendar;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantTask;
+import ca.smartsprout.it.smart.smarthomegarden.utils.AlarmReceiver;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
 
 public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
@@ -58,8 +65,27 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         });
 
         buttonSaveTask.setOnClickListener(v -> {
+            // Calculate the task time based on the date and time set by the user
+            Calendar calendar = Calendar.getInstance();
+            // Assuming buttonSetDate and buttonSetTime contain the date and time in the correct format
+            String[] dateParts = buttonSetDate.getText().toString().split("/");
+            String[] timeParts = buttonSetTime.getText().toString().split(":| ");
+            int day = Integer.parseInt(dateParts[0]);
+            int month = Integer.parseInt(dateParts[1]) - 1; // Month is 0-based in Calendar
+            int year = Integer.parseInt(dateParts[2]);
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            String amPm = timeParts[2];
+            if (amPm.equals("PM") && hour != 12) {
+                hour += 12;
+            } else if (amPm.equals("AM") && hour == 12) {
+                hour = 0;
+            }
+            calendar.set(year, month, day, hour, minute, 0);
+            long taskTime = calendar.getTimeInMillis();
+
             PlantTask task = new PlantTask(
-                    System.currentTimeMillis(),
+                    taskTime,
                     spinnerPlantSelection.getText().toString(),
                     editTextTaskName.getText().toString(),
                     buttonSetDate.getText().toString(),
@@ -69,8 +95,18 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
             );
             Log.d("CustomBottomSheetFragment", "Saving task: " + task);
             viewModel.addTask(task);
+
+            // Set the task reminder with a unique request code
+            setTaskReminder(taskTime, task.getTaskName(), (int) taskTime);
+
+            // Create a notification to inform the user that the task has been added
+            NotificationHelper.createNotification(requireContext(), "Task Added", "You have added a new task: " + task.getTaskName());
+
             dismiss();
         });
+
+
+
 
         return view;
     }
@@ -113,5 +149,26 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         );
         timePickerDialog.show();
     }
+
+    private void setTaskReminder(long taskTime, String taskName, int requestCode) {
+        AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
+
+        // Reminder alarm (30 minutes before the task time)
+        Intent reminderIntent = new Intent(requireContext(), AlarmReceiver.class);
+        reminderIntent.putExtra("task_name", taskName);
+        reminderIntent.putExtra("notification_type", "reminder");
+        PendingIntent reminderPendingIntent = PendingIntent.getBroadcast(requireContext(), requestCode, reminderIntent, PendingIntent.FLAG_IMMUTABLE);
+        long reminderTime = taskTime - 1800000; // 30 minutes in milliseconds
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, reminderPendingIntent);
+
+        // Exact task time alarm
+        Intent taskTimeIntent = new Intent(requireContext(), AlarmReceiver.class);
+        taskTimeIntent.putExtra("task_name", taskName);
+        taskTimeIntent.putExtra("notification_type", "task_time");
+        PendingIntent taskTimePendingIntent = PendingIntent.getBroadcast(requireContext(), requestCode + 1, taskTimeIntent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, taskTime, taskTimePendingIntent);
+    }
+
+
 
 }

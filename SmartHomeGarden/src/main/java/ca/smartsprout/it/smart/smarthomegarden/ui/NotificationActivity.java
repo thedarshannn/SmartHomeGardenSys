@@ -47,6 +47,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         // Create notification channel
         NotificationHelper.createNotificationChannel(this);
+        NotificationHelper.createTaskReminderChannel(this);
 
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         adapter = new NotificationAdapter(notificationList);
