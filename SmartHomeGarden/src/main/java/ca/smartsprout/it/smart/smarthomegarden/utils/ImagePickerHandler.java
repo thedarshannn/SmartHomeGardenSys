@@ -1,8 +1,16 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
 package ca.smartsprout.it.smart.smarthomegarden.utils;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 
 import android.content.Intent;
@@ -10,7 +18,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,8 +27,6 @@ import androidx.core.app.ActivityCompat;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 
 
 import java.io.File;
