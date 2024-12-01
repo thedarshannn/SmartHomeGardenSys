@@ -22,14 +22,16 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,18 +39,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PhotoAdapter;
 
 
 public class ProfileFragment extends Fragment {
 
-     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == requireActivity().RESULT_OK && result.getData() != null) {
                     // Handle the image captured by the camera
@@ -69,8 +76,11 @@ public class ProfileFragment extends Fragment {
     private TextView userNameTV;
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
-    private PhotosViewModel photosViewModel;
-    private PhotosAdapter adapter;
+    private PhotoViewModel photosViewModel;
+    private PhotoAdapter adapter;
+    private RecyclerView photosGrid;
+    private RecyclerView recyclerView;
+    private TabLayout tabLayout;
 
     public ProfileFragment() {
 
@@ -87,7 +97,12 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        recyclerView = view.findViewById(R.id.recyclerView);
+        photosGrid = view.findViewById(R.id.photosGrid);
 
+        tabLayout = view.findViewById(R.id.tabLayout);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         FloatingActionButton fabMain = view.findViewById(R.id.floatingActionButton);
         final FloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
@@ -97,6 +112,7 @@ public class ProfileFragment extends Fragment {
         imageView = view.findViewById(R.id.imageView);
         userNameTV = view.findViewById(R.id.userNameTV);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
         // load profile picture and load with glide and update the image view from firebase
@@ -180,11 +196,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // Initialize RecyclerView
-        RecyclerView photosGrid = view.findViewById(R.id.photosGrid);
-        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-
-        return view;
+         return view;
     }
 
     @Override
@@ -192,19 +204,46 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set up ViewModel
-        photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
-
-        // Observe LiveData and update RecyclerView
-        photosViewModel.getPhotos().observe(getViewLifecycleOwner(), new Observer<List<ContactsContract.Contacts.Photo>>() {
+        photosViewModel.getPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
             @Override
-            public void onChanged(List<ContactsContract.Contacts.Photo> photos) {
-                adapter = new PhotosAdapter(requireContext(), photos);
+            public void onChanged(List<Photo> photos) {
+             adapter = new PhotoAdapter(requireContext(), photos);
                 photosGrid.setAdapter(adapter);
             }
         });
+
+        // Handle Tab Selection
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) { // Plants Tab
+                    recyclerView.setVisibility(View.VISIBLE);
+                    photosGrid.setVisibility(View.GONE);
+                } else if (tab.getPosition() == 1) { // Photos Tab
+                    recyclerView.setVisibility(View.GONE);
+                    photosGrid.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // No action needed
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // No action needed
+            }
+        });
+
+        // Default to Plants Tab
+        recyclerView.setVisibility(View.VISIBLE);
+        photosGrid.setVisibility(View.GONE);
     }
-    @Override
+
+        @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
+
 }

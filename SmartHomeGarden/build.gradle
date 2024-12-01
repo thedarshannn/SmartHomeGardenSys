@@ -78,6 +78,9 @@ dependencies {
     implementation libs.circleimageview
     implementation libs.firebase.storage.ktx
     implementation libs.core
+    implementation libs.cardview
+
+
 
 
     // Test dependencies

@@ -1,8 +1,9 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +34,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         return new PhotoViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull PhotoAdapter.PhotoViewHolder holder, int position) {
-    }
+
 
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Photo photo = photos.get(position);
+        Log.d("PhotosAdapter", "Binding photo: " + photo.getName());
 
         // Load the photo using Glide
         Glide.with(context).load(photo.getUrl()).into(holder.imageViewPhoto);

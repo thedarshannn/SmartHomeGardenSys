@@ -1,3 +1,5 @@
+package ca.smartsprout.it.smart.smarthomegarden.data.model;
+
 public class Photo {
     private String id;
     private String url;
@@ -5,11 +7,11 @@ public class Photo {
     private String date;
 
     // Constructor
-    public Photo(String id, String url, String name, String date) {
+    public Photo(String id, String url, String rose, String date) {
         this.id = id;
-        this.url = url;
+        this.url = this.url;
         this.name = name;
-        this.date = date;
+        this.date = this.date;
     }
 
     // Getters
