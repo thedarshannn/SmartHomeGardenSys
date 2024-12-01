@@ -223,6 +223,27 @@ Members:
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
     <string name="edit_button">Edit Button</string>
+    <string name="task">task</string>
+    <string name="custombottomsheetfragment">CustomBottomSheetFragment</string>
+    <string name="task_is_null_in_oncreateview">Task is null in onCreateView</string>
+    <string name="arguments_are_null_in_oncreateview">Arguments are null in onCreateView</string>
+    <string name="date_button_clicked">Date button clicked</string>
+    <string name="pm">PM</string>
+    <string name="am">AM</string>
+    <string name="task_added">Task Added</string>
+    <string name="you_have_added_a_new_task">"You have added a new task: "</string>
+    <string name="task_updated">Task Updated</string>
+    <string name="you_have_updated_the_task">"You have updated the task: "</string>
+    <string name="plant_name1">Plant Name</string>
+    <string name="task_name">Task Name</string>
+    <string name="date">Date:</string>
+    <string name="datehint">Date</string>
+    <string name="time">Time:</string>
+    <string name="timehint">Time</string>
+    <string name="recurrence">Recurrence:</string>
+    <string name="recurrencehint">Recurrence</string>
+    <string name="notes">Notes:</string>
+    <string name="noteshint">Notes</string>
 
 
 </resources>

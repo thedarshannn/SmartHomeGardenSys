@@ -65,20 +65,18 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                 buttonSetTime.setText(task.getTime());
                 // Set recurrence radio button based on task.getRecurrence()
             } else {
-                Log.e("CustomBottomSheetFragment", "Task is null in onCreateView");
+                Log.e(getString(R.string.custombottomsheetfragment), getString(R.string.task_is_null_in_oncreateview));
             }
         } else {
-            Log.e("CustomBottomSheetFragment", "Arguments are null in onCreateView");
+            Log.e(getString(R.string.custombottomsheetfragment), getString(R.string.arguments_are_null_in_oncreateview));
         }
 
         buttonSetDate.setOnClickListener(v -> {
             showDatePicker();
-            Log.d("CustomBottomSheetFragment", "Date button clicked");
         });
 
         buttonSetTime.setOnClickListener(v -> {
             showTimePicker();
-            Log.d("CustomBottomSheetFragment", "Time button clicked");
         });
 
         buttonSaveTask.setOnClickListener(v -> {
@@ -93,9 +91,9 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
             int hour = Integer.parseInt(timeParts[0]);
             int minute = Integer.parseInt(timeParts[1]);
             String amPm = timeParts[2];
-            if (amPm.equals("PM") && hour != 12) {
+            if (amPm.equals(getString(R.string.pm)) && hour != 12) {
                 hour += 12;
-            } else if (amPm.equals("AM") && hour == 12) {
+            } else if (amPm.equals(getString(R.string.am)) && hour == 12) {
                 hour = 0;
             }
             calendar.set(year, month, day, hour, minute, 0);
@@ -114,14 +112,13 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                         getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId()),
                         editTextNotes.getText().toString()
                 );
-                Log.d("CustomBottomSheetFragment", "Saving new task: " + newTask);
                 viewModel.addTask(newTask);
 
                 // Set the task reminder with a unique request code
                 setTaskReminder(taskTime, newTask.getTaskName(), (int) taskId);
 
                 // Create a notification to inform the user that the task has been added
-                NotificationHelper.createNotification(requireContext(), "Task Added", "You have added a new task: " + newTask.getTaskName());
+                NotificationHelper.createNotification(requireContext(), getString(R.string.task_added), getString(R.string.you_have_added_a_new_task) + newTask.getTaskName());
             } else {
                 // Update the existing task
                 PlantTask updatedTask = new PlantTask(
@@ -134,14 +131,13 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                         getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId()),
                         editTextNotes.getText().toString()
                 );
-                Log.d("CustomBottomSheetFragment", "Updating task: " + updatedTask);
                 viewModel.updateTask(updatedTask);
 
                 // Set the task reminder with a unique request code
                 setTaskReminder(taskTime, updatedTask.getTaskName(), (int) task.getId());
 
                 // Create a notification to inform the user that the task has been updated
-                NotificationHelper.createNotification(requireContext(), "Task Updated", "You have updated the task: " + updatedTask.getTaskName());
+                NotificationHelper.createNotification(requireContext(), getString(R.string.task_updated), getString(R.string.you_have_updated_the_task) + updatedTask.getTaskName());
             }
 
             dismiss();

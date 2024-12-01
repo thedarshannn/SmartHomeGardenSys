@@ -33,5 +33,9 @@
     <color name="bottom">#E0E0E0</color>
     <color name="stroke">#2E7D32</color>
     <color name="bottomhint">#2E7D32</color>
+    <color name="homecardview">#F5F9F5</color>
+    <color name="checkbox">#388E3C</color>
+    <color name="taskname">#313030</color>
+    <color name="lightGrey">#717171</color>
 
 </resources>
