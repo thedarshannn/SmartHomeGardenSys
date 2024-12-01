@@ -43,7 +43,6 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_custom_bottom_sheet, container, false);
-        Log.d("CustomBottomSheetFragment", "onCreateView called");
 
         viewModel = new ViewModelProvider(requireActivity()).get(PlantTaskViewModel.class);
 
@@ -65,20 +64,20 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                 buttonSetTime.setText(task.getTime());
                 // Set recurrence radio button based on task.getRecurrence()
             } else {
-                Log.e("CustomBottomSheetFragment", "Task is null in onCreateView");
+                Log.e(getString(R.string.custombottomsheetfragment), getString(R.string.task_is_null_in_oncreateview));
             }
         } else {
-            Log.e("CustomBottomSheetFragment", "Arguments are null in onCreateView");
+            Log.e(getString(R.string.custombottomsheetfragment), getString(R.string.arguments_are_null_in_oncreateview));
         }
 
         buttonSetDate.setOnClickListener(v -> {
             showDatePicker();
-            Log.d("CustomBottomSheetFragment", "Date button clicked");
+            Log.d(getString(R.string.custombottomsheetfragment), getString(R.string.date_button_clicked));
         });
 
         buttonSetTime.setOnClickListener(v -> {
             showTimePicker();
-            Log.d("CustomBottomSheetFragment", "Time button clicked");
+            Log.d(getString(R.string.custombottomsheetfragment), getString(R.string.time_button_clicked));
         });
 
         buttonSaveTask.setOnClickListener(v -> {
@@ -93,9 +92,9 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
             int hour = Integer.parseInt(timeParts[0]);
             int minute = Integer.parseInt(timeParts[1]);
             String amPm = timeParts[2];
-            if (amPm.equals("PM") && hour != 12) {
+            if (amPm.equals(getString(R.string.pm)) && hour != 12) {
                 hour += 12;
-            } else if (amPm.equals("AM") && hour == 12) {
+            } else if (amPm.equals(getString(R.string.am)) && hour == 12) {
                 hour = 0;
             }
             calendar.set(year, month, day, hour, minute, 0);
@@ -114,14 +113,13 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                         getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId()),
                         editTextNotes.getText().toString()
                 );
-                Log.d("CustomBottomSheetFragment", "Saving new task: " + newTask);
                 viewModel.addTask(newTask);
 
                 // Set the task reminder with a unique request code
                 setTaskReminder(taskTime, newTask.getTaskName(), (int) taskId);
 
                 // Create a notification to inform the user that the task has been added
-                NotificationHelper.createNotification(requireContext(), "Task Added", "You have added a new task: " + newTask.getTaskName());
+                NotificationHelper.createNotification(requireContext(), getString(R.string.task_added), getString(R.string.you_have_added_a_new_task) + newTask.getTaskName());
             } else {
                 // Update the existing task
                 PlantTask updatedTask = new PlantTask(
@@ -134,14 +132,13 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                         getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId()),
                         editTextNotes.getText().toString()
                 );
-                Log.d("CustomBottomSheetFragment", "Updating task: " + updatedTask);
                 viewModel.updateTask(updatedTask);
 
                 // Set the task reminder with a unique request code
                 setTaskReminder(taskTime, updatedTask.getTaskName(), (int) task.getId());
 
                 // Create a notification to inform the user that the task has been updated
-                NotificationHelper.createNotification(requireContext(), "Task Updated", "You have updated the task: " + updatedTask.getTaskName());
+                NotificationHelper.createNotification(requireContext(), getString(R.string.task_updated), getString(R.string.you_have_updated_the_task) + updatedTask.getTaskName());
             }
 
             dismiss();
@@ -178,10 +175,10 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireContext(),
                 (view, hourOfDay, minute) -> {
-                    String amPm = (hourOfDay >= 12) ? "PM" : "AM";
+                    String amPm = (hourOfDay >= 12) ? (getString(R.string.pm)) : (getString(R.string.am));
                     int hour = (hourOfDay > 12) ? hourOfDay - 12 : hourOfDay;
                     hour = (hour == 0) ? 12 : hour; // handle midnight and noon
-                    buttonSetTime.setText(String.format("%02d:%02d %s", hour, minute, amPm));
+                    buttonSetTime.setText(String.format(getString(R.string.timeformate), hour, minute, amPm));
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
@@ -195,16 +192,16 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
 
         // Reminder alarm (30 minutes before the task time)
         Intent reminderIntent = new Intent(requireContext(), AlarmReceiver.class);
-        reminderIntent.putExtra("task_name", taskName);
-        reminderIntent.putExtra("notification_type", "reminder");
+        reminderIntent.putExtra(getString(R.string.task_name), taskName);
+        reminderIntent.putExtra(getString(R.string.notification_type), getString(R.string.reminder));
         PendingIntent reminderPendingIntent = PendingIntent.getBroadcast(requireContext(), requestCode, reminderIntent, PendingIntent.FLAG_IMMUTABLE);
         long reminderTime = taskTime - 1800000; // 30 minutes in milliseconds
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, reminderPendingIntent);
 
         // Exact task time alarm
         Intent taskTimeIntent = new Intent(requireContext(), AlarmReceiver.class);
-        taskTimeIntent.putExtra("task_name", taskName);
-        taskTimeIntent.putExtra("notification_type", "task_time");
+        taskTimeIntent.putExtra(getString(R.string.task_name), taskName);
+        taskTimeIntent.putExtra(getString(R.string.notification_type), getString(R.string.task_time));
         PendingIntent taskTimePendingIntent = PendingIntent.getBroadcast(requireContext(), requestCode + 1, taskTimeIntent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, taskTime, taskTimePendingIntent);
     }

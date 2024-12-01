@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create New Plant Task"
+        android:text="@string/create_new_plant_task"
         android:textSize="22sp"
         android:textColor="@color/bottomNavColour"
         android:textStyle="bold"
@@ -29,7 +29,7 @@
             android:id="@+id/spinner_plant_selection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select Plant"
+            android:hint="@string/select_plant"
             android:inputType="none"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -47,7 +47,7 @@
             android:id="@+id/edit_text_task_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Task Name"
+            android:hint="@string/task_name1"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="Set Date"
+            android:text="@string/set_date"
             android:textSize="14sp"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
@@ -75,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Set Time"
+            android:text="@string/set_time"
             android:textSize="14sp"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
@@ -92,7 +92,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recurrence"
+            android:text="@string/recurrence"
             android:textSize="16sp"
             android:textColor="@color/bottomNavColour"
             android:textStyle="bold"
@@ -109,21 +109,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Daily" />
+                android:text="@string/daily" />
 
             <RadioButton
                 android:id="@+id/radio_button_weekly"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Weekly" />
+                android:text="@string/weekly" />
 
             <RadioButton
                 android:id="@+id/radio_button_monthly"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="None" />
+                android:text="@string/none" />
         </RadioGroup>
     </LinearLayout>
 
@@ -137,7 +137,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notes"
+            android:text="@string/notes"
             android:textSize="16sp"
             android:textColor="@color/bottomNavColour"
             android:textStyle="bold"
@@ -154,7 +154,7 @@
                 android:id="@+id/edit_text_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter notes"
+                android:hint="@string/enter_notes"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -164,7 +164,7 @@
         android:id="@+id/button_save_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Task"
+        android:text="@string/save_task"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@color/bottomNavColour"
