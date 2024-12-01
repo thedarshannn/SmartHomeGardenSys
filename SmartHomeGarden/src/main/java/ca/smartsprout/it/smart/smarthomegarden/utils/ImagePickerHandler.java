@@ -21,6 +21,7 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -46,7 +47,9 @@ public class ImagePickerHandler {
     public static void showImagePickerDialog(
             AppCompatActivity activity,
             ActivityResultLauncher<Intent> cameraLauncher,
-            ActivityResultLauncher<Intent> galleryLauncher
+            ActivityResultLauncher<Intent> galleryLauncher,
+           @Nullable ActivityResultLauncher<String> requestCameraPermissionLauncher,
+           @Nullable ActivityResultLauncher<String> requestGalleryPermissionLauncher
     ) {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.choose_option)
@@ -55,7 +58,10 @@ public class ImagePickerHandler {
                     if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
                             == PackageManager.PERMISSION_GRANTED) {
                         openCamera(activity, cameraLauncher);
-                    } else {
+                    } else if (requestCameraPermissionLauncher != null) {
+                            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+                        }
+                     else {
                         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, 100);
                     }
                 })
@@ -67,7 +73,10 @@ public class ImagePickerHandler {
                     if (ContextCompat.checkSelfPermission(activity, permission)
                             == PackageManager.PERMISSION_GRANTED) {
                         openGallery(activity, galleryLauncher);
-                    } else {
+                    } else if (requestGalleryPermissionLauncher != null) {
+                        requestGalleryPermissionLauncher.launch(permission);
+                    }
+                    else {
                         ActivityCompat.requestPermissions(activity, new String[]{permission}, 101);
                     }
                 })

@@ -9,7 +9,11 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
+import static ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler.openCamera;
+import static ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler.openGallery;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -162,7 +167,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         // Click listener for profile image edit
         profileImageView.setOnClickListener(v -> {
-            ImagePickerHandler.showImagePickerDialog(this, cameraLauncher, galleryLauncher);
+            ImagePickerHandler.showImagePickerDialog(this, cameraLauncher, galleryLauncher,null,null);
         });
 
         // Save button click listener
@@ -344,6 +349,26 @@ public class AccountSettingsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish(); // Close the activity and go back
         return true;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100) { // Camera permission
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Open the camera immediately
+                openCamera(this, cameraLauncher);
+            } else {
+                Toast.makeText(this, "Camera permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == 101) { // Gallery permission
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Open the gallery immediately
+                openGallery(this, galleryLauncher);
+            } else {
+                Toast.makeText(this, "Gallery permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

@@ -10,7 +10,10 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,22 +59,6 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PhotoAdapter;
 
 public class ProfileFragment extends Fragment {
 
-    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == requireActivity().RESULT_OK && result.getData() != null) {
-                    // Handle the image captured by the camera
-                    Toast.makeText(requireContext(), "Camera image captured.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == requireActivity().RESULT_OK && result.getData() != null) {
-                    // Handle the image selected from the gallery
-                    Toast.makeText(requireContext(), "Gallery image selected.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
     boolean isOptionsVisible;
     private ImageView imageView;
     private TextView userNameTV;
@@ -81,6 +69,11 @@ public class ProfileFragment extends Fragment {
     private RecyclerView photosGrid;
     private RecyclerView recyclerView;
     private TabLayout tabLayout;
+    private ActivityResultLauncher<String> requestCameraPermissionLauncher;
+    private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+
 
     public ProfileFragment() {
 
@@ -89,6 +82,51 @@ public class ProfileFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize camera permission launcher
+        requestCameraPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Open the camera via ImagePickerHandler
+                        ImagePickerHandler.openCamera((AppCompatActivity) requireActivity(), cameraLauncher);
+                    } else {
+                        Toast.makeText(requireContext(), "Camera permission denied.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Initialize gallery permission launcher
+        requestGalleryPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Open the gallery via ImagePickerHandler
+                        ImagePickerHandler.openGallery((AppCompatActivity) requireActivity(), galleryLauncher);
+                    } else {
+                        Toast.makeText(requireContext(), "Gallery permission denied.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Initialize camera launcher
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                        Toast.makeText(requireContext(), "Camera image captured.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Initialize gallery launcher
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                        Toast.makeText(requireContext(), "Gallery image selected.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
     }
 
@@ -178,13 +216,17 @@ public class ProfileFragment extends Fragment {
         });
 
         fabAddPicture.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+
                 // Handle adding a picture of a plant
                 ImagePickerHandler.showImagePickerDialog(
                         (AppCompatActivity) requireActivity(),
                         cameraLauncher,
-                        galleryLauncher
+                        galleryLauncher,
+                        requestCameraPermissionLauncher,
+                        requestGalleryPermissionLauncher
                 );
             }
         });
