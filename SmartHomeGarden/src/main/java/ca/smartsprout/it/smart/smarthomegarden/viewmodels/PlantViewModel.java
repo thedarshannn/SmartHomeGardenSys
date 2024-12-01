@@ -58,17 +58,14 @@ public class PlantViewModel extends ViewModel {
                     if (plantResponse != null && plantResponse.getData() != null) {
                         plantList.postValue(plantResponse.getData());
                     } else {
-                        Log.e(TAG, "Plant list response is empty or null");
                         plantList.postValue(null);
                     }
                 } else {
-                    Log.e(TAG, "Failed to load plants: " + response.code());
                     plantList.postValue(null);
                 }
 
                 response.close();
             } catch (IOException e) {
-                Log.e(TAG, "Error loading plants: " + e.getMessage(), e);
                 plantList.postValue(null);
             }
         });
@@ -90,17 +87,14 @@ public class PlantViewModel extends ViewModel {
                     if (plantResponse != null && plantResponse.getData() != null) {
                         plantList.postValue(plantResponse.getData());
                     } else {
-                        Log.e(TAG, "Search response is empty or null");
                         plantList.postValue(null);
                     }
                 } else {
-                    Log.e(TAG, "Search failed with code: " + response.code());
                     plantList.postValue(null);
                 }
 
                 response.close();
             } catch (IOException e) {
-                Log.e(TAG, "Search request error: " + e.getMessage(), e);
                 plantList.postValue(null);
             }
         });
