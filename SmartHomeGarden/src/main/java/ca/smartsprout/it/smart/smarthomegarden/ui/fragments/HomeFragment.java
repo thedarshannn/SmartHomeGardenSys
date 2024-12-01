@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment {
 
             // Pass the task to the bottom sheet fragment
             Bundle args = new Bundle();
-            args.putSerializable(getString(R.string.task), task);
+            args.putSerializable("task", task);
             bottomSheetFragment.setArguments(args);
 
             bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());

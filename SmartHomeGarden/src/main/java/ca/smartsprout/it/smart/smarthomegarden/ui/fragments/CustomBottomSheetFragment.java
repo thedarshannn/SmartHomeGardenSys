@@ -19,6 +19,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
@@ -81,11 +82,19 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         });
 
         buttonSaveTask.setOnClickListener(v -> {
+            String dateText = buttonSetDate.getText().toString();
+            String timeText = buttonSetTime.getText().toString();
+
+            if (dateText.equals("Set Date") || timeText.equals("Set Time")) {
+                Toast.makeText(requireContext(), "Please set the date and time.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             // Calculate the task time based on the date and time set by the user
             Calendar calendar = Calendar.getInstance();
             // Assuming buttonSetDate and buttonSetTime contain the date and time in the correct format
-            String[] dateParts = buttonSetDate.getText().toString().split("/");
-            String[] timeParts = buttonSetTime.getText().toString().split(":| ");
+            String[] dateParts = dateText.split("/");
+            String[] timeParts = timeText.split(":| ");
             int day = Integer.parseInt(dateParts[0]);
             int month = Integer.parseInt(dateParts[1]) - 1; // Month is 0-based in Calendar
             int year = Integer.parseInt(dateParts[2]);
@@ -100,17 +109,19 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
             calendar.set(year, month, day, hour, minute, 0);
             long taskTime = calendar.getTimeInMillis();
 
+            String recurrence = getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId());
+
             if (task == null) {
                 // Create a new task with a unique ID
-                long taskId = System.currentTimeMillis(); // Use current time as a unique ID
+                long taskId = System.currentTimeMillis();
                 PlantTask newTask = new PlantTask(
                         taskId,
                         taskTime,
                         spinnerPlantSelection.getText().toString(),
                         editTextTaskName.getText().toString(),
-                        buttonSetDate.getText().toString(),
-                        buttonSetTime.getText().toString(),
-                        getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId()),
+                        dateText,
+                        timeText,
+                        recurrence,
                         editTextNotes.getText().toString()
                 );
                 viewModel.addTask(newTask);
@@ -127,9 +138,9 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                         taskTime,
                         spinnerPlantSelection.getText().toString(),
                         editTextTaskName.getText().toString(),
-                        buttonSetDate.getText().toString(),
-                        buttonSetTime.getText().toString(),
-                        getRecurrence(radioGroupRecurrence.getCheckedRadioButtonId()),
+                        dateText,
+                        timeText,
+                        recurrence,
                         editTextNotes.getText().toString()
                 );
                 viewModel.updateTask(updatedTask);
@@ -143,7 +154,7 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
 
             dismiss();
         });
-        
+
         return view;
     }
 
