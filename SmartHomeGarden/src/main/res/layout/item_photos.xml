@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:cardCornerRadius="12dp"
+    android:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/imageViewPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/photo" />
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="Plant Name" />
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:text="Date" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

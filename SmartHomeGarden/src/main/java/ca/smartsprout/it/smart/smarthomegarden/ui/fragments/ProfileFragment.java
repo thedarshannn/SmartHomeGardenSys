@@ -15,11 +15,17 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +37,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
@@ -61,6 +69,8 @@ public class ProfileFragment extends Fragment {
     private TextView userNameTV;
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
+    private PhotosViewModel photosViewModel;
+    private PhotosAdapter adapter;
 
     public ProfileFragment() {
 
@@ -170,9 +180,29 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Initialize RecyclerView
+        RecyclerView photosGrid = view.findViewById(R.id.photosGrid);
+        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Set up ViewModel
+        photosViewModel = new ViewModelProvider(this).get(PhotosViewModel.class);
+
+        // Observe LiveData and update RecyclerView
+        photosViewModel.getPhotos().observe(getViewLifecycleOwner(), new Observer<List<ContactsContract.Contacts.Photo>>() {
+            @Override
+            public void onChanged(List<ContactsContract.Contacts.Photo> photos) {
+                adapter = new PhotosAdapter(requireContext(), photos);
+                photosGrid.setAdapter(adapter);
+            }
+        });
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

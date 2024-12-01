@@ -234,6 +234,7 @@ Members:
 </string>
     <string name="Units">Convert Units</string>
     <string name="Units_summary">Switch between Metric and Imperial Units.</string>
+    <string name="photo">Photo\n</string>
 
 
 </resources>
