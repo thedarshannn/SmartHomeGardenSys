@@ -127,7 +127,7 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                 viewModel.addTask(newTask);
 
                 // Set the task reminder with a unique request code
-                setTaskReminder(taskTime, newTask.getTaskName(), (int) taskId);
+                setTaskReminder(taskTime, newTask.getTaskName(), (int) taskId, recurrence);
 
                 // Create a notification to inform the user that the task has been added
                 NotificationHelper.createNotification(requireContext(), getString(R.string.task_added), getString(R.string.you_have_added_a_new_task) + newTask.getTaskName());
@@ -146,7 +146,7 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
                 viewModel.updateTask(updatedTask);
 
                 // Set the task reminder with a unique request code
-                setTaskReminder(taskTime, updatedTask.getTaskName(), (int) task.getId());
+                setTaskReminder(taskTime, updatedTask.getTaskName(), (int) task.getId(), recurrence);
 
                 // Create a notification to inform the user that the task has been updated
                 NotificationHelper.createNotification(requireContext(), getString(R.string.task_updated), getString(R.string.you_have_updated_the_task) + updatedTask.getTaskName());
@@ -198,7 +198,7 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         timePickerDialog.show();
     }
 
-    private void setTaskReminder(long taskTime, String taskName, int requestCode) {
+    private void setTaskReminder(long taskTime, String taskName, int requestCode, String recurrence) {
         AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
 
         // Reminder alarm (30 minutes before the task time)
@@ -214,8 +214,16 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         taskTimeIntent.putExtra(getString(R.string.task_name), taskName);
         taskTimeIntent.putExtra(getString(R.string.notification_type), getString(R.string.task_time));
         PendingIntent taskTimePendingIntent = PendingIntent.getBroadcast(requireContext(), requestCode + 1, taskTimeIntent, PendingIntent.FLAG_IMMUTABLE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, taskTime, taskTimePendingIntent);
+
+        if (recurrence.equals("Daily")) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, taskTime, AlarmManager.INTERVAL_DAY, taskTimePendingIntent);
+        } else if (recurrence.equals("Weekly")) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, taskTime, AlarmManager.INTERVAL_DAY * 7, taskTimePendingIntent);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, taskTime, taskTimePendingIntent);
+        }
     }
+
 }
 
 
