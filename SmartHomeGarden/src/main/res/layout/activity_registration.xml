@@ -180,15 +180,23 @@
 
     <TextView
         android:id="@+id/goback"
-        android:layout_width="270dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="68dp"
-        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/textview_rounded_bg"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:text="Go back to login!"
+        android:textColor="@color/green"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.482" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
