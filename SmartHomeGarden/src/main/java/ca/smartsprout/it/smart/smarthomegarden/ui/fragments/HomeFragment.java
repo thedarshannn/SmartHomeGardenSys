@@ -117,7 +117,7 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        adapter = new PlantTaskAdapter(new ArrayList<>());
+        adapter = new PlantTaskAdapter(getContext(),new ArrayList<>());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
