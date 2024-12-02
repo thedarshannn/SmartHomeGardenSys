@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
+import ca.smartsprout.it.smart.smarthomegarden.utils.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import com.google.android.gms.tasks.OnSuccessListener;

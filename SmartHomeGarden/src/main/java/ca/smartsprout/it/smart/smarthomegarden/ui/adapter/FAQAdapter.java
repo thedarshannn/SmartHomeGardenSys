@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -13,9 +15,10 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.FAQ;
 
 public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
     private final List<FAQ> faqList;
-
+    private List<String> filteredList;
     public FAQAdapter(List<FAQ> faqList) {
         this.faqList = faqList;
+
     }
 
     @NonNull
