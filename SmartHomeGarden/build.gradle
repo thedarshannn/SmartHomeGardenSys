@@ -76,6 +76,12 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation libs.circleimageview
+    implementation libs.firebase.storage.ktx
+    implementation libs.core
+    implementation libs.cardview
+    implementation libs.room.common
+    implementation libs.room.runtime
+
 
     // Test dependencies
     testImplementation libs.junit
@@ -86,4 +92,5 @@ dependencies {
     testImplementation libs.core.testing
     testImplementation libs.robolectric
     androidTestImplementation libs.core.testing
+    annotationProcessor libs.room.compiler
 }
