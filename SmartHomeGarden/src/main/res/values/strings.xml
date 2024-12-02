@@ -228,6 +228,10 @@ Members:
     <string name="watering_info_not_available">Watering info not available</string>
     <string name="propagation">"Propagation: "</string>
     <string name="propagation_info_not_available">Propagation info not available</string>
+    <string name="add_new_plant">Add New Plant</string>
+    <string name="custom_plant_name">Custom Plant Name</string>
+    <string name="special_notes">Special Notes</string>
+    <string name="date_added">Date Added:</string>
 
 
 </resources>
