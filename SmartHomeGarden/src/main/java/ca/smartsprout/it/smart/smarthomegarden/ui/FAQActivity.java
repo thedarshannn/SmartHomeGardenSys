@@ -3,6 +3,8 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,6 +30,19 @@ public class FAQActivity extends AppCompatActivity {
         RecyclerView faqRecyclerView = findViewById(R.id.faqRecyclerView);
         faqRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        // Handle the back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish(); // Close the activity and go back
+            }
+        });
+
         // Hardcoded FAQ list
         List<FAQ> faqList = new ArrayList<>();
         faqList.add(new FAQ("How do I use this app?", "This app helps you manage your plants effectively."));
@@ -38,5 +53,10 @@ public class FAQActivity extends AppCompatActivity {
         FAQAdapter adapter = new FAQAdapter(faqList);
         faqRecyclerView.setAdapter(adapter);
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // Close the activity and go back
+        return true;
     }
 }
