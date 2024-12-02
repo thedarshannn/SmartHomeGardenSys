@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.io.Serializable;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
@@ -26,7 +25,7 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
     public static PlantDetailsBottomSheetFragment newInstance(PlantDetail plantDetail) {
         PlantDetailsBottomSheetFragment fragment = new PlantDetailsBottomSheetFragment();
         Bundle args = new Bundle();
-        args.putSerializable("plantDetail", (Serializable) plantDetail);
+        args.putSerializable("plantDetail", plantDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,7 +78,8 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
 
         // Set button click listener
         btnAddPlant.setOnClickListener(v -> {
-            // Logic for adding plant
+            AddPlantBottomSheet fragment = AddPlantBottomSheet.newInstance(plantDetail.toPlant());
+            fragment.show(getParentFragmentManager(), "PlantDetailsBottomSheet");
             dismiss();
         });
 

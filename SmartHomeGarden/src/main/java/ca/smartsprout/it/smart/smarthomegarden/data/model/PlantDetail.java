@@ -182,6 +182,15 @@ public class PlantDetail implements Serializable {
         this.name = name;
     }
 
+    public Plant toPlant() {
+        return new Plant(
+                name,
+                description.getValue(),
+                commonNames,
+                watering.getMax()
+        );
+    }
+
     // Nested classes
     public static class Taxonomy {
         @SerializedName("class")
