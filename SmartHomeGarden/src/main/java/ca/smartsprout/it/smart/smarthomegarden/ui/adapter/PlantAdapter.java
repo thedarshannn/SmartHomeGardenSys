@@ -20,14 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.chip.Chip;
 
 import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
-import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.AddPlantBottomSheet;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.PlantDetailsBottomSheetFragment;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
@@ -56,7 +53,8 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         if (plant.getDescription() != null && plant.getDescription().getValue() != null) {
             holder.plantDescription.setText(plant.getDescription().getValue());
         } else {
-            holder.plantDescription.setVisibility(View.GONE);
+            holder.plantDescription.setText(R.string.description_not_available);
+            holder.plantDescription.setVisibility(View.VISIBLE);
         }
 
         // Bind thumbnail image using Glide

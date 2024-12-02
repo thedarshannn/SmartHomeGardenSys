@@ -1,3 +1,12 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.os.Bundle;
@@ -61,13 +70,13 @@ public class AddPlantBottomSheet extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             selectedPlant = (Plant) getArguments().getSerializable(PLANT_KEY);
             if (selectedPlant != null) {
-                titleTextView.setText(String.format("%s %s", getString(R.string.adding), selectedPlant.getName()));
+                titleTextView.setText(String.format("%s%s", getString(R.string.adding), selectedPlant.getName()));
             } else {
-                handleException("Error: Plant details not found.");
+                handleException(getString(R.string.error_plant_details_not_found));
                 dismiss();
             }
         } else {
-            handleException("Error: No plant details passed.");
+            handleException(getString(R.string.error_no_plant_details_passed));
             dismiss();
         }
 
@@ -100,17 +109,17 @@ public class AddPlantBottomSheet extends BottomSheetDialogFragment {
                         new PlantRepository.OnPlantAddedListener() {
                             @Override
                             public void onSuccess() {
-                                Toast.makeText(getContext(), "Plant added successfully.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.plant_added_successfully, Toast.LENGTH_SHORT).show();
                                 dismiss();
                             }
 
                             @Override
                             public void onFailure(Exception e) {
-                                handleException("Error adding plant. Please try again.");
+                                handleException(getString(R.string.error_adding_plant_please_try_again));
                             }
                         });
             } catch (Exception e) {
-                handleException("An unexpected error occurred: " + e.getMessage());
+                handleException(getString(R.string.an_unexpected_error_occurred) + e.getMessage());
             }
         });
 

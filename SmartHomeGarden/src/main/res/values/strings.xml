@@ -233,6 +233,12 @@ Members:
     <string name="special_notes">Special Notes</string>
     <string name="date_added">Date Added:</string>
     <string name="adding">"Adding "</string>
+    <string name="description_not_available">Description not available</string>
+    <string name="error_plant_details_not_found">Error: Plant details not found.</string>
+    <string name="error_no_plant_details_passed">Error: No plant details passed.</string>
+    <string name="plant_added_successfully">Plant added successfully.</string>
+    <string name="error_adding_plant_please_try_again">Error adding plant. Please try again.</string>
+    <string name="an_unexpected_error_occurred">"An unexpected error occurred: "</string>
 
 
 </resources>
