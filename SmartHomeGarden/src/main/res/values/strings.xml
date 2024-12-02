@@ -223,6 +223,25 @@ Members:
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
 
+    <string name="propagation_division">Propagation: Division</string>
+    <string name="low_watering">Low Watering</string>
+    <string name="short_description_placeholder">Short description of the plant...</string>
+    <string name="watering_info_not_available">Watering info not available</string>
+    <string name="propagation">"Propagation: "</string>
+    <string name="propagation_info_not_available">Propagation info not available</string>
+    <string name="add_new_plant">Add New Plant</string>
+    <string name="custom_plant_name">Custom Plant Name</string>
+    <string name="special_notes">Special Notes</string>
+    <string name="date_added">Date Added:</string>
+    <string name="adding">"Adding "</string>
+    <string name="description_not_available">Description not available</string>
+    <string name="error_plant_details_not_found">Error: Plant details not found.</string>
+    <string name="error_no_plant_details_passed">Error: No plant details passed.</string>
+    <string name="plant_added_successfully">Plant added successfully.</string>
+    <string name="error_adding_plant_please_try_again">Error adding plant. Please try again.</string>
+    <string name="an_unexpected_error_occurred">"An unexpected error occurred: "</string>
+
+
     <string name="permission_required">Permission Required</string>
     <string name="permission_required_message">" Please grant the required permission from your device's settings.\n"</string>
     <string name="go_to_settings">Go to Settings\n</string>
@@ -244,6 +263,7 @@ Members:
     <string name="offline_image">Offline State Illustration</string>
     <string name="internet_connection_restored">Internet connection restored!</string>
     <string name="still_no_internet_connection">Still no internet connection.</string>
+
 
 
 
