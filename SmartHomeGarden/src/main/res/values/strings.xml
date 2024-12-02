@@ -147,7 +147,7 @@ Members:
     <string name="rate_your_experience">Rate your experience</string>
     <string name="feedbackprefs">FeedbackPrefs</string>
     <string name="submission_limit">submission limit</string>
-    <string name="next_feedback">Next feedback in: %02d:%02d:%02d</string>
+    <string name="next_feedback" formatted="false">Next feedback in: %02d:%02d:%02d</string>
     <string name="your_feedback">Your Feedback</string>
     <string name="n_a">N/A</string>
 
@@ -299,7 +299,7 @@ Members:
 
 
     <string name="whoops_no_internet">Whoops! No Internet</string>
-    <string name="check_connection_message">It seems you're offline. Turn on Wi-Fi or Mobile Data to reconnect.</string>
+    <string name="check_connection_message">It seems you\'re offline. Turn on Wi-Fi or Mobile Data to reconnect.</string>
     <string name="retry_connection">Try Again</string>
     <string name="offline_image">Offline State Illustration</string>
     <string name="internet_connection_restored">Internet connection restored!</string>

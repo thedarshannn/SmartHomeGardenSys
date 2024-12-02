@@ -89,6 +89,8 @@ dependencies {
     implementation libs.room.common
     implementation libs.room.runtime
 
+    implementation libs.gson
+    implementation libs.okhttp
 
 
     // Test dependencies

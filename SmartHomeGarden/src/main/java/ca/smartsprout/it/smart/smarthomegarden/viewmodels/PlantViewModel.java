@@ -80,29 +80,18 @@ public class PlantViewModel extends ViewModel {
                         Log.d(TAG, "Search Result Access Token: " + accessToken);
                         fetchPlantDetail(accessToken); // Pass accessToken to fetch detail
                     } else {
-
-                        plantList.postValue(null);
-                    }
-                } else {
-                    plantList.postValue(null);
-
                         Log.e(TAG, "Access Token is null or no entities found");
                         plantDetail.postValue(null);
                     }
                 } else {
                     Log.e(TAG, "Search API failed. Code: " + searchResponse.code() + ", Message: " + searchResponse.message());
                     plantDetail.postValue(null);
-
                 }
 
                 searchResponse.close();
             } catch (IOException e) {
-
-                plantList.postValue(null);
-
                 Log.e(TAG, "Error during search query: " + e.getMessage(), e);
                 plantDetail.postValue(null);
-
             }
         });
     }
@@ -138,29 +127,18 @@ public class PlantViewModel extends ViewModel {
                     if (detail != null) {
                         plantDetail.postValue(detail);
                     } else {
-
-                        plantList.postValue(null);
-                    }
-                } else {
-                    plantList.postValue(null);
-
                         Log.e(TAG, "Parsed PlantDetail is null");
                         plantDetail.postValue(null);
                     }
                 } else {
                     Log.e(TAG, "Detail API failed. Code: " + detailResponse.code() + ", Message: " + detailResponse.message());
                     plantDetail.postValue(null);
-
                 }
 
                 detailResponse.close();
             } catch (IOException e) {
-
-                plantList.postValue(null);
-
                 Log.e(TAG, "Error fetching plant detail: " + e.getMessage(), e);
                 plantDetail.postValue(null);
-
             }
         });
     }
