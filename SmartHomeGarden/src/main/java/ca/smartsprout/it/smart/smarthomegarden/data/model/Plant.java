@@ -1,13 +1,16 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class Plant {
     private String id;
     private String name;
+    private String customName; // User-defined custom name for the plant
     private String description;
     private List<String> commonNames;
     private String watering;
+    private Date dateAdded;
 
     // Getters and setters
     public String getId() {
@@ -48,5 +51,21 @@ public class Plant {
 
     public void setWatering(String watering) {
         this.watering = watering;
+    }
+
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
+
+    public Date getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
     }
 }

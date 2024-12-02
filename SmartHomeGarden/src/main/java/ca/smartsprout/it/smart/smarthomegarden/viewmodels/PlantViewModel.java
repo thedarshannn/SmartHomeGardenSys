@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,6 +38,7 @@ public class PlantViewModel extends ViewModel {
     private static final String API_KEY = "3A9BMjgBTtSyZxRsO98zjV7yKpGL4mfDPuoh8giqM3BRp6a2q1";
 
     private final MutableLiveData<PlantDetail> plantDetail = new MutableLiveData<>();
+    private final MutableLiveData<List<Plant>> plantList = new MutableLiveData<>(new ArrayList<>());
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -45,7 +47,15 @@ public class PlantViewModel extends ViewModel {
         return plantDetail;
     }
 
+    public LiveData<List<Plant>> getAllPlants() {
+        return plantList;
+    }
 
+
+    /**
+     * Search for a plant by name and fetch its details
+     * @param query The plant name to search for
+     */
     public void searchAndFetchPlantDetail(String query) {
         executorService.execute(() -> {
             try {
@@ -87,6 +97,10 @@ public class PlantViewModel extends ViewModel {
     }
 
 
+    /**
+     * Fetch plant details using the access token
+     * @param accessToken The access token to fetch plant details
+     */
     private void fetchPlantDetail(String accessToken) {
         executorService.execute(() -> {
             try {
@@ -127,6 +141,19 @@ public class PlantViewModel extends ViewModel {
                 plantDetail.postValue(null);
             }
         });
+    }
+
+
+    /**
+     * Add a plant to the list
+     * @param plant The plant to add to the list
+     */
+    public void addPlant(Plant plant) {
+        List<Plant> currentPlants = plantList.getValue();
+        if (currentPlants != null) {
+            currentPlants.add(plant);
+            plantList.setValue(currentPlants);
+        }
     }
 
 }
