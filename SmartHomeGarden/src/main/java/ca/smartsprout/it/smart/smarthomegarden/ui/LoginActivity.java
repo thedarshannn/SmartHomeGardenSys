@@ -60,6 +60,11 @@ private TextView registerswitch,forgotpassword;
         forgotpassword=findViewById(R.id.forgotPassword);
         googlesignin=findViewById(R.id.googlesignin);
         googleSignInHelpers = new GoogleSignInHelper(this);
+
+        // Hide the Toolbar for this activity
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         // Initialize ViewModel
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         emailInput.addTextChangedListener(new TextWatcher() {

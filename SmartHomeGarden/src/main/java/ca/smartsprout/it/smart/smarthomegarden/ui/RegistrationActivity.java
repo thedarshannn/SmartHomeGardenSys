@@ -55,7 +55,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
         goback = findViewById(R.id.goback);
 
-
+// Hide the Toolbar for this activity
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         // Set filters for inputs
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         passwordInput2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
