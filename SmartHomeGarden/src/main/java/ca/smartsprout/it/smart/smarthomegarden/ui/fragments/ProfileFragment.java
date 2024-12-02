@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -234,11 +235,23 @@ public class ProfileFragment extends Fragment {
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Handle adding a task for the plant
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new HomeFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+                // Update the bottom navigation indicator
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+
+                // Show the CustomBottomSheetFragment
+                CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+                bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
             }
         });
 
-         return view;
+        return view;
+
     }
 
     @Override

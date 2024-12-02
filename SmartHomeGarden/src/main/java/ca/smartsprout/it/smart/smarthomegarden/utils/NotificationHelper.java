@@ -51,4 +51,14 @@ public class NotificationHelper {
 
         notificationManager.notify(1, builder.build());
     }
+
+    public static void createTaskReminderChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("task_reminder_channel", "Task Reminders", NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Notifications for task reminders");
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 }
