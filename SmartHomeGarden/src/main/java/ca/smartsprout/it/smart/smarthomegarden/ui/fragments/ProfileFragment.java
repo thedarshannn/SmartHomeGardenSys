@@ -51,6 +51,7 @@ import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
 import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
@@ -140,7 +141,6 @@ public class ProfileFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tabLayout);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         FloatingActionButton fabMain = view.findViewById(R.id.floatingActionButton);
         final FloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
@@ -245,6 +245,9 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        photosGrid.addItemDecoration(new GridSpacingDecoration(14));
+
         // Set up ViewModel
         photosViewModel.getPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
             @Override
@@ -269,12 +272,9 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                // No action needed
             }
-
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                // No action needed
+            public void onTabReselected(TabLayout.Tab tab) {// No action needed
             }
         });
 

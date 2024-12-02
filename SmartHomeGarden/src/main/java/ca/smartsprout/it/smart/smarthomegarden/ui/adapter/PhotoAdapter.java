@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.Random;
 
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>  {
 
     private final Context context;
     private final List<Photo> photos;
+    private final Random random = new Random();
 
     public PhotoAdapter(Context context, List<Photo> photos) {
         this.context = context;
@@ -39,7 +41,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Photo photo = photos.get(position);
-        Log.d("PhotosAdapter", "Binding photo: " + photo.getName());
+        // Randomize item height
+        int randomHeight = getRandomHeight();
+        ViewGroup.LayoutParams layoutParams = holder.imageViewPhoto.getLayoutParams();
+        layoutParams.height = randomHeight; // Set dynamic height
+        holder.imageViewPhoto.setLayoutParams(layoutParams);
 
         // Load the photo using Glide
         Glide.with(context).load(photo.getUrl()).into(holder.imageViewPhoto);
@@ -65,5 +71,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             textViewName = itemView.findViewById(R.id.textViewName);
             textViewDate = itemView.findViewById(R.id.textViewDate);
         }
+    }
+    // Generate random heights for items
+    private int getRandomHeight() {
+        int[] heights = {300, 400, 500, 600}; // Example heights in pixels
+        return heights[random.nextInt(heights.length)];
     }
 }
