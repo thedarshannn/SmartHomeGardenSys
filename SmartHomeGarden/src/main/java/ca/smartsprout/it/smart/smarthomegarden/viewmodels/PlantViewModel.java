@@ -18,85 +18,164 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantResponse;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantSearchResult;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.SearchResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlantViewModel extends ViewModel {
     private static final String TAG = "PlantViewModel";
-    private static final String BASE_URL = "https://perenual.com/api/species-list?key=sk-lhd4673423e3776287615";
-    private final MutableLiveData<List<Plant>> plantList = new MutableLiveData<>();
+    private static final String SEARCH_URL = "https://plant.id/api/v3/kb/plants/name_search";
+    private static final String DETAIL_URL = "https://plant.id/api/v3/kb/plants/:";
+    private static final String API_KEY = "3A9BMjgBTtSyZxRsO98zjV7yKpGL4mfDPuoh8giqM3BRp6a2q1";
+
+    private final MutableLiveData<PlantDetail> plantDetail = new MutableLiveData<>();
+    private final MutableLiveData<List<Plant>> plantList = new MutableLiveData<>(new ArrayList<>());
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-    public PlantViewModel() {
-        loadPlants();
+    public LiveData<PlantDetail> getPlantDetail() {
+        return plantDetail;
     }
 
-    public LiveData<List<Plant>> getPlantList() {
+    public LiveData<List<Plant>> getAllPlants() {
         return plantList;
     }
 
-    public void loadPlants() {
+
+    /**
+     * Search for a plant by name and fetch its details
+     * @param query The plant name to search for
+     */
+    public void searchAndFetchPlantDetail(String query) {
         executorService.execute(() -> {
             try {
-                Request request = new Request.Builder().url(BASE_URL).build();
-                Response response = client.newCall(request).execute();
+                String searchUrl = SEARCH_URL + "?q=" + query + "&limit=1";
+                Request searchRequest = new Request.Builder()
+                        .url(searchUrl)
+                        .addHeader("Content-Type", "application/json")
+                        .addHeader("Api-Key", API_KEY)
+                        .build();
 
-                if (response.isSuccessful() && response.body() != null) {
-                    String jsonResponse = response.body().string();
-                    Type responseType = new TypeToken<PlantResponse>() {}.getType();
-                    PlantResponse plantResponse = gson.fromJson(jsonResponse, responseType);
+                Response searchResponse = client.newCall(searchRequest).execute();
+                if (searchResponse.isSuccessful() && searchResponse.body() != null) {
+                    String searchJson = searchResponse.body().string();
+                    Log.d(TAG, "Raw Search JSON: " + searchJson);
 
-                    if (plantResponse != null && plantResponse.getData() != null) {
-                        plantList.postValue(plantResponse.getData());
+                    // Deserialize JSON into SearchResponse
+                    Type responseType = new TypeToken<SearchResponse>() {}.getType();
+                    SearchResponse response = gson.fromJson(searchJson, responseType);
+
+                    if (response != null && response.getEntities() != null && !response.getEntities().isEmpty()) {
+                        String accessToken = response.getEntities().get(0).getAccessToken();
+                        Log.d(TAG, "Search Result Access Token: " + accessToken);
+                        fetchPlantDetail(accessToken); // Pass accessToken to fetch detail
                     } else {
+
                         plantList.postValue(null);
                     }
                 } else {
                     plantList.postValue(null);
+
+                        Log.e(TAG, "Access Token is null or no entities found");
+                        plantDetail.postValue(null);
+                    }
+                } else {
+                    Log.e(TAG, "Search API failed. Code: " + searchResponse.code() + ", Message: " + searchResponse.message());
+                    plantDetail.postValue(null);
+
                 }
 
-                response.close();
+                searchResponse.close();
             } catch (IOException e) {
+
                 plantList.postValue(null);
+
+                Log.e(TAG, "Error during search query: " + e.getMessage(), e);
+                plantDetail.postValue(null);
+
             }
         });
     }
 
-    public void searchPlants(String query) {
-        String searchUrl = BASE_URL + "&q=" + query;
 
+    /**
+     * Fetch plant details using the access token
+     * @param accessToken The access token to fetch plant details
+     */
+    private void fetchPlantDetail(String accessToken) {
         executorService.execute(() -> {
             try {
-                Request request = new Request.Builder().url(searchUrl).build();
-                Response response = client.newCall(request).execute();
+                // Construct the detail API URL
+                String detailUrl = DETAIL_URL + accessToken + "?details=common_names,url,description,image,watering,propagation_methods&language=en";
 
-                if (response.isSuccessful() && response.body() != null) {
-                    String jsonResponse = response.body().string();
-                    Type responseType = new TypeToken<PlantResponse>() {}.getType();
-                    PlantResponse plantResponse = gson.fromJson(jsonResponse, responseType);
+                // Build the GET request
+                Request detailRequest = new Request.Builder()
+                        .url(detailUrl)
+                        .addHeader("Content-Type", "application/json") // Optional for GET, but harmless
+                        .addHeader("Api-Key", API_KEY)
+                        .build();
 
-                    if (plantResponse != null && plantResponse.getData() != null) {
-                        plantList.postValue(plantResponse.getData());
+                // Execute the request
+                Response detailResponse = client.newCall(detailRequest).execute();
+
+                // Process the response
+                if (detailResponse.isSuccessful() && detailResponse.body() != null) {
+                    String detailJson = detailResponse.body().string();
+                    Log.d(TAG, "Detail Response JSON: " + detailJson); // Log for debugging
+
+                    // Parse the response into the PlantDetail model
+                    PlantDetail detail = gson.fromJson(detailJson, PlantDetail.class);
+                    if (detail != null) {
+                        plantDetail.postValue(detail);
                     } else {
+
                         plantList.postValue(null);
                     }
                 } else {
                     plantList.postValue(null);
+
+                        Log.e(TAG, "Parsed PlantDetail is null");
+                        plantDetail.postValue(null);
+                    }
+                } else {
+                    Log.e(TAG, "Detail API failed. Code: " + detailResponse.code() + ", Message: " + detailResponse.message());
+                    plantDetail.postValue(null);
+
                 }
 
-                response.close();
+                detailResponse.close();
             } catch (IOException e) {
+
                 plantList.postValue(null);
+
+                Log.e(TAG, "Error fetching plant detail: " + e.getMessage(), e);
+                plantDetail.postValue(null);
+
             }
         });
     }
+
+
+    /**
+     * Add a plant to the list
+     * @param plant The plant to add to the list
+     */
+    public void addPlant(Plant plant) {
+        List<Plant> currentPlants = plantList.getValue();
+        if (currentPlants != null) {
+            currentPlants.add(plant);
+            plantList.setValue(currentPlants);
+        }
+    }
+
 }

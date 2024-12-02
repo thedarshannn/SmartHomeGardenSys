@@ -21,7 +21,9 @@ public class PasswordViewModel extends ViewModel {
     private final MutableLiveData<Boolean> currentPasswordValidation = new MutableLiveData<>();
     private final MutableLiveData<Boolean> passwordsMatch = new MutableLiveData<>();
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> passwordRegexValidation = new MutableLiveData<>();
     public FirebaseAuth firebaseAuth;
+    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
 
     public PasswordViewModel() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -38,6 +40,14 @@ public class PasswordViewModel extends ViewModel {
 
     public LiveData<Boolean> getPasswordsMatch() {
         return passwordsMatch;
+    }
+
+    public LiveData<Boolean> getPasswordRegexValidation() {
+        return passwordRegexValidation;
+    }
+
+    private void validateRegex(String newPassword) {
+        passwordRegexValidation.setValue(newPassword.matches(PASSWORD_PATTERN));
     }
 
     public LiveData<Boolean> getUpdateStatus() {
@@ -83,7 +93,6 @@ public class PasswordViewModel extends ViewModel {
     public void updatePassword(String currentPassword, String newPassword) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
         if (user == null) {
             updateStatus.setValue(false); // User is not logged in
             return;
@@ -122,4 +131,8 @@ public class PasswordViewModel extends ViewModel {
         currentPasswordValidation.setValue(false); // Update MutableLiveData value
     }
 
+    public String getPasswordPattern() {
+        return PASSWORD_PATTERN;
+
+    }
 }

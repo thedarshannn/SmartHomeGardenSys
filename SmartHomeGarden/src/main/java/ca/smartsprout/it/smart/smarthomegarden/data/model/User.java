@@ -15,6 +15,7 @@ public class User {
     private String email;
     private String password;
     private String confirmPassword;
+    private String profilePictureUrl;
 
     // Constructor, getters, and setters
     public User(String name, String phoneNumber, String email, String password, String confirmPassword) {
@@ -23,6 +24,15 @@ public class User {
         this.email = email;
         this.password = password;
         this.confirmPassword = confirmPassword;
+    }
+
+    public User(String name, String phoneNumber, String email, String password, String confirmPassword, String profilePictureUrl) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public User() {
@@ -34,4 +44,12 @@ public class User {
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public String getConfirmPassword() { return confirmPassword; }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
 }

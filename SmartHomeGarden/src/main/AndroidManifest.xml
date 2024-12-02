@@ -5,17 +5,21 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
 
     <application
         android:allowBackup="true"
@@ -29,6 +33,10 @@
         android:theme="@style/Theme.SmartHomeGarden"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
+        <activity
+            android:name=".ui.OfflineActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
         <activity
             android:name=".ui.NotificationActivity"
             android:exported="false" />
@@ -69,10 +77,11 @@
         </activity>
         <activity
             android:name=".ui.AccountSettingsActivity"
-            android:exported="false"
             android:configChanges="uiMode|orientation|screenSize"
+            android:exported="false"
             android:theme="@style/Theme.SmartHomeGarden"
             tools:ignore="Instantiatable" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -85,8 +94,5 @@
         <receiver android:name=".utils.AlarmReceiver" />
 
     </application>
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
 </manifest>
