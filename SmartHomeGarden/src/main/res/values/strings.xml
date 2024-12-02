@@ -232,6 +232,7 @@ Members:
     <string name="custom_plant_name">Custom Plant Name</string>
     <string name="special_notes">Special Notes</string>
     <string name="date_added">Date Added:</string>
+    <string name="adding">"Adding "</string>
 
 
 </resources>

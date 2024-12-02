@@ -27,6 +27,7 @@ import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.AddPlantBottomSheet;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.PlantDetailsBottomSheetFragment;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {

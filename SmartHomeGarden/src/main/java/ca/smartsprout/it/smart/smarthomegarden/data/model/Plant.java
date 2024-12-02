@@ -1,16 +1,24 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Plant {
+public class Plant implements Serializable {
     private String id;
     private String name;
     private String customName; // User-defined custom name for the plant
     private String description;
     private List<String> commonNames;
-    private String watering;
+    private int watering;
     private Date dateAdded;
+
+    public Plant(String name, String description, List<String> commonNames, int watering) {
+        this.name = name;
+        this.description = description;
+        this.commonNames = commonNames;
+        this.watering = watering;
+    }
 
     // Getters and setters
     public String getId() {
@@ -45,13 +53,6 @@ public class Plant {
         this.commonNames = commonNames;
     }
 
-    public String getWatering() {
-        return watering;
-    }
-
-    public void setWatering(String watering) {
-        this.watering = watering;
-    }
 
     public String getCustomName() {
         return customName;
@@ -67,5 +68,13 @@ public class Plant {
 
     public void setDateAdded(Date dateAdded) {
         this.dateAdded = dateAdded;
+    }
+
+    public int getWatering() {
+        return watering;
+    }
+
+    public void setWatering(int watering) {
+        this.watering = watering;
     }
 }
