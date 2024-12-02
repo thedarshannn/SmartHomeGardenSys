@@ -249,7 +249,7 @@ public class ProfileFragment extends Fragment {
         photosGrid.addItemDecoration(new GridSpacingDecoration(14));
 
         // Set up ViewModel
-        photosViewModel.getPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
             @Override
             public void onChanged(List<Photo> photos) {
              adapter = new PhotoAdapter(requireContext(), photos);
@@ -282,8 +282,7 @@ public class ProfileFragment extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         photosGrid.setVisibility(View.GONE);
     }
-
-        @Override
+           @Override
     public void onDestroyView() {
         super.onDestroyView();
     }

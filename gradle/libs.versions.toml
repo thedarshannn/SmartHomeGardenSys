@@ -38,6 +38,9 @@ swiperefreshlayout = "1.1.0"
 
 robolectric = "4.10"
 core = "1.6.1"
+roomCommon = "2.6.1"
+roomRuntime = "2.6.1"
+roomCompiler = "2.6.1"
 
 
 [libraries]
@@ -77,6 +80,9 @@ swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout"
 
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 core = { group = "androidx.test", name = "core", version.ref = "core" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 
 [plugins]

@@ -2,6 +2,7 @@ package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,30 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PhotoRepository;
 
 public class PhotoViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<List<Photo>> photos = new MutableLiveData<>();
+    private final PhotoRepository photoRepository;
+    private final LiveData<List<Photo>> photos;
 
-    public PhotoViewModel(Application application) {
+
+    public PhotoViewModel(@NonNull Application application) {
         super(application);
-        loadPhotos(); // Load mock data for now
+        photoRepository = new PhotoRepository(application);
+        photos = photoRepository.getAllPhotos();
+    }
+    public void insertPhoto(Photo photo) {
+        photoRepository.insertPhoto(photo);
     }
 
-    public LiveData<List<Photo>> getPhotos() {
+    public LiveData<List<Photo>> getAllPhotos() {
         return photos;
     }
 
-    private void loadPhotos() {
-        List<Photo> photoList = new ArrayList<>();
-        photoList.add(new Photo("1", "https://via.placeholder.com/300x400", "Rose", "2024-12-01"));
-        photoList.add(new Photo("2", "https://via.placeholder.com/200x300", "Sunflower", "2024-12-02"));
-        photoList.add(new Photo("3", "https://via.placeholder.com/400x300", "Tulip", "2024-12-03"));
-        photoList.add(new Photo("4", "https://via.placeholder.com/300x500", "Lily", "2024-12-04"));
-        photoList.add(new Photo("5", "https://via.placeholder.com/200x200", "Daisy", "2024-12-05"));
-        photoList.add(new Photo("6", "https://via.placeholder.com/400x300", "Orchid", "2024-12-06"));
-        photos.setValue(photoList);
-
+    public void syncPhotos(String userId) {
+        photoRepository.syncPhotos(userId);
     }
 
 }
