@@ -39,7 +39,6 @@ public class MainActivity extends BaseActivity {
 
     private NavigationViewModel navigationViewModel;
     private ThemeViewModel themeViewModel;
-    private WeatherViewModel weatherViewModel;
     private MenuHandler menuHandler;
 
     @Override
@@ -50,9 +49,8 @@ public class MainActivity extends BaseActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
         themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
-        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
-        menuHandler = new MenuHandler(this, weatherViewModel);
+        menuHandler = new MenuHandler(this);
 
         // Set the theme based on the user's preference
         themeViewModel.getThemeMode().observe(this, themeMode -> {

@@ -9,43 +9,72 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.KEY_USER_PIC;
-import static ca.smartsprout.it.smart.smarthomegarden.utils.Constants.PREFS_USER_PROFILE;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
+import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PhotoAdapter;
 
 
 public class ProfileFragment extends Fragment {
 
-
     boolean isOptionsVisible;
     private ImageView imageView;
     private TextView userNameTV;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
+    private PhotoViewModel photosViewModel;
+    private PhotoAdapter adapter;
+    private RecyclerView photosGrid;
+    private RecyclerView recyclerView;
+    private TabLayout tabLayout;
+    private ActivityResultLauncher<String> requestCameraPermissionLauncher;
+    private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+
 
     public ProfileFragment() {
 
@@ -54,6 +83,51 @@ public class ProfileFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize camera permission launcher
+        requestCameraPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Open the camera via ImagePickerHandler
+                        ImagePickerHandler.openCamera((AppCompatActivity) requireActivity(), cameraLauncher);
+                    } else {
+                        Toast.makeText(requireContext(), "Camera permission denied.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Initialize gallery permission launcher
+        requestGalleryPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Open the gallery via ImagePickerHandler
+                        ImagePickerHandler.openGallery((AppCompatActivity) requireActivity(), galleryLauncher);
+                    } else {
+                        Toast.makeText(requireContext(), "Gallery permission denied.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Initialize camera launcher
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                        Toast.makeText(requireContext(), "Camera image captured.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Initialize gallery launcher
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                        Toast.makeText(requireContext(), "Gallery image selected.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
     }
 
@@ -62,6 +136,11 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        recyclerView = view.findViewById(R.id.recyclerView);
+        photosGrid = view.findViewById(R.id.photosGrid);
+
+        tabLayout = view.findViewById(R.id.tabLayout);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         FloatingActionButton fabMain = view.findViewById(R.id.floatingActionButton);
         final FloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
@@ -70,12 +149,23 @@ public class ProfileFragment extends Fragment {
 
         imageView = view.findViewById(R.id.imageView);
         userNameTV = view.findViewById(R.id.userNameTV);
-        sharedPreferences = requireContext().getSharedPreferences(PREFS_USER_PROFILE, Context.MODE_PRIVATE);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
-        // Load initial user data from SharedPreferences
-        loadUserProfile();
+        // load profile picture and load with glide and update the image view from firebase
+        userViewModel.getProfilePictureUrl().observe(getViewLifecycleOwner(), profilePictureUrl -> {
+            if (profilePictureUrl != null) {
+                Glide.with(requireActivity())
+                        .load(profilePictureUrl)
+                        .placeholder(R.drawable.user)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            } else {
+                // Clear the image if the URL is null
+                imageView.setImageResource(R.drawable.user);
+            }
+        });
 
         // Set up the profile card click listener
         CardView profileCardView = view.findViewById(R.id.profileCardView);
@@ -126,9 +216,18 @@ public class ProfileFragment extends Fragment {
         });
 
         fabAddPicture.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+
                 // Handle adding a picture of a plant
+                ImagePickerHandler.showImagePickerDialog(
+                        (AppCompatActivity) requireActivity(),
+                        cameraLauncher,
+                        galleryLauncher,
+                        requestCameraPermissionLauncher,
+                        requestGalleryPermissionLauncher
+                );
             }
         });
 
@@ -139,21 +238,53 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        return view;
+         return view;
     }
 
-    private void loadUserProfile() {
-        String uriString = sharedPreferences.getString(KEY_USER_PIC, null);
-        if (uriString != null) {
-            Uri uri = Uri.parse(uriString);
-            imageView.setImageURI(uri); // Load URI directly into CircleImageView
-        } else {
-            imageView.setImageResource(R.drawable.user); // Default image
-        }
-    }
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        photosGrid.addItemDecoration(new GridSpacingDecoration(14));
+
+        // Set up ViewModel
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
+            @Override
+            public void onChanged(List<Photo> photos) {
+             adapter = new PhotoAdapter(requireContext(), photos);
+                photosGrid.setAdapter(adapter);
+            }
+        });
+
+        // Handle Tab Selection
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) { // Plants Tab
+                    recyclerView.setVisibility(View.VISIBLE);
+                    photosGrid.setVisibility(View.GONE);
+                } else if (tab.getPosition() == 1) { // Photos Tab
+                    recyclerView.setVisibility(View.GONE);
+                    photosGrid.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {// No action needed
+            }
+        });
+
+        // Default to Plants Tab
+        recyclerView.setVisibility(View.VISIBLE);
+        photosGrid.setVisibility(View.GONE);
+    }
+           @Override
     public void onDestroyView() {
         super.onDestroyView();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
+
 }

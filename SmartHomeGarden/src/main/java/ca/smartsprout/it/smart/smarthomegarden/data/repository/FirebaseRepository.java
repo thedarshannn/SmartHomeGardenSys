@@ -11,15 +11,22 @@ package ca.smartsprout.it.smart.smarthomegarden.data.repository;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Log;
 import android.util.Patterns;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
@@ -28,9 +35,17 @@ public class FirebaseRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    private final MutableLiveData<String> profilePictureUrlLiveData = new MutableLiveData<>();
+
     public FirebaseRepository() {
         firestore = FirebaseFirestore.getInstance();
     }
+
+    public LiveData<String> getProfilePictureUrlLiveData() {
+        return profilePictureUrlLiveData;
+    }
+
     public LiveData<AuthResult> loginUser(String email, String password) {
         MutableLiveData<AuthResult> loginResult = new MutableLiveData<>();
 
@@ -167,5 +182,34 @@ public class FirebaseRepository {
 
     public interface OnFeedbackSubmissionListener {
         void onFeedbackSubmitted(boolean isSuccess);
+    }
+
+    public void uploadProfilePicture(Bitmap bitmap, String userId, OnCompleteListener<Uri> onCompleteListener) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference profilePicRef = firebaseStorage.getReference("profile_pictures/" + userId + ".jpg");
+        profilePicRef.putBytes(data).addOnSuccessListener(taskSnapshot ->
+                profilePicRef.getDownloadUrl().addOnCompleteListener(onCompleteListener)
+        ).addOnFailureListener(e -> Log.e("FirebaseRepository", "Error uploading profile picture", e));
+    }
+
+    public void saveProfilePictureUrl(String userId, String downloadUrl) {
+        firestore.collection("users").document(userId)
+                .update("profilePictureUrl", downloadUrl)
+                .addOnSuccessListener(aVoid -> Log.d("FirebaseRepository", "Profile picture URL updated successfully"))
+                .addOnFailureListener(e -> Log.e("FirebaseRepository", "Error updating profile picture URL", e));
+    }
+
+    public LiveData<String> getProfilePictureUrl(String userId) {
+        firestore.collection("users").document(userId)
+                .get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String url = documentSnapshot.getString("profilePictureUrl");
+                        profilePictureUrlLiveData.setValue(url);
+                    }
+                }).addOnFailureListener(e -> Log.e("FirebaseRepository", "Error fetching profile picture URL", e));
+        return profilePictureUrlLiveData;
     }
 }

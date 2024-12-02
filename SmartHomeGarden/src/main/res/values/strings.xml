@@ -132,9 +132,9 @@ Members:
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
 
-<string name="invalidpasswords">Passwords do not match.</string>
-<string name="invalidphone">Phone Number is Invalid!</string>
-<string name="signedin">Already Signed In!</string>
+    <string name="invalidpasswords">Passwords do not match.</string>
+    <string name="invalidphone">Phone Number is Invalid!</string>
+    <string name="signedin">Already Signed In!</string>
 
 
     <string name="watering_chip">Watering</string>
@@ -222,6 +222,7 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
+
     <string name="propagation_division">Propagation: Division</string>
     <string name="low_watering">Low Watering</string>
     <string name="short_description_placeholder">Short description of the plant...</string>
@@ -239,6 +240,31 @@ Members:
     <string name="plant_added_successfully">Plant added successfully.</string>
     <string name="error_adding_plant_please_try_again">Error adding plant. Please try again.</string>
     <string name="an_unexpected_error_occurred">"An unexpected error occurred: "</string>
+
+
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_required_message">" Please grant the required permission from your device's settings.\n"</string>
+    <string name="go_to_settings">Go to Settings\n</string>
+    <string name="failed_to_load_image">Failed to load image</string>
+    <string name="camera_permission_required_message">
+    Camera access is required to take pictures. Please enable it from Settings.
+</string>
+    <string name="gallery_permission_required_message">
+    Gallery access is required to select pictures. Please enable it from Settings.
+</string>
+    <string name="Units">Convert Units</string>
+    <string name="Units_summary">Switch between Metric and Imperial Units.</string>
+    <string name="photo">Photo\n</string>
+
+
+    <string name="whoops_no_internet">Whoops! No Internet</string>
+    <string name="check_connection_message">It seems you're offline. Turn on Wi-Fi or Mobile Data to reconnect.</string>
+    <string name="retry_connection">Try Again</string>
+    <string name="offline_image">Offline State Illustration</string>
+    <string name="internet_connection_restored">Internet connection restored!</string>
+    <string name="still_no_internet_connection">Still no internet connection.</string>
+
+
 
 
 </resources>

@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHomeGarden"
         tools:targetApi="34">
+        <activity
+            android:name=".ui.OfflineActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
         <activity
             android:name=".ui.NotificationActivity"
             android:exported="false" />
@@ -65,10 +73,11 @@
         </activity>
         <activity
             android:name=".ui.AccountSettingsActivity"
-            android:exported="false"
             android:configChanges="uiMode|orientation|screenSize"
+            android:exported="false"
             android:theme="@style/Theme.SmartHomeGarden"
             tools:ignore="Instantiatable" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -79,8 +88,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
 </manifest>
