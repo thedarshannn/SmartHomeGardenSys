@@ -28,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="139dp"
-                android:layout_height="88dp"
+                android:layout_width="179dp"
+                android:layout_height="94dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/sprout" />

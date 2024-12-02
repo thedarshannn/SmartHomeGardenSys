@@ -203,35 +203,35 @@ private TextView registerswitch,forgotpassword;
 
     private void showForgotPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Reset Password");
+        builder.setTitle(R.string.resetpassword);
 
         final EditText inputEmail = new EditText(this);
-        inputEmail.setHint("Enter your registered email");
+        inputEmail.setHint(R.string.enter_registered_email);
         inputEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         builder.setView(inputEmail);
 
-        builder.setPositiveButton("Send", (dialog, which) -> {
+        builder.setPositiveButton(R.string.send, (dialog, which) -> {
             String email = inputEmail.getText().toString().trim();
             if (!TextUtils.isEmpty(email)) {
                 authViewModel.sendPasswordResetEmail(email);
             } else {
-                Toast.makeText(this, "Please enter an email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.valid, Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
     private void observeViewModel() {
         authViewModel.getIsResetEmailSent().observe(this, isSent -> {
             if (isSent) {
-                Toast.makeText(this, "Password reset email sent!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.reset_email_sent, Toast.LENGTH_LONG).show();
                 // Update Firestore with password change timestamp
                 authViewModel.updatePasswordChangeTimestamp();
 
             } else {
-                Toast.makeText(this, "Failed to send reset email. Try again.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.failed_to_send_email, Toast.LENGTH_LONG).show();
             }
         });
 
