@@ -32,7 +32,7 @@ public class MenuHandler {
             // Handle temperature unit toggle
             weatherViewModel.toggleTemperatureUnit();
             return true;
-        } else if (id == R.id.help) {
+        } else if (id == R.id.faq) {
             Intent intent = new Intent(context, FAQActivity.class);
             context.startActivity(intent);
             return true;

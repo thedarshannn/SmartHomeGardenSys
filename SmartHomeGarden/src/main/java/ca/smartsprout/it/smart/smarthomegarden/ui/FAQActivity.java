@@ -37,5 +37,6 @@ public class FAQActivity extends AppCompatActivity {
 
         FAQAdapter adapter = new FAQAdapter(faqList);
         faqRecyclerView.setAdapter(adapter);
+
     }
 }

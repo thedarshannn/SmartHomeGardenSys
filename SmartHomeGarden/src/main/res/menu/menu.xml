@@ -16,7 +16,7 @@
         android:title="@string/toggle_temp"
         app:showAsAction="never" />
     <item
-        android:id="@+id/help"
-        android:title="@string/help"
+        android:id="@+id/faq"
+        android:title="@string/faq"
         app:showAsAction="never" />
 </menu>
