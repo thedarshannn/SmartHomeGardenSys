@@ -52,8 +52,11 @@ import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.ProfilePlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
 import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PhotoAdapter;
@@ -67,6 +70,8 @@ public class ProfileFragment extends Fragment {
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
     private PhotoViewModel photosViewModel;
+    private PlantViewModel plantViewModel;
+    private ProfilePlantAdapter plantAdapter;
     private PhotoAdapter adapter;
     private RecyclerView photosGrid;
     private RecyclerView recyclerView;
@@ -136,7 +141,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
         recyclerView = view.findViewById(R.id.recyclerView);
         photosGrid = view.findViewById(R.id.photosGrid);
 
@@ -257,6 +261,21 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        plantAdapter = new ProfilePlantAdapter(new ArrayList<>());
+        recyclerView.setAdapter(plantAdapter);
+
+        plantViewModel = new ViewModelProvider(requireActivity()).get(PlantViewModel.class);
+
+        plantViewModel.getAllPlants().observe(getViewLifecycleOwner(), plants -> {
+            if (plants != null) {
+                plantAdapter.updatePlantList(plants);
+            }
+        });
+
 
         photosGrid.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         photosGrid.addItemDecoration(new GridSpacingDecoration(14));
