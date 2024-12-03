@@ -36,6 +36,7 @@ gmsGoogleServices = "4.4.2"
 swiperefreshlayout = "1.1.0"
 
 robolectric = "4.10"
+rules = "1.6.1"
 
 
 [libraries]
@@ -72,6 +73,7 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx"
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
 
 
 [plugins]
