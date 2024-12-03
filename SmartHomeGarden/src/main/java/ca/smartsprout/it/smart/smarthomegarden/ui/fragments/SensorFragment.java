@@ -35,7 +35,6 @@ public class SensorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
 
         // Initialize UI elements
@@ -46,20 +45,21 @@ public class SensorFragment extends Fragment {
         temperatureProgressBar = view.findViewById(R.id.temperature_progress);
         moistureProgressBar = view.findViewById(R.id.moisture_progress);
 
-        // Set hard-coded sensor data directly
-        SensorData hardCodedSensorData = new SensorData(89.97, 27.0, 4.90); // Example hard-coded values
-        sensorViewModel.updateSensorData(hardCodedSensorData); // Send hard-coded data to database
+        // Observe LiveData from ViewModel
+        sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
+            if (sensorData != null) {
+                sunlightValueTextView.setText(String.valueOf(sensorData.getSunlight()));
+                sunlightProgressBar.setProgress((int) sensorData.getSunlight());
 
-        // Update UI components with hard-coded values
-        sunlightValueTextView.setText(String.valueOf(hardCodedSensorData.getSunlight()));
-        sunlightProgressBar.setProgress((int) hardCodedSensorData.getSunlight());
+                temperatureValueTextView.setText(String.valueOf(sensorData.getTemperature()));
+                temperatureProgressBar.setProgress((int) sensorData.getTemperature());
 
-        temperatureValueTextView.setText(String.valueOf(hardCodedSensorData.getTemperature()));
-        temperatureProgressBar.setProgress((int) hardCodedSensorData.getTemperature());
-
-        moistureValueTextView.setText(String.valueOf(hardCodedSensorData.getMoisture()));
-        moistureProgressBar.setProgress((int) hardCodedSensorData.getMoisture());
+                moistureValueTextView.setText(String.valueOf(sensorData.getMoisture()));
+                moistureProgressBar.setProgress((int) sensorData.getMoisture());
+            }
+        });
 
         return view;
     }
+
 }
