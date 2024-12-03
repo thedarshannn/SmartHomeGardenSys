@@ -45,15 +45,16 @@ public class FAQActivity extends AppCompatActivity {
 
         // Hardcoded FAQ list
         List<FAQ> faqList = new ArrayList<>();
-        faqList.add(new FAQ("How do I use this app?", "This app helps you manage your plants effectively."));
-        faqList.add(new FAQ("How to add a new plant?", "Go to the 'Add Plant' section and fill in the details."));
-        faqList.add(new FAQ("Can I change the watering schedule?", "Yes, you can edit schedules in the 'Settings' menu."));
-        faqList.add(new FAQ("How do I track plant health?", "Use the 'Health Tracker' feature in the app."));
+        faqList.add(new FAQ(getString(R.string.faq1), getString(R.string.faq5)));
+        faqList.add(new FAQ(getString(R.string.faq2), getString(R.string.faq6)));
+        faqList.add(new FAQ(getString(R.string.faq3), getString(R.string.faq7)));
+        faqList.add(new FAQ(getString(R.string.faq4), getString(R.string.faq8)));
 
         FAQAdapter adapter = new FAQAdapter(faqList);
         faqRecyclerView.setAdapter(adapter);
 
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish(); // Close the activity and go back

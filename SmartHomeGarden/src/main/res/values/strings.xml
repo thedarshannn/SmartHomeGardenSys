@@ -229,4 +229,12 @@ Members:
     <string name="enter_registered_email">Enter your registered email</string>
     <string name="reset_email_sent">Password reset email sent</string>
     <string name="failed_to_send_email">Failed to send reset email. Try again.</string>
+    <string name="faq1">How do I use this app?</string>
+<string name="faq2">How to add a new plant?</string>
+    <string name="faq3">Can I change the watering schedule?</string>
+    <string name="faq4">How do I track plant health?</string>
+<string name="faq5">This app helps you manage your plants effectively.</string>
+<string name="faq6">Go to the Add Plant section and fill in the details.</string>
+    <string name="faq7">Yes, you can edit schedules in the Settings menu.</string>
+    <string name="faq8">Use the Health Tracker feature in the app.</string>
 </resources>

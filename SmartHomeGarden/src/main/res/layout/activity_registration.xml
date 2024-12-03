@@ -79,6 +79,7 @@
         app:hintEnabled="false"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/hint_color"
+
         app:boxBackgroundMode="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
