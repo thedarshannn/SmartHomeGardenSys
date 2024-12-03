@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment {
         });
 
         adapter.setOnEditButtonClickListener(task -> {
-            CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+            TaskBottomSheetFragment bottomSheetFragment = new TaskBottomSheetFragment();
 
             // Pass the task to the bottom sheet fragment
             Bundle args = new Bundle();

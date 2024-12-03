@@ -31,7 +31,7 @@ import ca.smartsprout.it.smart.smarthomegarden.utils.AlarmReceiver;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
 
-public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
+public class TaskBottomSheetFragment extends BottomSheetDialogFragment {
 
     private PlantTaskViewModel viewModel;
     private AutoCompleteTextView spinnerPlantSelection;
