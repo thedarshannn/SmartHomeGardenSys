@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -210,10 +211,13 @@ private TextView registerswitch,forgotpassword;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.resetpassword);
 
-        final EditText inputEmail = new EditText(this);
-        inputEmail.setHint(R.string.enter_registered_email);
-        inputEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        builder.setView(inputEmail);
+        // Inflate custom layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_forgot_password, null);
+        builder.setView(dialogView);
+
+        // Reference EditText from custom layout
+        EditText inputEmail = dialogView.findViewById(R.id.editTextEmail);
 
         builder.setPositiveButton(R.string.send, (dialog, which) -> {
             String email = inputEmail.getText().toString().trim();
@@ -227,6 +231,7 @@ private TextView registerswitch,forgotpassword;
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
         builder.show();
     }
+
 
     private void observeViewModel() {
         authViewModel.getIsResetEmailSent().observe(this, isSent -> {
