@@ -83,18 +83,18 @@ public class NotificationActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+                int position = viewHolder.getBindingAdapterPosition();
                 Notification notification = notificationList.get(position);
 
                 // Check if notification ID is not null
                 if (notification.getId() != null) {
                     // Remove the notification from the database
                     databaseReference.child(notification.getId()).removeValue();
-                }
 
-                // Remove the notification from the list
-                notificationList.remove(position);
-                adapter.notifyItemRemoved(position);
+                    // Remove the notification from the list
+                    notificationList.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
             }
         });
 
