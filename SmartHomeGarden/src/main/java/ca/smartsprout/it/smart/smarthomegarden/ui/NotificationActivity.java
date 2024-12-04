@@ -1,12 +1,3 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
-
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.annotation.SuppressLint;
@@ -16,11 +7,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
-
 import androidx.annotation.NonNull;
-
 import androidx.appcompat.app.ActionBar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -72,7 +60,6 @@ public class NotificationActivity extends AppCompatActivity {
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
 
-
         // Initialize ActionBar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -83,36 +70,7 @@ public class NotificationActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                finish(); // Close the activity and go back
-            }
-        });
-
-        // Initialize the database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notificationsdatbase));
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                notificationList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Notification notification = snapshot.getValue(Notification.class);
-                    notificationList.add(0, notification); // Add to the top of the list
-                }
-                adapter.notifyDataSetChanged();
-
-                // Toggle visibility of the "No Notifications" image and "Clear All" button
-                if (notificationList.isEmpty()) {
-                    btnClearAll.setVisibility(View.GONE);
-                    imgNoNotifications.setVisibility(View.VISIBLE);
-                } else {
-                    btnClearAll.setVisibility(View.VISIBLE);
-                    imgNoNotifications.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle possible errors.
+                finish();
             }
         });
 
@@ -124,23 +82,16 @@ public class NotificationActivity extends AppCompatActivity {
         if (currentUser != null) {
             String userId = currentUser.getUid();
             databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
-            loadNotifications();
-        } else {
-            // Handle the case where there is no authenticated user
+            loadNotifications(btnClearAll, imgNoNotifications);
         }
-
-
 
         // Handle "Clear All" button click
         btnClearAll.setOnClickListener(v -> {
             databaseReference.removeValue();
             notificationList.clear();
             adapter.notifyDataSetChanged();
-
-            btnClearAll.setVisibility(View.GONE);
-            imgNoNotifications.setVisibility(View.VISIBLE); // Show the image
+            updateVisibility(btnClearAll, imgNoNotifications); // Update visibility
         });
-
 
         // Add ItemTouchHelper for swipe-to-dismiss functionality
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -154,43 +105,32 @@ public class NotificationActivity extends AppCompatActivity {
                 int position = viewHolder.getBindingAdapterPosition();
                 Notification notification = notificationList.get(position);
 
-                // Check if notification ID is not null
                 if (notification.getId() != null) {
-                    // Remove the notification from the database
                     databaseReference.child(notification.getId()).removeValue();
-
-                    // Remove the notification from the list
-                    notificationList.remove(position);
-                    adapter.notifyItemRemoved(position);
                 }
+
+                notificationList.remove(position);
+                adapter.notifyItemRemoved(position);
+                updateVisibility(btnClearAll, imgNoNotifications); // Update visibility
             }
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
-    }
-
-    // Method to add a notification
-    private void addNotification(Notification notification) {
-        if (currentUser != null) {
-            String userId = currentUser.getUid();
-            DatabaseReference userNotificationsRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
-            String notificationId = userNotificationsRef.push().getKey();
-            if (notificationId != null) {
-                notification.setId(notificationId);
-                userNotificationsRef.child(notificationId).setValue(notification);
-            }
+    // Refactored method to update visibility
+    private void updateVisibility(Button btnClearAll, ImageView imgNoNotifications) {
+        if (notificationList.isEmpty()) {
+            btnClearAll.setVisibility(View.GONE);
+            imgNoNotifications.setVisibility(View.VISIBLE);
+        } else {
+            btnClearAll.setVisibility(View.VISIBLE);
+            imgNoNotifications.setVisibility(View.GONE);
         }
     }
 
-    private void loadNotifications() {
+    private void loadNotifications(Button btnClearAll, ImageView imgNoNotifications) {
         databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 notificationList.clear();
@@ -199,6 +139,7 @@ public class NotificationActivity extends AppCompatActivity {
                     notificationList.add(0, notification); // Add to the top of the list
                 }
                 adapter.notifyDataSetChanged();
+                updateVisibility(btnClearAll, imgNoNotifications); // Update visibility
             }
 
             @Override
@@ -206,5 +147,11 @@ public class NotificationActivity extends AppCompatActivity {
                 // Handle possible errors.
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
