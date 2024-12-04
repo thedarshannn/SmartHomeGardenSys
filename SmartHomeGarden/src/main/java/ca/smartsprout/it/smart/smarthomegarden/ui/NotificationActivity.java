@@ -1,3 +1,12 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.annotation.SuppressLint;
@@ -37,9 +46,11 @@ import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
 
 public class NotificationActivity extends AppCompatActivity {
 
+    private NotificationViewModel notificationViewModel;
     private DatabaseReference databaseReference;
-    private final List<Notification> notificationList = new ArrayList<>();
+    private List<Notification> notificationList = new ArrayList<>();
     private NotificationAdapter adapter;
+    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
     @SuppressLint("MissingInflatedId")
@@ -57,9 +68,7 @@ public class NotificationActivity extends AppCompatActivity {
         NotificationHelper.createNotificationChannel(this);
         NotificationHelper.createTaskReminderChannel(this);
 
-
-        NotificationViewModel notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
-
+        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
 
@@ -108,7 +117,7 @@ public class NotificationActivity extends AppCompatActivity {
         });
 
         // Initialize FirebaseAuth
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // Get current user
         currentUser = mAuth.getCurrentUser();
@@ -136,37 +145,28 @@ public class NotificationActivity extends AppCompatActivity {
         // Add ItemTouchHelper for swipe-to-dismiss functionality
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getBindingAdapterPosition();
                 Notification notification = notificationList.get(position);
 
+                // Check if notification ID is not null
                 if (notification.getId() != null) {
+                    // Remove the notification from the database
                     databaseReference.child(notification.getId()).removeValue();
-                }
 
-                notificationList.remove(position);
-                adapter.notifyItemRemoved(position);
-
-                if (notificationList.isEmpty()) {
-                    btnClearAll.setVisibility(View.GONE);
-                    imgNoNotifications.setVisibility(View.VISIBLE); // Show the image
+                    // Remove the notification from the list
+                    notificationList.remove(position);
+                    adapter.notifyItemRemoved(position);
                 }
             }
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
-    }
-
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish(); // Close the activity and go back
-        return true;
     }
 
     // Method to add a notification
@@ -196,10 +196,9 @@ public class NotificationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 // Handle possible errors.
             }
         });
-
     }
 }
