@@ -47,21 +47,28 @@ public class PlantRepository {
      * @return LiveData object containing a list of plants
      */
     public LiveData<List<Plant>> fetchPlants() {
-        getUserPlantsCollection().get()
-                .addOnSuccessListener(querySnapshot -> {
-                    List<Plant> plants = new ArrayList<>();
-                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                        Plant plant = document.toObject(Plant.class);
-                        assert plant != null;
-                        plant.setId(document.getId()); // Set document ID for later use
+        getUserPlantsCollection().addSnapshotListener((querySnapshot, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Error fetching plants: " + e.getMessage(), e);
+                return;
+            }
+
+            if (querySnapshot != null) {
+                List<Plant> plants = new ArrayList<>();
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    Plant plant = document.toObject(Plant.class);
+                    if (plant != null) {
+                        plant.setId(document.getId());
                         plants.add(plant);
                     }
-                    plantsLiveData.postValue(plants);
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Error fetching plants: " + e.getMessage(), e));
+                }
+                plantsLiveData.postValue(plants);
+            }
+        });
 
         return plantsLiveData;
     }
+
 
 
     /**

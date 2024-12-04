@@ -27,17 +27,18 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapter.PlantViewHolder> {
 
     private List<Plant> plantList;
-    private final OnPlantClickListener listener;
+    private OnPlantClickListener listener = null;
 
-    public ProfilePlantAdapter(List<Plant> plantList, OnPlantClickListener listener) {
+    public ProfilePlantAdapter(List<Plant> plantList) {
         this.plantList = plantList;
-        this.listener = listener;
     }
 
     public void updatePlantList(List<Plant> updatedList) {
-        this.plantList = updatedList;
+        this.plantList.clear();
+        this.plantList.addAll(updatedList);
         notifyDataSetChanged();
     }
+
 
     @NonNull
     @Override
@@ -51,9 +52,11 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
         Plant plant = plantList.get(position);
         holder.plantName.setText(plant.getCustomName() != null ? plant.getCustomName() : plant.getName());
         holder.plantSpecies.setText(plant.getName());
-        holder.dateAdded.setText(plant.getDateAdded().toString());
-
-        holder.cardView.setOnClickListener(v -> listener.onPlantClick(plant));
+        if (plant.getDateAdded() != null) {
+            holder.dateAdded.setText(plant.getDateAdded().toString());
+        } else {
+            holder.dateAdded.setText(R.string.no_date_provided); // Or any placeholder text
+        }
     }
 
     @Override
@@ -73,6 +76,7 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
             plantName = itemView.findViewById(R.id.plantName);
             plantSpecies = itemView.findViewById(R.id.plantSpecies);
             dateAdded = itemView.findViewById(R.id.dateAdded);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 
