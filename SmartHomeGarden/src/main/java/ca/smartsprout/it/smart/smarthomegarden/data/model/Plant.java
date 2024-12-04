@@ -24,6 +24,9 @@ public class Plant implements Serializable {
         this.watering = watering;
     }
 
+    public Plant() {
+    }
+
     // Getters and setters
     public String getId() {
         return id;

@@ -62,8 +62,8 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
 
         // Populate plant details
         if (plantDetail != null) {
-            tvPlantName.setText(plantDetail.getName());
-            tvPlantDescription.setText(plantDetail.getDescription().getValue());
+            tvPlantName.setText(plantDetail.getName() != null ? plantDetail.getName() : getString(R.string.name_not_available));
+            tvPlantDescription.setText(plantDetail.getDescription() != null && plantDetail.getDescription().getValue() != null ? plantDetail.getDescription().getValue() : getString(R.string.description_not_available));
 
             if (plantDetail.getWatering() != null) {
                 tvWatering.setText(plantDetail.getWatering().getMax() == 1 ? "Low Watering" : "Frequent Watering");

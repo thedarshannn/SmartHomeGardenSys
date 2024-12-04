@@ -1,4 +1,4 @@
-package ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin
+package ca.smartsprout.it.smart.smarthomegarden.utils.GoogleSignin
 
 import android.content.Context
 import android.util.Log

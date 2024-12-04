@@ -10,6 +10,7 @@ Members:
 <resources>
     <string name="SmartHomeGarden">SmartHomeGarden</string>
     <string name="home">Home</string>
+    <string name="app_name">SmartHomeGarden</string>
     <string name="sensors">Sensor</string>
     <string name="search">Search</string>
     <string name="diagnosis">Diagnosis</string>
@@ -18,7 +19,7 @@ Members:
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="start">Get started with sprouting!</string>
     <string name="signin">Already have an account?Sign in</string>
-    <string name="signup">Do not have an account?sign up</string>
+    <string name="signup">Do not have an account?Sign up</string>
     <string name="sign">Sign in</string>
     <string name="register">REGISTER</string>
     <string name="date_format">dd MMM, yyyy</string>
@@ -116,7 +117,7 @@ Members:
     <string name="invalidemail">Invalid email format</string>
     <string name="exceed">Password cannot exceed 10 characters</string>
     <string name="match">Password do not match</string>
-    <string name="valid">Enter an valid email</string>
+    <string name="valid"> Enter an valid email</string>
 
     <string name="datauser">User data not found.</string>
     <string name="loggeddata">You need to log in first.</string>
@@ -192,6 +193,7 @@ Members:
     <string name="mailto_smartsprout_gmail_com">mailto:smartsprout@gmail.com</string>
     <string name="help_request">Help Request</string>
     <string name="send_email">Send Email</string>
+    <string name="faq">FAQ</string>
     <string name="help">Help</string>
     <string name="loginprefs">loginPrefs</string>
     <string name="notifications">notifications</string>
@@ -222,6 +224,26 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
+
+    <string name="or">or</string>
+    <string name="continuewith">or continue with</string>
+<string name="goback">Go back to login!</string>
+<string name="resetpassword">Reset Password</string>
+    <string name="enter_registered_email">Enter your registered email</string>
+    <string name="reset_email_sent">Password reset email sent</string>
+    <string name="failed_to_send_email">Failed to send reset email. Try again.</string>
+    <string name="faq1">How do I use this app?</string>
+<string name="faq2">How to add a new plant?</string>
+    <string name="faq3">Can I change the watering schedule?</string>
+    <string name="faq4">How do I track plant health?</string>
+<string name="faq5">This app helps you manage your plants effectively.</string>
+<string name="faq6">Go to the Add Plant section and fill in the details.</string>
+    <string name="faq7">Yes, you can edit schedules in the Settings menu.</string>
+    <string name="faq8">Use the Health Tracker feature in the app.</string>
+
+
+    <string name="clear_all">Clear All</string>
+
 
     <string name="edit_button">Edit Button</string>
     <string name="custombottomsheetfragment">CustomBottomSheetFragment</string>
@@ -266,7 +288,7 @@ Members:
 
     <string name="propagation_division">Propagation: Division</string>
     <string name="low_watering">Low Watering</string>
-    <string name="short_description_placeholder">Short description of the plant...</string>
+    <string name="short_description_placeholder">Short description of the plant…</string>
     <string name="watering_info_not_available">Watering info not available</string>
     <string name="propagation">"Propagation: "</string>
     <string name="propagation_info_not_available">Propagation info not available</string>
@@ -305,6 +327,10 @@ Members:
     <string name="internet_connection_restored">Internet connection restored!</string>
     <string name="still_no_internet_connection">Still no internet connection.</string>
 
+    <string name="no_date_provided">No Date Provided</string>
+    <string name="delete">Delete</string>
+
+    <string name="name_not_available">Plant name is not available.</string>
 
 
 </resources>

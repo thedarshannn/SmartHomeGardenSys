@@ -2,9 +2,16 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
+
 import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.ActionBar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,14 +47,63 @@ public class NotificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notification);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view_notifications);
+        Button btnClearAll = findViewById(R.id.btn_clear_all);
+        ImageView imgNoNotifications = findViewById(R.id.img_no_notifications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Create notification channel
         NotificationHelper.createNotificationChannel(this);
         NotificationHelper.createTaskReminderChannel(this);
 
+
+        NotificationViewModel notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
+
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
+
+
+        // Initialize ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Handle the back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish(); // Close the activity and go back
+            }
+        });
+
+        // Initialize the database reference
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notificationsdatbase));
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                notificationList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Notification notification = snapshot.getValue(Notification.class);
+                    notificationList.add(0, notification); // Add to the top of the list
+                }
+                adapter.notifyDataSetChanged();
+
+                // Toggle visibility of the "No Notifications" image and "Clear All" button
+                if (notificationList.isEmpty()) {
+                    btnClearAll.setVisibility(View.GONE);
+                    imgNoNotifications.setVisibility(View.VISIBLE);
+                } else {
+                    btnClearAll.setVisibility(View.VISIBLE);
+                    imgNoNotifications.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors.
+            }
+        });
 
         // Initialize FirebaseAuth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -62,13 +118,18 @@ public class NotificationActivity extends AppCompatActivity {
             // Handle the case where there is no authenticated user
         }
 
-        // Handle back button press
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                finish(); // Close the activity and go back to the previous screen
-            }
+
+
+        // Handle "Clear All" button click
+        btnClearAll.setOnClickListener(v -> {
+            databaseReference.removeValue();
+            notificationList.clear();
+            adapter.notifyDataSetChanged();
+
+            btnClearAll.setVisibility(View.GONE);
+            imgNoNotifications.setVisibility(View.VISIBLE); // Show the image
         });
+
 
         // Add ItemTouchHelper for swipe-to-dismiss functionality
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -82,19 +143,28 @@ public class NotificationActivity extends AppCompatActivity {
                 int position = viewHolder.getBindingAdapterPosition();
                 Notification notification = notificationList.get(position);
 
-                // Check if notification ID is not null
                 if (notification.getId() != null) {
-                    // Remove the notification from the database
                     databaseReference.child(notification.getId()).removeValue();
                 }
 
-                // Remove the notification from the list
                 notificationList.remove(position);
                 adapter.notifyItemRemoved(position);
+
+                if (notificationList.isEmpty()) {
+                    btnClearAll.setVisibility(View.GONE);
+                    imgNoNotifications.setVisibility(View.VISIBLE); // Show the image
+                }
             }
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // Close the activity and go back
+        return true;
     }
 
     // Method to add a notification
@@ -128,5 +198,6 @@ public class NotificationActivity extends AppCompatActivity {
                 // Handle possible errors.
             }
         });
+
     }
 }
