@@ -30,6 +30,7 @@
         tools:targetApi="34">
         <activity
             android:name=".ui.FAQActivity"
+            android:label="@string/faq"
             android:exported="false" />
         <activity
             android:name=".ui.NotificationActivity"
