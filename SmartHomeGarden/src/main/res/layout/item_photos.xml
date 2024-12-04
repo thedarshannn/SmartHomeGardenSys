@@ -23,16 +23,6 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/photo" />
 
-        <!-- Name -->
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:text="Plant Name" />
 
         <!-- Date -->
         <TextView
@@ -44,6 +34,14 @@
             android:paddingEnd="8dp"
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
-            android:text="Date" />
+             />
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="60dp"
+            android:layout_height="33dp"
+            android:text="@string/delete"
+            android:layout_gravity="end"
+            android:textSize="9sp"
+            android:padding="4dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

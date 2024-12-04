@@ -327,5 +327,10 @@ Members:
     <string name="internet_connection_restored">Internet connection restored!</string>
     <string name="still_no_internet_connection">Still no internet connection.</string>
 
+    <string name="no_date_provided">No Date Provided</string>
+    <string name="delete">Delete</string>
+
+    <string name="name_not_available">Plant name is not available.</string>
+
 
 </resources>
