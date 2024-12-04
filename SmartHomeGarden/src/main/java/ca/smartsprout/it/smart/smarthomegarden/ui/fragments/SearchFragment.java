@@ -25,10 +25,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 
@@ -36,7 +39,6 @@ public class SearchFragment extends Fragment {
 
     private PlantAdapter plantAdapter;
     private PlantViewModel plantViewModel;
-    private TextView noResultsTextView;
     private ExecutorService executorService;
     private Handler mainHandler;
 
@@ -62,23 +64,24 @@ public class SearchFragment extends Fragment {
         recyclerView.setAdapter(plantAdapter);
 
         // Initialize TextView for empty state
-        noResultsTextView = view.findViewById(R.id.noResultsTextView);
+        TextView noResultsTextView = view.findViewById(R.id.noResultsTextView);
 
         // Initialize ViewModel
         plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
-
-        // Observe LiveData for plant list updates
-        plantViewModel.getPlantList().observe(getViewLifecycleOwner(), plants -> {
-            executorService.submit(() -> mainHandler.post(() -> {
-                if (plants != null && !plants.isEmpty()) {
+        plantViewModel.getPlantDetail().observe(getViewLifecycleOwner(), plantDetail -> {
+            if (plantDetail != null) {
+                mainHandler.post(() -> {
+                    List<PlantDetail> plantList = new ArrayList<>();
+                    plantList.add(plantDetail);
+                    plantAdapter.updatePlantList(plantList);
                     noResultsTextView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    plantAdapter.updatePlantList(plants);
-                } else {
+                });
+            } else {
+                mainHandler.post(() -> {
+                    plantAdapter.updatePlantList(new ArrayList<>());
                     noResultsTextView.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }
-            }));
+                });
+            }
         });
 
         // Initialize SearchView
@@ -86,18 +89,19 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                executorService.submit(() -> plantViewModel.searchPlants(query)); // Perform search in a thread
+                executorService.submit(() -> plantViewModel.searchAndFetchPlantDetail(query));
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    executorService.submit(() -> plantViewModel.loadPlants()); // Load default plants in a thread
+                    plantAdapter.updatePlantList(new ArrayList<>()); // Clear results
                 }
                 return true;
             }
         });
+
 
         return view;
     }

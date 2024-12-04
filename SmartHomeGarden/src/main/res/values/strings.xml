@@ -132,9 +132,9 @@ Members:
     <string name="health_status">HEALTH STATUS</string>
     <string name="diagnosis_">DIAGNOSIS</string>
 
-<string name="invalidpasswords">Passwords do not match.</string>
-<string name="invalidphone">Phone Number is Invalid!</string>
-<string name="signedin">Already Signed In!</string>
+    <string name="invalidpasswords">Passwords do not match.</string>
+    <string name="invalidphone">Phone Number is Invalid!</string>
+    <string name="signedin">Already Signed In!</string>
 
 
     <string name="watering_chip">Watering</string>
@@ -147,7 +147,7 @@ Members:
     <string name="rate_your_experience">Rate your experience</string>
     <string name="feedbackprefs">FeedbackPrefs</string>
     <string name="submission_limit">submission limit</string>
-    <string name="next_feedback">Next feedback in: %02d:%02d:%02d</string>
+    <string name="next_feedback" formatted="false">Next feedback in: %02d:%02d:%02d</string>
     <string name="your_feedback">Your Feedback</string>
     <string name="n_a">N/A</string>
 
@@ -222,7 +222,90 @@ Members:
     <string name="feedback_submitted">Feedback Submitted</string>
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
+
     <string name="clear_all">Clear All</string>
 
+
+    <string name="edit_button">Edit Button</string>
+    <string name="custombottomsheetfragment">CustomBottomSheetFragment</string>
+    <string name="task_is_null_in_oncreateview">Task is null in onCreateView</string>
+    <string name="arguments_are_null_in_oncreateview">Arguments are null in onCreateView</string>
+    <string name="date_button_clicked">Date button clicked</string>
+    <string name="time_button_clicked">Time button clicked</string>
+    <string name="pm">PM</string>
+    <string name="am">AM</string>
+    <string name="task_added">Task Added</string>
+    <string name="you_have_added_a_new_task">"You have added a new task: "</string>
+    <string name="task_updated">Task Updated</string>
+    <string name="you_have_updated_the_task">"You have updated the task: "</string>
+    <string name="timeformate">%02d:%02d %s</string>
+    <string name="task_name">task_name</string>
+    <string name="notification_type">notification_type</string>
+    <string name="reminder">reminder</string>
+    <string name="task_time">task_time</string>
+    <string name="create_new_plant_task">Create New Plant Task</string>
+    <string name="select_plant">Select Plant</string>
+    <string name="task_name1">Task Name</string>
+    <string name="set_date">Set Date</string>
+    <string name="set_time">Set Time</string>
+    <string name="recurrence">Recurrence</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="none">None</string>
+    <string name="notes">Notes</string>
+    <string name="enter_notes">Enter notes</string>
+    <string name="save_task">Save Task</string>
+    <string name="plant_name1">Plant Name</string>
+    <string name="task_name2">Task Name</string>
+    <string name="date">Date:</string>
+    <string name="dateHint">Date</string>
+    <string name="time">Time:</string>
+    <string name="timeHint">Time</string>
+    <string name="recurrence1">Recurrence:</string>
+    <string name="recurrenceHint">Recurrence</string>
+    <string name="notes1">Notes:</string>
+    <string name="notesHint">Notes</string>
+
+
+    <string name="propagation_division">Propagation: Division</string>
+    <string name="low_watering">Low Watering</string>
+    <string name="short_description_placeholder">Short description of the plant...</string>
+    <string name="watering_info_not_available">Watering info not available</string>
+    <string name="propagation">"Propagation: "</string>
+    <string name="propagation_info_not_available">Propagation info not available</string>
+    <string name="add_new_plant">Add New Plant</string>
+    <string name="custom_plant_name">Custom Plant Name</string>
+    <string name="special_notes">Special Notes</string>
+    <string name="date_added">Date Added:</string>
+    <string name="adding">"Adding "</string>
+    <string name="description_not_available">Description not available</string>
+    <string name="error_plant_details_not_found">Error: Plant details not found.</string>
+    <string name="error_no_plant_details_passed">Error: No plant details passed.</string>
+    <string name="plant_added_successfully">Plant added successfully.</string>
+    <string name="error_adding_plant_please_try_again">Error adding plant. Please try again.</string>
+    <string name="an_unexpected_error_occurred">"An unexpected error occurred: "</string>
+
+
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_required_message">" Please grant the required permission from your device's settings.\n"</string>
+    <string name="go_to_settings">Go to Settings\n</string>
+    <string name="failed_to_load_image">Failed to load image</string>
+    <string name="camera_permission_required_message">
+    Camera access is required to take pictures. Please enable it from Settings.
+</string>
+    <string name="gallery_permission_required_message">
+    Gallery access is required to select pictures. Please enable it from Settings.
+</string>
+    <string name="Units">Convert Units</string>
+    <string name="Units_summary">Switch between Metric and Imperial Units.</string>
+    <string name="photo">Photo\n</string>
+
+
+    <string name="whoops_no_internet">Whoops! No Internet</string>
+    <string name="check_connection_message">It seems you\'re offline. Turn on Wi-Fi or Mobile Data to reconnect.</string>
+    <string name="retry_connection">Try Again</string>
+    <string name="offline_image">Offline State Illustration</string>
+    <string name="internet_connection_restored">Internet connection restored!</string>
+    <string name="still_no_internet_connection">Still no internet connection.</string>
 
 </resources>
