@@ -28,11 +28,6 @@ public class MenuHandler {
             Intent intent = new Intent(context, SettingsActivity.class);
             context.startActivity(intent);
             return true;
-
-        } else if (id == R.id.action_toggle_temp) {
-            // Handle temperature unit toggle
-            weatherViewModel.toggleTemperatureUnit();
-            return true;
         } else if (id == R.id.faq) {
             Intent intent = new Intent(context, FAQActivity.class);
             context.startActivity(intent);
