@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,16 +24,13 @@ import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.NotificationAdapter;
-import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 
 public class NotificationActivity extends AppCompatActivity {
 
-    private NotificationViewModel notificationViewModel;
     private DatabaseReference databaseReference;
-    private List<Notification> notificationList = new ArrayList<>();
+    private final List<Notification> notificationList = new ArrayList<>();
     private NotificationAdapter adapter;
-    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
     @SuppressLint("MissingInflatedId")
@@ -49,12 +46,11 @@ public class NotificationActivity extends AppCompatActivity {
         NotificationHelper.createNotificationChannel(this);
         NotificationHelper.createTaskReminderChannel(this);
 
-        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
 
         // Initialize FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         // Get current user
         currentUser = mAuth.getCurrentUser();
@@ -77,13 +73,13 @@ public class NotificationActivity extends AppCompatActivity {
         // Add ItemTouchHelper for swipe-to-dismiss functionality
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getBindingAdapterPosition();
                 Notification notification = notificationList.get(position);
 
                 // Check if notification ID is not null
@@ -116,8 +112,9 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void loadNotifications() {
         databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 notificationList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Notification notification = snapshot.getValue(Notification.class);
@@ -127,7 +124,7 @@ public class NotificationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle possible errors.
             }
         });

@@ -33,16 +33,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText emailInput, passwordInput;
-    private Button loginButton, googlesignin;
-    private AuthViewModel authViewModel;
-    private TextView registerswitch;
+    public EditText emailInput;
+    public EditText passwordInput;
+    public Button loginButton, googlesignin;
+    public AuthViewModel authViewModel;
+    public TextView registerswitch;
     private GoogleSignInHelper googleSignInHelpers;
-    private CheckBox rememberMeCheckbox;
-    private SharedPreferences sharedPreferences;
-    private DatabaseReference databaseReference;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
+    public CheckBox rememberMeCheckbox;
+    public SharedPreferences sharedPreferences;
+    public DatabaseReference databaseReference;
+    public FirebaseAuth mAuth;
+    public FirebaseUser currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void loadLoginDetails() {
+    public void loadLoginDetails() {
         boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
         if (rememberMe) {
             String savedEmail = sharedPreferences.getString("email", "");
@@ -152,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void saveLoginDetails() {
+    public void saveLoginDetails() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (rememberMeCheckbox.isChecked()) {
             editor.putBoolean("rememberMe", true);

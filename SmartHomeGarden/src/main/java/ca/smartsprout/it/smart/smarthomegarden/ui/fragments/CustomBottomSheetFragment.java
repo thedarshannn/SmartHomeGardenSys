@@ -9,11 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.RadioGroup;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -26,7 +30,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantTask;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
 import ca.smartsprout.it.smart.smarthomegarden.utils.AlarmReceiver;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
@@ -39,6 +45,7 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
     private MaterialButton buttonSetDate, buttonSetTime, buttonSaveTask;
     private RadioGroup radioGroupRecurrence;
     private PlantTask task;
+    private PlantRepository plantRepository;
 
     @Nullable
     @Override
@@ -46,6 +53,7 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.fragment_custom_bottom_sheet, container, false);
 
         viewModel = new ViewModelProvider(requireActivity()).get(PlantTaskViewModel.class);
+        plantRepository = new PlantRepository();
 
         spinnerPlantSelection = view.findViewById(R.id.spinner_plant_selection);
         editTextTaskName = view.findViewById(R.id.edit_text_task_name);
@@ -54,6 +62,18 @@ public class CustomBottomSheetFragment extends BottomSheetDialogFragment {
         buttonSetTime = view.findViewById(R.id.button_set_time);
         buttonSaveTask = view.findViewById(R.id.button_save_task);
         radioGroupRecurrence = view.findViewById(R.id.radio_group_recurrence);
+
+        // Fetch plants and set up the spinner
+        plantRepository.fetchPlants().observe(getViewLifecycleOwner(), plants -> {
+            if (plants != null) {
+                List<String> plantNames = new ArrayList<>();
+                for (Plant plant : plants) {
+                    plantNames.add(plant.getCustomName()); // Show custom name
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantNames);
+                spinnerPlantSelection.setAdapter(adapter);
+            }
+        });
 
         if (getArguments() != null) {
             task = (PlantTask) getArguments().getSerializable("task");
