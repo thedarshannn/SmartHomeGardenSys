@@ -25,9 +25,8 @@ public class Photo {
     private boolean isSynced;
 
     // Constructor
-    public Photo(@NonNull String url, String name, String date) {
+    public Photo(@NonNull String url, String date) {
         this.url = url;
-        this.name = name;
         this.date = date;
         this.isSynced = false;
     }
@@ -50,10 +49,10 @@ public class Photo {
     }
 
     // Setters
-
     public void setId(long id) {
         this.id = id;
     }
+
     public void setUrl(@NonNull String url) {
         this.url = url;
     }

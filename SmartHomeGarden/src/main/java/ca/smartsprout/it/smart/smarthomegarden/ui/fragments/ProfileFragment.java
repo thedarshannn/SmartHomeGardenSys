@@ -42,11 +42,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PhotoRepository;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.ProfilePlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
@@ -75,6 +79,8 @@ public class ProfileFragment extends Fragment {
     private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
     private ActivityResultLauncher<Intent> galleryLauncher;
+    private String currentDate;
+    private PhotoRepository photoRepository;
 
 
     public ProfileFragment() {
@@ -84,6 +90,9 @@ public class ProfileFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        photoRepository = new PhotoRepository(requireActivity().getApplication());
+        currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
         // Initialize camera permission launcher
         requestCameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
@@ -117,7 +126,7 @@ public class ProfileFragment extends Fragment {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         if (imageUri != null) {
-                            Photo photo = new Photo(imageUri.toString(), "Captured Image", "Today");
+                            Photo photo = new Photo(imageUri.toString(), currentDate);
                             adapter.addPhoto(photo);
                         } else {
                             Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
@@ -133,8 +142,9 @@ public class ProfileFragment extends Fragment {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         if (imageUri != null) {
-                            Photo photo = new Photo(imageUri.toString(), "Selected Image", "Today");
+                            Photo photo = new Photo(imageUri.toString(), currentDate);
                             adapter.addPhoto(photo);
+                            photoRepository.uploadImageToFirebase(imageUri, userViewModel.getUserId());
                         } else {
                             Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
                         }

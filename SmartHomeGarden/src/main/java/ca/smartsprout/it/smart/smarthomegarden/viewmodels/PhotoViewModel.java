@@ -30,16 +30,12 @@ public class PhotoViewModel extends AndroidViewModel {
         photoRepository = new PhotoRepository(application);
         photos = photoRepository.getAllPhotos();
     }
-    public void insertPhoto(Photo photo) {
-        photoRepository.insertPhoto(photo);
-    }
+
 
     public LiveData<List<Photo>> getAllPhotos() {
         return photos;
     }
 
-    public void syncPhotos(String userId) {
-        photoRepository.syncPhotos(userId);
-    }
+
 
 }
