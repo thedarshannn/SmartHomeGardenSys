@@ -22,6 +22,10 @@ public class Plant implements Serializable {
     private int watering;
     private Date dateAdded;
 
+    // No-argument constructor required for Firestore
+    public Plant() {
+    }
+
     public Plant(String name, String description, List<String> commonNames, int watering) {
         this.name = name;
         this.description = description;
@@ -61,7 +65,6 @@ public class Plant implements Serializable {
     public void setCommonNames(List<String> commonNames) {
         this.commonNames = commonNames;
     }
-
 
     public String getCustomName() {
         return customName;

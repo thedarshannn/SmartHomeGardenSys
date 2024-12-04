@@ -237,7 +237,7 @@ public class ProfileFragment extends Fragment {
                 bottomNavigationView.setSelectedItemId(R.id.navigation_home);
 
                 // Show the CustomBottomSheetFragment
-                TaskBottomSheetFragment bottomSheetFragment = new TaskBottomSheetFragment();
+                CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
                 bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
             }
         });
