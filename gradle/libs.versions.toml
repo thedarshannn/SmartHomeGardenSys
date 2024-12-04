@@ -16,7 +16,6 @@ espressoCoreVersion = "3.4.0"
 espressoIntents = "3.6.1"
 firebaseAuthVersion = "23.1.0"
 
-espressoCoreVersion = "3.5.1"
 
 
 circleimageview = "3.1.0"

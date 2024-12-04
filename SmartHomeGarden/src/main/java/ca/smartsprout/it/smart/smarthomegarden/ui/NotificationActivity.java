@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.NotificationAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -100,7 +102,7 @@ public class NotificationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle possible errors.
             }
         });
