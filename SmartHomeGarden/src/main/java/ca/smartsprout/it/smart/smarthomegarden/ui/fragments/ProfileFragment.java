@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -110,11 +111,17 @@ public class ProfileFragment extends Fragment {
         );
 
         // Initialize camera launcher
-        cameraLauncher = registerForActivityResult(
+                cameraLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Toast.makeText(requireContext(), "Camera image captured.", Toast.LENGTH_SHORT).show();
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            Photo photo = new Photo(imageUri.toString(), "Captured Image", "Today");
+                            adapter.addPhoto(photo);
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );
@@ -124,7 +131,13 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Toast.makeText(requireContext(), "Gallery image selected.", Toast.LENGTH_SHORT).show();
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            Photo photo = new Photo(imageUri.toString(), "Selected Image", "Today");
+                            adapter.addPhoto(photo);
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );
@@ -150,6 +163,14 @@ public class ProfileFragment extends Fragment {
         userNameTV = view.findViewById(R.id.userNameTV);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
+            @Override
+            public void onChanged(List<Photo> photos) {
+                adapter = new PhotoAdapter(requireContext(), photos);
+                photosGrid.setAdapter(adapter);
+            }
+        });
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
         // load profile picture and load with glide and update the image view from firebase

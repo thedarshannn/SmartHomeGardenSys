@@ -43,8 +43,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         return new PhotoViewHolder(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Photo photo = photos.get(position);
@@ -79,9 +77,15 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             textViewDate = itemView.findViewById(R.id.textViewDate);
         }
     }
+
     // Generate random heights for items
     private int getRandomHeight() {
         int[] heights = {300, 400, 500, 600}; // Example heights in pixels
         return heights[random.nextInt(heights.length)];
+    }
+
+    public void addPhoto(Photo photo) {
+        this.photos.add(0, photo);
+        notifyItemInserted(0);
     }
 }
