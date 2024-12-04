@@ -169,6 +169,12 @@ public class NotificationActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     // Method to add a notification
     private void addNotification(Notification notification) {
         if (currentUser != null) {
