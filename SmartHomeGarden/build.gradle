@@ -21,6 +21,12 @@ android {
             useSupportLibrary = true
         }
 
+        testOptions {
+            unitTests {
+                includeAndroidResources = true
+            }
+        }
+
         buildConfigField "String", "API_URL", "\"${project.hasProperty('API_URL') ? project.properties['API_URL'] : 'https://default-url.com'}\""
     }
 
@@ -107,5 +113,15 @@ dependencies {
     androidTestImplementation libs.core.testing
 
     annotationProcessor libs.room.compiler
+
+    androidTestImplementation libs.espresso.intents
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation libs.robolectric.v414
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.mockito:mockito-inline:3.11.2'
+
+    androidTestImplementation libs.junit.v113
+    androidTestImplementation libs.espresso.core.v340
 
 }

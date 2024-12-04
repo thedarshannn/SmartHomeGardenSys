@@ -37,20 +37,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText emailInput, passwordInput;
-    private Button loginButton, googlesignin;
-    private AuthViewModel authViewModel;
 
-
-    private TextView registerswitch,forgotpassword;
-
-
+    public EditText emailInput;
+    public EditText passwordInput;
+    public Button loginButton, googlesignin;
+    public AuthViewModel authViewModel;
+    public TextView registerswitch, forgotpassword;
     private GoogleSignInHelper googleSignInHelpers;
-    private CheckBox rememberMeCheckbox;
+    public CheckBox rememberMeCheckbox;
+    public SharedPreferences sharedPreferences;
+    public DatabaseReference databaseReference;
+    public FirebaseAuth mAuth;
+    public FirebaseUser currentUser;
 
-    private DatabaseReference databaseReference;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,8 +175,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    public void loadLoginDetails() {
+        boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
+        if (rememberMe) {
+            String savedEmail = sharedPreferences.getString("email", "");
+            String savedPassword = sharedPreferences.getString("password", "");
+            emailInput.setText(savedEmail);
+            passwordInput.setText(savedPassword);
+            rememberMeCheckbox.setChecked(true);
+        }
+    }
 
-
+    public void saveLoginDetails() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (rememberMeCheckbox.isChecked()) {
+            editor.putBoolean("rememberMe", true);
+            editor.putString("email", emailInput.getText().toString().trim());
+            editor.putString("password", passwordInput.getText().toString().trim());
+        } else {
+            editor.clear();
+        }
+        editor.apply();
+    }
 
     private void loginUser() {
         String email = emailInput.getText().toString().trim();
