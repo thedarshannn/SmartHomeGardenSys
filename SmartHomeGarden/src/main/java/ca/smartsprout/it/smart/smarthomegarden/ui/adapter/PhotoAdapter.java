@@ -22,10 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>  {
+import android.widget.Button;
+
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
 
     private final Context context;
     private final List<Photo> photos;
@@ -54,10 +57,15 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
         // Load the photo using Glide
         Glide.with(context).load(photo.getUrl()).into(holder.imageViewPhoto);
+        String currentDate = java.text.DateFormat.getDateTimeInstance().format(new Date());
+        holder.textViewDate.setText(currentDate);
 
-        // Set the name and date
-        holder.textViewName.setText(photo.getName());
-        holder.textViewDate.setText(photo.getDate());
+        // Handle delete button click
+        holder.buttonDelete.setOnClickListener(v -> {
+            photos.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, photos.size());
+        });
     }
 
     @Override
@@ -67,14 +75,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     static class PhotoViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewPhoto;
-        TextView textViewName;
         TextView textViewDate;
+        Button buttonDelete;
 
         public PhotoViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewPhoto = itemView.findViewById(R.id.imageViewPhoto);
-            textViewName = itemView.findViewById(R.id.textViewName);
             textViewDate = itemView.findViewById(R.id.textViewDate);
+            buttonDelete = itemView.findViewById(R.id.buttonDelete);
         }
     }
 
