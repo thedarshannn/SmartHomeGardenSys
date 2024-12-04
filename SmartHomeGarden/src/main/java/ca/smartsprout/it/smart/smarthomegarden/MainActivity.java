@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
 
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.MenuHandler;
 import ca.smartsprout.it.smart.smarthomegarden.ui.BaseActivity;
@@ -39,20 +40,19 @@ public class MainActivity extends BaseActivity {
 
     private NavigationViewModel navigationViewModel;
     private ThemeViewModel themeViewModel;
-    private WeatherViewModel weatherViewModel;
     private MenuHandler menuHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
         themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
-        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
-        menuHandler = new MenuHandler(this, weatherViewModel);
+        menuHandler = new MenuHandler(this);
 
         // Set the theme based on the user's preference
         themeViewModel.getThemeMode().observe(this, themeMode -> {

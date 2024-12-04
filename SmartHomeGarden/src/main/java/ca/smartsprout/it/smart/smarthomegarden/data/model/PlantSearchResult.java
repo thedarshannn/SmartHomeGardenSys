@@ -1,0 +1,58 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
+package ca.smartsprout.it.smart.smarthomegarden.data.model;
+
+import com.google.gson.annotations.SerializedName;
+
+public class PlantSearchResult {
+    @SerializedName("access_token")
+    private String accessToken;
+
+    @SerializedName("matched_in")
+    private String matchedIn;
+
+    @SerializedName("matched_in_type")
+    private String matchedInType;
+
+    @SerializedName("entity_name")
+    private String entityName;
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getMatchedIn() {
+        return matchedIn;
+    }
+
+    public void setMatchedIn(String matchedIn) {
+        this.matchedIn = matchedIn;
+    }
+
+    public String getMatchedInType() {
+        return matchedInType;
+    }
+
+    public void setMatchedInType(String matchedInType) {
+        this.matchedInType = matchedInType;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
+}

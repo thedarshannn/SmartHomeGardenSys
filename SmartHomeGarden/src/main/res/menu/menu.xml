@@ -12,9 +12,9 @@
         android:icon="@drawable/bell"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_toggle_temp"
-        android:title="@string/toggle_temp"
-        app:showAsAction="never" />
+        android:id="@+id/faq"
+        android:title="@string/faq" />
+
     <item
         android:id="@+id/help"
         android:title="@string/help"

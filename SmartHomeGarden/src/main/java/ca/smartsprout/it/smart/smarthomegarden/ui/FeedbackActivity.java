@@ -1,3 +1,12 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
@@ -27,16 +36,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class FeedbackActivity extends AppCompatActivity {
-    private TextView nameTextView, emailTextView, phoneTextView, timerTextView;
-    private RatingBar ratingBar;
-    private EditText descriptionEditText;
+    public TextView nameTextView;
+    public TextView emailTextView;
+    public TextView phoneTextView;
+    public TextView timerTextView;
+    public RatingBar ratingBar;
+    public EditText descriptionEditText;
     private Button submitButton;
     private FeedbackViewModel feedbackViewModel;
     private ProgressBar progressBar;
 
     private static final long SUBMISSION_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-    private SharedPreferences sharedPreferences;
-    private Handler handler = new Handler();
+    public SharedPreferences sharedPreferences;
+    public Handler handler = new Handler();
     private String userEmail;
 
     @Override
@@ -170,7 +182,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
 
-    private void clearInputFields() {
+    public void clearInputFields() {
         descriptionEditText.setText(""); // Clear the description input
         ratingBar.setRating(0); // Reset the rating
     }
@@ -182,7 +194,7 @@ public class FeedbackActivity extends AppCompatActivity {
         // Optional: finish the current activity to prevent it from appearing in the back stack
     }
 
-    private void setFieldsEnabled(boolean enabled) {
+    public void setFieldsEnabled(boolean enabled) {
         nameTextView.setEnabled(enabled);
         emailTextView.setEnabled(enabled);
         phoneTextView.setEnabled(enabled);
@@ -202,7 +214,7 @@ public class FeedbackActivity extends AppCompatActivity {
         submitButton.setAlpha(alpha);
     }
 
-    private void checkSubmissionInterval() {
+    public void checkSubmissionInterval() {
         long lastSubmissionTime = sharedPreferences.getLong(userEmail, 0);
         long currentTime = System.currentTimeMillis();
 

@@ -1,3 +1,12 @@
+/**
+ * Smart Sprout
+ * Members:
+ * 1. Aditi Patel, n01525570, CENG322-RCB
+ * 2. Birava Prajapati, n01579924, CENG322-RCA
+ * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
+ * 4. Zeel Patel, n01526282, CENG322-RCB
+ */
+
 package ca.smartsprout.it.smart.smarthomegarden.utils;
 
 import android.app.NotificationChannel;
@@ -51,4 +60,14 @@ public class NotificationHelper {
 
         notificationManager.notify(1, builder.build());
     }
+
+    public static void createTaskReminderChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("task_reminder_channel", "Task Reminders", NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Notifications for task reminders");
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 }

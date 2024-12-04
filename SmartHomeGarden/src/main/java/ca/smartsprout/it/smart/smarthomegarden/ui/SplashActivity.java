@@ -10,14 +10,20 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.utils.Constants;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -28,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
      */
 
     private Handler handler = new Handler();
-    private Runnable runnable;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +42,38 @@ public class SplashActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
 
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        };
-        handler.postDelayed(runnable, 3000);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        // Observe the login status to decide where to go
+        authViewModel.getLoginStatus().observe(this, loggedIn -> {
+            handler.postDelayed(() -> {
+                if (isRememberMeEnabled() && loggedIn) {
+                    // User wants to be remembered and is logged in
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    // User is not logged in or does not want to be remembered
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                finish();
+            }, 3000); // 3 seconds delay before transitioning
+        });
+
+        // Check the login status as soon as the splash screen loads
+        authViewModel.checkLoggedInStatus();
     }
 
 
+    private boolean isRememberMeEnabled() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREFS_USER_SESSION, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("remember_me", false);
+    }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(runnable);
+        handler.removeCallbacksAndMessages(null);
     }
 }
