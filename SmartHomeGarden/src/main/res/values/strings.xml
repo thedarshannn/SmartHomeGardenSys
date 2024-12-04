@@ -223,6 +223,9 @@ Members:
     <string name="thank_you_for_your_feedback_your_submission_has_been_successfully_recorded">Thank you for your feedback! Your submission has been successfully recorded.</string>
     <string name="ok">OK</string>
 
+    <string name="clear_all">Clear All</string>
+
+
     <string name="edit_button">Edit Button</string>
     <string name="custombottomsheetfragment">CustomBottomSheetFragment</string>
     <string name="task_is_null_in_oncreateview">Task is null in onCreateView</string>
@@ -304,7 +307,5 @@ Members:
     <string name="offline_image">Offline State Illustration</string>
     <string name="internet_connection_restored">Internet connection restored!</string>
     <string name="still_no_internet_connection">Still no internet connection.</string>
-
-
 
 </resources>
