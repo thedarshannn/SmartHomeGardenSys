@@ -304,7 +304,7 @@ Members:
     <string name="offline_image">Offline State Illustration</string>
     <string name="internet_connection_restored">Internet connection restored!</string>
     <string name="still_no_internet_connection">Still no internet connection.</string>
-
+    <string name="encryption_failed">Encryption Failed</string>
 
 
 </resources>

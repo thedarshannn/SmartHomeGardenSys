@@ -30,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
+import ca.smartsprout.it.smart.smarthomegarden.utils.EncryptionUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -72,10 +73,12 @@ public class RegistrationActivity extends AppCompatActivity {
         // Email validation
         emailInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -94,7 +97,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 if (!googleSignInHelper.isSignedIn()) {
                     googleSignInHelper.signIn(result -> {
-                      //  Log.d("RegistrationActivity", "Sign-In result: " + result);
+                        //  Log.d("RegistrationActivity", "Sign-In result: " + result);
                         if (result) {
                             runOnUiThread(() -> {
                                 Toast.makeText(RegistrationActivity.this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
@@ -120,10 +123,12 @@ public class RegistrationActivity extends AppCompatActivity {
         // Password validation during typing
         passwordInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -139,10 +144,12 @@ public class RegistrationActivity extends AppCompatActivity {
         // Confirm password validation
         passwordInput2.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -193,20 +200,27 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
 
-        // Register the user
+// Register the user
         authViewModel.registerUser(email, password).observe(this, authResult -> {
             if (authResult != null && authResult.getUser() != null) {
                 String uid = authResult.getUser().getUid();
-                User user = new User(name, phone, email, password, confirmPassword);
-                authViewModel.saveUserDataToFirestore(uid, user).observe(this, success -> {
-                    if (success) {
-                        Toast.makeText(this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                try {
+                    String encryptedPassword = EncryptionUtils.encrypt(password);
+                    String encryptedConfirmPassword = EncryptionUtils.encrypt(confirmPassword);
+                    User user = new User(name, phone, email, encryptedPassword, encryptedConfirmPassword);
+                    authViewModel.saveUserDataToFirestore(uid, user).observe(this, success -> {
+                        if (success) {
+                            Toast.makeText(this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    Toast.makeText(this, getString(R.string.encryption_failed), Toast.LENGTH_SHORT).show();
+                    Log.e("RegistrationActivity", "Encryption failed", e);
+                }
             } else {
                 Toast.makeText(this, getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
             }
