@@ -6,7 +6,6 @@
  * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
-
 package ca.smartsprout.it.smart.smarthomegarden.data.dao;
 
 import androidx.lifecycle.LiveData;
@@ -33,4 +32,5 @@ public interface PhotoDao {
 
     @Update
     void updatePhoto(Photo photo); // Mark photo as synced
+
 }

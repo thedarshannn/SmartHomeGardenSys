@@ -10,7 +10,9 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +42,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PhotoRepository;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.ProfilePlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
 import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PhotoAdapter;
@@ -59,6 +69,8 @@ public class ProfileFragment extends Fragment {
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
     private PhotoViewModel photosViewModel;
+    private PlantViewModel plantViewModel;
+    private ProfilePlantAdapter plantAdapter;
     private PhotoAdapter adapter;
     private RecyclerView photosGrid;
     private RecyclerView recyclerView;
@@ -67,6 +79,8 @@ public class ProfileFragment extends Fragment {
     private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
     private ActivityResultLauncher<Intent> galleryLauncher;
+    private String currentDate;
+    private PhotoRepository photoRepository;
 
 
     public ProfileFragment() {
@@ -76,6 +90,18 @@ public class ProfileFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        photoRepository = new PhotoRepository(requireActivity().getApplication());
+        currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // Initialize ViewModel
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        userViewModel.getUserID().observe(this, userId -> {
+            if (userId != null) {
+                photosViewModel.fetchPhotosFromFirebase(userId);
+            }
+        });
+
         // Initialize camera permission launcher
         requestCameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
@@ -103,11 +129,17 @@ public class ProfileFragment extends Fragment {
         );
 
         // Initialize camera launcher
-        cameraLauncher = registerForActivityResult(
+                cameraLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Toast.makeText(requireContext(), "Camera image captured.", Toast.LENGTH_SHORT).show();
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            Photo photo = new Photo(imageUri.toString(), currentDate);
+                            adapter.addPhoto(photo);
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );
@@ -117,7 +149,14 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Toast.makeText(requireContext(), "Gallery image selected.", Toast.LENGTH_SHORT).show();
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            Photo photo = new Photo(imageUri.toString(), currentDate);
+                            adapter.addPhoto(photo);
+                            photoRepository.uploadImageToFirebase(imageUri, userViewModel.getUserId());
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );
@@ -128,7 +167,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
         recyclerView = view.findViewById(R.id.recyclerView);
         photosGrid = view.findViewById(R.id.photosGrid);
 
@@ -144,6 +182,14 @@ public class ProfileFragment extends Fragment {
         userNameTV = view.findViewById(R.id.userNameTV);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
+            @Override
+            public void onChanged(List<Photo> photos) {
+                adapter = new PhotoAdapter(requireContext(), photos);
+                photosGrid.setAdapter(adapter);
+            }
+        });
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
         // load profile picture and load with glide and update the image view from firebase
@@ -250,17 +296,30 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        plantAdapter = new ProfilePlantAdapter(new ArrayList<>());
+        recyclerView.setAdapter(plantAdapter);
+
+        plantViewModel = new ViewModelProvider(requireActivity()).get(PlantViewModel.class);
+
+        plantViewModel.getAllPlants().observe(getViewLifecycleOwner(), plants -> {
+            if (plants != null) {
+                plantAdapter.updatePlantList(plants);
+            }
+        });
+
+
         photosGrid.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         photosGrid.addItemDecoration(new GridSpacingDecoration(14));
 
         // Set up ViewModel
-        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
-            @Override
-            public void onChanged(List<Photo> photos) {
-             adapter = new PhotoAdapter(requireContext(), photos);
-                photosGrid.setAdapter(adapter);
-            }
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), photos -> {
+            adapter = new PhotoAdapter(requireContext(), photos);
+            photosGrid.setAdapter(adapter);
         });
+
 
         // Handle Tab Selection
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

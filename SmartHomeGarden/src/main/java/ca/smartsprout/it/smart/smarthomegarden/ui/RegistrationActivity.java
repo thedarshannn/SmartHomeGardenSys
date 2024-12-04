@@ -19,6 +19,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.utils.EncryptionUtils;
+import ca.smartsprout.it.smart.smarthomegarden.utils.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,7 +47,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private GoogleSignInHelper googleSignInHelper;
     private FirebaseFirestore db;
-
+    private TextView goback;
     // Password pattern for validation: minimum 6 chars, at least one uppercase, one digit, and one special char
     private final String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{6,}$";
 
@@ -57,11 +59,17 @@ public class RegistrationActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.editTextEmail1);
         passwordInput = findViewById(R.id.editTextPassword1);
         registerButton = findViewById(R.id.button2);
-        Signingoogle = findViewById(R.id.googleButton);
+
         nameInput = findViewById(R.id.editTextName1);
         passwordInput2 = findViewById(R.id.editTextPassword2);
         phoneInput = findViewById(R.id.editTextPhone1);
 
+        goback = findViewById(R.id.goback);
+
+// Hide the Toolbar for this activity
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         // Set filters for inputs
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         passwordInput2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
@@ -87,6 +95,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
+
+        goback.setOnClickListener(v -> goToHomeScreen());
 
         // Set click listener for Google Sign-In button
         googleSignInHelper = new GoogleSignInHelper(this);
@@ -165,7 +175,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void goToHomeScreen() {
-        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

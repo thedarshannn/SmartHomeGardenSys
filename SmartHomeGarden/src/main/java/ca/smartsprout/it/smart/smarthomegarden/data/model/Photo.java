@@ -6,7 +6,6 @@
  * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
-
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
 import androidx.annotation.NonNull;
@@ -26,9 +25,8 @@ public class Photo {
     private boolean isSynced;
 
     // Constructor
-    public Photo(@NonNull String url, String name, String date) {
+    public Photo(@NonNull String url, String date) {
         this.url = url;
-        this.name = name;
         this.date = date;
         this.isSynced = false;
     }
@@ -51,10 +49,10 @@ public class Photo {
     }
 
     // Setters
-
     public void setId(long id) {
         this.id = id;
     }
+
     public void setUrl(@NonNull String url) {
         this.url = url;
     }

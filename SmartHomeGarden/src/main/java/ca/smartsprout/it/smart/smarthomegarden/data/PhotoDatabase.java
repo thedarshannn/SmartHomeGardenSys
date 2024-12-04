@@ -6,7 +6,6 @@
  * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
  * 4. Zeel Patel, n01526282, CENG322-RCB
  */
-
 package ca.smartsprout.it.smart.smarthomegarden.data;
 import androidx.room.Database;
 import androidx.room.Room;

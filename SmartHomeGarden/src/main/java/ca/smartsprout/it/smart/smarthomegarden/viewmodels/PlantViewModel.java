@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,6 +28,7 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantSearchResult;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.SearchResponse;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,7 +40,8 @@ public class PlantViewModel extends ViewModel {
     private static final String API_KEY = "3A9BMjgBTtSyZxRsO98zjV7yKpGL4mfDPuoh8giqM3BRp6a2q1";
 
     private final MutableLiveData<PlantDetail> plantDetail = new MutableLiveData<>();
-    private final MutableLiveData<List<Plant>> plantList = new MutableLiveData<>(new ArrayList<>());
+    private final PlantRepository plantRepository;
+    private MutableLiveData<List<Plant>> plantList = new MutableLiveData<>(new ArrayList<>());
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -49,6 +52,12 @@ public class PlantViewModel extends ViewModel {
 
     public LiveData<List<Plant>> getAllPlants() {
         return plantList;
+    }
+
+    public PlantViewModel() {
+        plantRepository = new PlantRepository();
+        plantList = new MutableLiveData<>();
+        fetchPlantsFromFirestore(); // Fetch data from Firestore during initialization
     }
 
 
@@ -149,11 +158,16 @@ public class PlantViewModel extends ViewModel {
      * @param plant The plant to add to the list
      */
     public void addPlant(Plant plant) {
-        List<Plant> currentPlants = plantList.getValue();
-        if (currentPlants != null) {
-            currentPlants.add(plant);
-            plantList.setValue(currentPlants);
-        }
+        List<Plant> currentPlants = new ArrayList<>(Objects.requireNonNull(plantList.getValue()));
+        currentPlants.add(plant);
+        plantList.setValue(currentPlants); // Set a new list instance
+    }
+
+    /**
+     * Fetch plants from Firestore and update the LiveData
+     */
+    private void fetchPlantsFromFirestore() {
+        plantRepository.fetchPlants().observeForever(plantList::postValue);
     }
 
 }
