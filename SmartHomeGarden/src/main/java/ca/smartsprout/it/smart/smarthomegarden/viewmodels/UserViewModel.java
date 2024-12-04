@@ -68,4 +68,19 @@ public class UserViewModel extends ViewModel {
         firebaseRepository.updateUserName(newName); // Update name in Firebase
         userName.setValue(newName); // Reflect change locally
     }
+
+    public String getUserId() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+        return null;
+    }
+
+    public LiveData<String> getProfilePictureUrl() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            return firebaseRepository.getProfilePictureUrl(userId);
+        }
+        return null;
+    }
 }

@@ -20,6 +20,8 @@ import android.widget.Toast;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GoogleSignin.GoogleSignInHelper;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,16 +38,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
-    private Button loginButton,googlesignin;
+    private Button loginButton, googlesignin;
     private AuthViewModel authViewModel;
 
-private TextView registerswitch,forgotpassword;
+
+    private TextView registerswitch,forgotpassword;
+
+    private TextView registerswitch;
+
     private GoogleSignInHelper googleSignInHelpers;
-
-
     private CheckBox rememberMeCheckbox;
 
     private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +64,12 @@ private TextView registerswitch,forgotpassword;
         loginButton = findViewById(R.id.button);
         registerswitch = findViewById(R.id.registerswitch);
         rememberMeCheckbox = findViewById(R.id.rememberMeCheckbox);
+
         forgotpassword=findViewById(R.id.forgotPassword);
         googlesignin=findViewById(R.id.googlesignin);
+
+        googlesignin = findViewById(R.id.googlesignin);
+
         googleSignInHelpers = new GoogleSignInHelper(this);
 
         // Hide the Toolbar for this activity
@@ -85,7 +95,17 @@ private TextView registerswitch,forgotpassword;
 
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.notifications));
+
+        // Initialize FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
+        } else {
+            // Handle the case where there is no authenticated user
+        }
 
         registerswitch.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -94,19 +114,17 @@ private TextView registerswitch,forgotpassword;
 
 
 
-
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         Log.d("GooglePlayServices", "Google Play Services status: " + status);
         googlesignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Log.d("RegistrationActivity", "Google Sign-In button clicked");
+                Log.d("RegistrationActivity", "Google Sign-In button clicked");
 
                 if (!googleSignInHelpers.isSignedIn()) {
                     // Trigger Google Sign-In
                     googleSignInHelpers.signIn(result -> {
-                       Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
+                        Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
                         if (result) {
                             // Handle successful sign-in
                             runOnUiThread(() -> {
@@ -130,7 +148,8 @@ private TextView registerswitch,forgotpassword;
             }
         });
 
-// Observe the login status
+
+        // Observe the login status
         authViewModel.getLoginStatus().observe(this, loggedIn -> {
             if (loggedIn) {
                 goToHomeScreen();
@@ -139,6 +158,8 @@ private TextView registerswitch,forgotpassword;
 
         // Check if user is already logged in
         authViewModel.checkLoggedInStatus();
+
+
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
 
@@ -147,7 +168,6 @@ private TextView registerswitch,forgotpassword;
         // Observe the LiveData from ViewModel
         observeViewModel();
     }
-
 
     private void goToHomeScreen() {
         // Example: Navigate to HomeActivity after successful sign-in
@@ -188,20 +208,26 @@ private TextView registerswitch,forgotpassword;
     }
 
     private void showLoginNotification() {
-        // Generate a unique ID for the notification
-        String notificationId = databaseReference.push().getKey();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference userNotificationsRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
 
-        // Get the current timestamp
-        long timestamp = System.currentTimeMillis();
+            // Generate a unique ID for the notification
+            String notificationId = userNotificationsRef.push().getKey();
 
-        // Create the notification object
-        Notification notification = new Notification(notificationId, getString(R.string.login_successful), getString(R.string.welcome_back), timestamp);
+            // Get the current timestamp
+            long timestamp = System.currentTimeMillis();
 
-        // Save the notification to the database
-        if (notificationId != null) {
-            databaseReference.child(notificationId).setValue(notification);
+            // Create the notification object
+            Notification notification = new Notification(notificationId, getString(R.string.login_successful), getString(R.string.welcome_back), timestamp);
+
+            // Save the notification to the database
+            if (notificationId != null) {
+                userNotificationsRef.child(notificationId).setValue(notification);
+            }
         }
     }
+
     private void onLoginSuccess() {
         // Show login notification
         NotificationHelper.createNotification(this, getString(R.string.login_successful), getString(R.string.welcome_back));

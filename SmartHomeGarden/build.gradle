@@ -26,6 +26,9 @@ android {
 
     buildFeatures {
         buildConfig = true
+
+        viewBinding = true
+
     }
 
     buildTypes {
@@ -77,6 +80,19 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation libs.circleimageview
 
+    implementation libs.legacy.support.v4
+    implementation libs.recyclerview
+
+    implementation libs.firebase.storage.ktx
+    implementation libs.core
+    implementation libs.cardview
+    implementation libs.room.common
+    implementation libs.room.runtime
+
+    implementation libs.gson
+    implementation libs.okhttp
+
+
     // Test dependencies
     testImplementation libs.junit
     testImplementation libs.ext.junit
@@ -90,7 +106,6 @@ dependencies {
     testImplementation libs.robolectric
     androidTestImplementation libs.core.testing
 
-
-
+    annotationProcessor libs.room.compiler
 
 }

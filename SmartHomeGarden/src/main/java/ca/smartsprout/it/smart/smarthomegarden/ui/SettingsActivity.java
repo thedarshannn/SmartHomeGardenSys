@@ -33,6 +33,7 @@ import ca.smartsprout.it.smart.smarthomegarden.utils.Util;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.SessionViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ThemeViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -72,9 +73,11 @@ public class SettingsActivity extends BaseActivity {
         private static final String TAG = "SettingsFragment";
         private ActivityResultLauncher<String> requestPermissionLauncher;
         private NotificationViewModel notificationViewModel;
+        private WeatherViewModel weatherViewModel;
         private SessionViewModel sessionViewModel;
         private ThemeViewModel themeViewModel;
         private SwitchPreferenceCompat notificationToggle;
+        private SwitchPreferenceCompat unitToggle;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -82,7 +85,15 @@ public class SettingsActivity extends BaseActivity {
             sessionViewModel = new ViewModelProvider(this).get(SessionViewModel.class);
             notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
             themeViewModel = new ViewModelProvider(this).get(ThemeViewModel.class);
+            weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
+            Preference unitPreference = findPreference("action_toggle_units");
+            if (unitPreference != null) {
+                unitPreference.setOnPreferenceClickListener(preference -> {
+                    weatherViewModel.toggleTemperatureUnit();
+                    return true;
+                });
+            }
             Preference editProfilePref = findPreference("edit_profile");
             if (editProfilePref != null) {
                 editProfilePref.setOnPreferenceClickListener(preference -> {

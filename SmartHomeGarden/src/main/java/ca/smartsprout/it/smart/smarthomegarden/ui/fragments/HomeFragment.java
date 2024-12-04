@@ -14,7 +14,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,16 +23,14 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,8 +43,12 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
+import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantTaskAdapter;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
@@ -62,7 +63,9 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private UserViewModel userViewModel;
-    // Handle location permission result
+    private PlantTaskViewModel viewModel;
+    private PlantTaskAdapter adapter;
+    private RecyclerView recyclerView;
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -83,11 +86,11 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PlantTaskViewModel.class);
 
         // If permission was previously granted, start updates
         if (isPermissionPreviouslyGranted()) {
@@ -113,6 +116,36 @@ public class HomeFragment extends Fragment {
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
 
+        recyclerView = view.findViewById(R.id.recyclerView);
+        adapter = new PlantTaskAdapter(getContext(),new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
+            adapter.updateTasks(tasks);
+            adapter.notifyDataSetChanged();
+        });
+
+        // Add listener to the checkbox
+        adapter.setOnCheckedChangeListener((task, isChecked) -> {
+            if (isChecked) {
+                viewModel.removeTask(task);
+                adapter.removeTask(task);
+            }
+        });
+
+        adapter.setOnEditButtonClickListener(task -> {
+            CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+
+            // Pass the task to the bottom sheet fragment
+            Bundle args = new Bundle();
+            args.putSerializable("task", task);
+            bottomSheetFragment.setArguments(args);
+
+            bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
+        });
+        viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
             // Check if conditions are met for refreshing (permission granted and location enabled)
             if (isPermissionPreviouslyGranted() && isLocationEnabled()) {
@@ -128,7 +161,6 @@ public class HomeFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false); // Stop refreshing if conditions aren't met
             }
         });
-
 
         CardView weatherCardView = view.findViewById(R.id.cardView);
         weatherCardView.setOnClickListener(v -> {

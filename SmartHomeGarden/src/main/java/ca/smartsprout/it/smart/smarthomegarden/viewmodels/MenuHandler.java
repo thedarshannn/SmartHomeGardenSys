@@ -14,11 +14,11 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HelpBottomSheetFragm
 public class MenuHandler {
 
     private final Context context;
-    private final WeatherViewModel weatherViewModel;
 
-    public MenuHandler(Context context, WeatherViewModel weatherViewModel) {
+
+    public MenuHandler(Context context) {
         this.context = context;
-        this.weatherViewModel = weatherViewModel;
+
     }
 
     public boolean handleMenuItem(MenuItem item) {
@@ -28,6 +28,7 @@ public class MenuHandler {
             Intent intent = new Intent(context, SettingsActivity.class);
             context.startActivity(intent);
             return true;
+
         } else if (id == R.id.action_toggle_temp) {
             // Handle temperature unit toggle
             weatherViewModel.toggleTemperatureUnit();
@@ -35,6 +36,11 @@ public class MenuHandler {
         } else if (id == R.id.faq) {
             Intent intent = new Intent(context, FAQActivity.class);
             context.startActivity(intent);
+
+        } else if (id == R.id.help) {
+            HelpBottomSheetFragment helpBottomSheetFragment = new HelpBottomSheetFragment();
+            helpBottomSheetFragment.show(((FragmentActivity) context).getSupportFragmentManager(), helpBottomSheetFragment.getTag());
+
             return true;
         } else if (id == R.id.action_notification) {
             Intent intent = new Intent(context, NotificationActivity.class);

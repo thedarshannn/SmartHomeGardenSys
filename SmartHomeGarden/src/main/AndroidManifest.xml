@@ -5,9 +5,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,6 +13,16 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
 
     <application
         android:allowBackup="true"
@@ -27,14 +34,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHomeGarden"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
+
             android:name=".ui.FAQActivity"
             android:label="@string/faq"
             android:exported="false" />
         <activity
             android:name=".ui.NotificationActivity"
+
+            android:name=".ui.OfflineActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+
             android:exported="false" />
+        <activity
+            android:name=".ui.NotificationActivity"
+            android:exported="false"
+            android:label="Notifications"/>
         <activity
             android:name=".ui.FeedbackActivity"
             android:exported="false" />
@@ -87,6 +104,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <receiver android:name=".utils.AlarmReceiver" />
+
     </application>
 
 </manifest>
