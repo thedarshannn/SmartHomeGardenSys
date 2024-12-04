@@ -331,6 +331,7 @@ Members:
     <string name="delete">Delete</string>
 
     <string name="name_not_available">Plant name is not available.</string>
+    <string name="encryption_failed">Encryption Failed</string>
 
 
 </resources>
