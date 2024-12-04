@@ -332,6 +332,7 @@ Members:
 
     <string name="name_not_available">Plant name is not available.</string>
     <string name="encryption_failed">Encryption Failed</string>
+    <string name="account_settings">Account Settings</string>
 
 
 </resources>

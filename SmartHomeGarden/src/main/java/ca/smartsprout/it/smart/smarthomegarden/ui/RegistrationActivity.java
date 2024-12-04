@@ -39,7 +39,7 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput, passwordInput2, nameInput, phoneInput;
-    private Button registerButton, Signingoogle;
+    private Button registerButton;
     private AuthViewModel authViewModel;
     private GoogleSignInHelper googleSignInHelper;
     private FirebaseFirestore db;
@@ -59,6 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
         nameInput = findViewById(R.id.editTextName1);
         passwordInput2 = findViewById(R.id.editTextPassword2);
         phoneInput = findViewById(R.id.editTextPhone1);
+
 
         goback = findViewById(R.id.goback);
 
@@ -94,34 +95,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
         goback.setOnClickListener(v -> goToHomeScreen());
 
-        // Set click listener for Google Sign-In button
-        googleSignInHelper = new GoogleSignInHelper(this);
-        Signingoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("RegistrationActivity", "Google Sign-In button clicked");
-
-                if (!googleSignInHelper.isSignedIn()) {
-                    googleSignInHelper.signIn(result -> {
-                        //  Log.d("RegistrationActivity", "Sign-In result: " + result);
-                        if (result) {
-                            runOnUiThread(() -> {
-                                Toast.makeText(RegistrationActivity.this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
-                                goToHomeScreen();
-                            });
-                        } else {
-                            runOnUiThread(() -> {
-                                Toast.makeText(RegistrationActivity.this, getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
-                            });
-                        }
-                        return null;
-                    });
-                } else {
-                    Toast.makeText(RegistrationActivity.this, getString(R.string.signedin), Toast.LENGTH_SHORT).show();
-                    goToHomeScreen();
-                }
-            }
-        });
 
         // Set click listener for register button
         registerButton.setOnClickListener(v -> registerUser());

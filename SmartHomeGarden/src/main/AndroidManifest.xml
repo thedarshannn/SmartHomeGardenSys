@@ -50,6 +50,7 @@
             android:label="Notifications"/>
         <activity
             android:name=".ui.FeedbackActivity"
+            android:label="@string/feedback"
             android:exported="false" />
         <activity
             android:name=".ui.SettingsActivity"
@@ -88,6 +89,7 @@
             android:name=".ui.AccountSettingsActivity"
             android:configChanges="uiMode|orientation|screenSize"
             android:exported="false"
+            android:label="@string/account_settings"
             android:theme="@style/Theme.SmartHomeGarden"
             tools:ignore="Instantiatable" />
 
