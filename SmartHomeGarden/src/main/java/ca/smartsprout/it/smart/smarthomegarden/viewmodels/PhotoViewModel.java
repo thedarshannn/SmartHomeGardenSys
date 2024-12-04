@@ -33,7 +33,11 @@ public class PhotoViewModel extends AndroidViewModel {
 
 
     public LiveData<List<Photo>> getAllPhotos() {
-        return photos;
+        return photoRepository.getAllPhotos();
+    }
+
+    public void fetchPhotosFromFirebase(String userId) {
+        photoRepository.fetchPhotosFromFirebase(userId);
     }
 
 

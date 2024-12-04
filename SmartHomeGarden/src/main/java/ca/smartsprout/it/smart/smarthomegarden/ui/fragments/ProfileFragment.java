@@ -93,6 +93,15 @@ public class ProfileFragment extends Fragment {
         photoRepository = new PhotoRepository(requireActivity().getApplication());
         currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
+        // Initialize ViewModel
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
+        userViewModel.getUserID().observe(this, userId -> {
+            if (userId != null) {
+                photosViewModel.fetchPhotosFromFirebase(userId);
+            }
+        });
+
         // Initialize camera permission launcher
         requestCameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
@@ -306,13 +315,11 @@ public class ProfileFragment extends Fragment {
         photosGrid.addItemDecoration(new GridSpacingDecoration(14));
 
         // Set up ViewModel
-        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
-            @Override
-            public void onChanged(List<Photo> photos) {
-             adapter = new PhotoAdapter(requireContext(), photos);
-                photosGrid.setAdapter(adapter);
-            }
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), photos -> {
+            adapter = new PhotoAdapter(requireContext(), photos);
+            photosGrid.setAdapter(adapter);
         });
+
 
         // Handle Tab Selection
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -55,6 +55,15 @@ public class UserViewModel extends ViewModel {
     public LiveData<String> getUserName() {
         return userName;
     }
+
+    public LiveData<String> getUserID() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            return new MutableLiveData<>(userId);
+        }
+        return null;
+    }
+
     public LiveData<String> getUserEmail() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();

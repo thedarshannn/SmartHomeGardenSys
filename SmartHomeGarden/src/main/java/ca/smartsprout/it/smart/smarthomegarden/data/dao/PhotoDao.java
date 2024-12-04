@@ -32,4 +32,5 @@ public interface PhotoDao {
 
     @Update
     void updatePhoto(Photo photo); // Mark photo as synced
+
 }
