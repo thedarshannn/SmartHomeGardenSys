@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
@@ -34,8 +37,16 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
+
+            android:name=".ui.FAQActivity"
+            android:label="@string/faq"
+            android:exported="false" />
+        <activity
+            android:name=".ui.NotificationActivity"
+
             android:name=".ui.OfflineActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+
             android:exported="false" />
         <activity
             android:name=".ui.NotificationActivity"
@@ -65,6 +76,7 @@
             android:configChanges="uiMode|orientation|screenSize"
             android:exported="false"
             android:theme="@style/Theme.SmartHomeGarden" />
+
         <activity
             android:name=".ui.SplashActivity"
             android:configChanges="uiMode|orientation|screenSize"

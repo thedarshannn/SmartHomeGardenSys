@@ -5,16 +5,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
+import ca.smartsprout.it.smart.smarthomegarden.utils.GoogleSignin.GoogleSignInHelper;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +32,7 @@ import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,10 +40,15 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
     private Button loginButton, googlesignin;
     private AuthViewModel authViewModel;
+
+
+    private TextView registerswitch,forgotpassword;
+
     private TextView registerswitch;
+
     private GoogleSignInHelper googleSignInHelpers;
     private CheckBox rememberMeCheckbox;
-    private SharedPreferences sharedPreferences;
+
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -55,9 +64,18 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.button);
         registerswitch = findViewById(R.id.registerswitch);
         rememberMeCheckbox = findViewById(R.id.rememberMeCheckbox);
+
+        forgotpassword=findViewById(R.id.forgotPassword);
+        googlesignin=findViewById(R.id.googlesignin);
+
         googlesignin = findViewById(R.id.googlesignin);
+
         googleSignInHelpers = new GoogleSignInHelper(this);
 
+        // Hide the Toolbar for this activity
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         // Initialize ViewModel
         passwordInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         emailInput.addTextChangedListener(new TextWatcher() {
@@ -75,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        sharedPreferences = getSharedPreferences(getString(R.string.loginprefs), MODE_PRIVATE);
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         // Initialize FirebaseAuth
@@ -94,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        loadLoginDetails();
+
 
         int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         Log.d("GooglePlayServices", "Google Play Services status: " + status);
@@ -130,8 +148,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        // Observe the login status
+        authViewModel.getLoginStatus().observe(this, loggedIn -> {
+            if (loggedIn) {
+                goToHomeScreen();
+            }
+        });
+
+        // Check if user is already logged in
+        authViewModel.checkLoggedInStatus();
+
+
         // Set click listener for login button
         loginButton.setOnClickListener(v -> loginUser());
+
+        forgotpassword.setOnClickListener(v -> showForgotPasswordDialog());
+
+        // Observe the LiveData from ViewModel
+        observeViewModel();
     }
 
     private void goToHomeScreen() {
@@ -141,28 +176,9 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void loadLoginDetails() {
-        boolean rememberMe = sharedPreferences.getBoolean("rememberMe", false);
-        if (rememberMe) {
-            String savedEmail = sharedPreferences.getString("email", "");
-            String savedPassword = sharedPreferences.getString("password", "");
-            emailInput.setText(savedEmail);
-            passwordInput.setText(savedPassword);
-            rememberMeCheckbox.setChecked(true);
-        }
-    }
 
-    private void saveLoginDetails() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (rememberMeCheckbox.isChecked()) {
-            editor.putBoolean("rememberMe", true);
-            editor.putString("email", emailInput.getText().toString().trim());
-            editor.putString("password", passwordInput.getText().toString().trim());
-        } else {
-            editor.clear();
-        }
-        editor.apply();
-    }
+
+
 
     private void loginUser() {
         String email = emailInput.getText().toString().trim();
@@ -174,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError(getString(R.string.invalidemail));
         } else {
-            saveLoginDetails();
+
             authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
         }
     }
@@ -215,5 +231,50 @@ public class LoginActivity extends AppCompatActivity {
     private void onLoginSuccess() {
         // Show login notification
         NotificationHelper.createNotification(this, getString(R.string.login_successful), getString(R.string.welcome_back));
+    }
+
+    private void showForgotPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.resetpassword);
+
+        // Inflate custom layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_forgot_password, null);
+        builder.setView(dialogView);
+
+        // Reference EditText from custom layout
+        EditText inputEmail = dialogView.findViewById(R.id.editTextEmail);
+
+        builder.setPositiveButton(R.string.send, (dialog, which) -> {
+            String email = inputEmail.getText().toString().trim();
+            if (!TextUtils.isEmpty(email)) {
+                authViewModel.sendPasswordResetEmail(email);
+            } else {
+                Toast.makeText(this, R.string.valid, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+
+    private void observeViewModel() {
+        authViewModel.getIsResetEmailSent().observe(this, isSent -> {
+            if (isSent) {
+                Toast.makeText(this, R.string.reset_email_sent, Toast.LENGTH_LONG).show();
+                // Update Firestore with password change timestamp
+                authViewModel.updatePasswordChangeTimestamp();
+
+            } else {
+                Toast.makeText(this, R.string.failed_to_send_email, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        authViewModel.getResetEmailError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -28,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="139dp"
-                android:layout_height="88dp"
+                android:layout_width="179dp"
+                android:layout_height="94dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/sprout" />
@@ -73,6 +73,7 @@
                 app:boxCornerRadiusTopStart="16dp"
                 app:boxStrokeColor="@color/green"
                 app:endIconMode="password_toggle"
+
                app:startIconDrawable="@drawable/ic_lock"
                app:startIconTint="@color/green">
 
@@ -101,11 +102,12 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/forgotPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:padding="8dp"
-                    android:text="Forgot Password?"
+                    android:text="@string/forgot_password"
                     android:textColor="@color/green"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -138,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:text="or continue with"
+                    android:text="@string/continuewith"
                     android:textColor="@color/text_secondary" />
 
                 <View

@@ -95,6 +95,9 @@ dependencies {
 
     // Test dependencies
     testImplementation libs.junit
+    testImplementation libs.ext.junit
+    testImplementation libs.rules
+    testImplementation libs.rules
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     testImplementation libs.mockito.core
@@ -102,5 +105,7 @@ dependencies {
     testImplementation libs.core.testing
     testImplementation libs.robolectric
     androidTestImplementation libs.core.testing
+
     annotationProcessor libs.room.compiler
+
 }
