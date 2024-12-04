@@ -10,6 +10,7 @@ Members:
 <resources>
     <string name="SmartHomeGarden">SmartHomeGarden</string>
     <string name="home">Home</string>
+    <string name="app_name">SmartHomeGarden</string>
     <string name="sensors">Sensor</string>
     <string name="search">Search</string>
     <string name="diagnosis">Diagnosis</string>
@@ -193,6 +194,7 @@ Members:
     <string name="help_request">Help Request</string>
     <string name="send_email">Send Email</string>
     <string name="faq">FAQ</string>
+    <string name="help">Help</string>
     <string name="loginprefs">loginPrefs</string>
     <string name="notifications">notifications</string>
     <string name="login_successful">Login Successful</string>
@@ -286,7 +288,7 @@ Members:
 
     <string name="propagation_division">Propagation: Division</string>
     <string name="low_watering">Low Watering</string>
-    <string name="short_description_placeholder">Short description of the plant...</string>
+    <string name="short_description_placeholder">Short description of the plant…</string>
     <string name="watering_info_not_available">Watering info not available</string>
     <string name="propagation">"Propagation: "</string>
     <string name="propagation_info_not_available">Propagation info not available</string>

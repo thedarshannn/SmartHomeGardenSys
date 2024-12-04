@@ -246,6 +246,7 @@ public class FirebaseRepository {
                         }
                     });
         }
+    }
 
 
     public void uploadProfilePicture(Bitmap bitmap, String userId, OnCompleteListener<Uri> onCompleteListener) {

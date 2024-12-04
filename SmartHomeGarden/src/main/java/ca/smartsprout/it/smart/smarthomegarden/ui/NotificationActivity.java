@@ -162,6 +162,7 @@ public class NotificationActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish(); // Close the activity and go back
         return true;
+    }
 
     // Method to add a notification
     private void addNotification(Notification notification) {

@@ -37,16 +37,12 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
-
             android:name=".ui.FAQActivity"
             android:label="@string/faq"
             android:exported="false" />
         <activity
-            android:name=".ui.NotificationActivity"
-
             android:name=".ui.OfflineActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-
             android:exported="false" />
         <activity
             android:name=".ui.NotificationActivity"

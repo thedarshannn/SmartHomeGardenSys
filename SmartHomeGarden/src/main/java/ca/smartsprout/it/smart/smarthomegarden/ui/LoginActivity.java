@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView registerswitch,forgotpassword;
 
-    private TextView registerswitch;
 
     private GoogleSignInHelper googleSignInHelpers;
     private CheckBox rememberMeCheckbox;
