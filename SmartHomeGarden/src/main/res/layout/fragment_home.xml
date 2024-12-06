@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/poppins_bold"
             android:textColor="@color/grey"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -34,7 +34,7 @@
             android:layout_gravity="start"
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/black"
             android:textSize="30sp" />
 
@@ -75,7 +75,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:fontFamily="sans-serif-medium"
                         android:text="@string/low_n_c"
                         android:textColor="@color/LowTempColour"
                         android:textSize="28sp" />
@@ -84,7 +83,6 @@
                         android:id="@+id/tv_high_temp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
                         android:text="@string/high_n_c"
                         android:textColor="@color/highTempColour"
                         android:textSize="28sp" />
@@ -103,7 +101,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:backgroundTint="@color/bottomNavColour"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/poppins_bold"
             android:text="@string/add_plant"
             android:textColor="@color/white"
             android:textSize="18sp"

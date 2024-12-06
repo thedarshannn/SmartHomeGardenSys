@@ -103,6 +103,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <receiver android:name=".utils.AlarmReceiver" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
     </application>
 
