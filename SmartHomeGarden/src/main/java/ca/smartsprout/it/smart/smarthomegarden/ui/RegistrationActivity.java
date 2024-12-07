@@ -31,6 +31,7 @@ import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.utils.EncryptionUtils;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 
@@ -97,7 +98,15 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         // Set click listener for register button
-        registerButton.setOnClickListener(v -> registerUser());
+        registerButton.setOnClickListener(v -> {
+            if (NetworkUtils.isInternetAvailable(this)) {
+                registerUser(); // Proceed with the registration if connected
+            } else {
+                // Launch OfflineActivity if offline
+                startActivity(new Intent(this, OfflineActivity.class));
+            }
+        });
+
 
         // Password validation during typing
         passwordInput.addTextChangedListener(new TextWatcher() {

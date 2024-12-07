@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,12 +32,9 @@ public class OfflineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline);
 
-        MaterialButton retryButton = findViewById(R.id.buttonRetry);
-        MaterialButton settingsButton = findViewById(R.id.buttonSettings);
+        Button retryButton = findViewById(R.id.buttonRetry);
+        Button settingsButton = findViewById(R.id.buttonSettings);
 
-        networkViewModel = new ViewModelProvider(this).get(NetworkViewModel.class);
-
-        // Initialize NetworkViewModel
         networkViewModel = new ViewModelProvider(this).get(NetworkViewModel.class);
 
         // Observe connectivity status
@@ -56,7 +54,6 @@ public class OfflineActivity extends AppCompatActivity {
 
         // Open Settings button: Redirect to device's network settings
         settingsButton.setOnClickListener(v -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
-
 
     }
 }

@@ -50,6 +50,7 @@
         android:layout_marginHorizontal="48dp"
         android:layout_marginTop="12dp"
         android:gravity="center"
+        android:fontFamily="@font/poppins"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/check_connection_message"
         android:textColor="@color/green_700"
@@ -68,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textMessage"
         tools:layout_editor_absoluteX="24dp">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/buttonRetry"
             android:layout_width="0dp"
             android:layout_height="65dp"
@@ -80,10 +81,10 @@
             android:text="@string/retry_connection"
             android:textAllCaps="false"
             android:textSize="16sp"
-            app:cornerRadius="12dp"
-            app:rippleColor="@color/green_700" />
+            android:textColor="@color/white"
+            app:cornerRadius="12dp" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/buttonSettings"
             android:layout_width="0dp"
             android:layout_height="65dp"
@@ -95,8 +96,8 @@
             android:text="@string/open_settings"
             android:textAllCaps="false"
             android:textSize="16sp"
-            app:cornerRadius="12dp"
-            app:rippleColor="@color/green_700" />
+            android:textColor="@color/white"
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 
