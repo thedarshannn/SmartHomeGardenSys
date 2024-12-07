@@ -13,11 +13,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +33,22 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 public class NotificationViewModel extends ViewModel {
     private final MutableLiveData<Boolean> notificationPermissionState = new MutableLiveData<>();
     private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>(new ArrayList<>());
+
+    private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+
+    public NotificationViewModel() {
+        // Initialize FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+
+        // Get current user
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
+        }
+    }
 
     public void updateNotificationPermission(boolean isGranted) {
         notificationPermissionState.setValue(isGranted);
@@ -50,13 +72,15 @@ public class NotificationViewModel extends ViewModel {
         }
         return true; // Notifications are always enabled for older versions
     }
-
-
-    public void addNotification(Notification notification) {
-        List<Notification> currentNotifications = notifications.getValue();
-        if (currentNotifications != null) {
-            currentNotifications.add(notification);
-            notifications.setValue(currentNotifications);
+    public void addNotification(String title, String message) {
+        String id = databaseReference.push().getKey();
+        long timestamp = System.currentTimeMillis();
+        Notification notification = new Notification(id, title, message, timestamp);
+        if (id != null) {
+            databaseReference.child(id).setValue(notification)
+                    .addOnSuccessListener(aVoid -> Log.d("NotificationActivity", "Notification added successfully"))
+                    .addOnFailureListener(e -> Log.e("NotificationActivity", "Failed to add notification", e));
         }
     }
+
 }
