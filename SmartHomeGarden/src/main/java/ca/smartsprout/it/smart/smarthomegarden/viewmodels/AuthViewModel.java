@@ -8,8 +8,6 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.viewmodels;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 

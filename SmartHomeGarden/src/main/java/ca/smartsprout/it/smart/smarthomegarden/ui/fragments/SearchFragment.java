@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
