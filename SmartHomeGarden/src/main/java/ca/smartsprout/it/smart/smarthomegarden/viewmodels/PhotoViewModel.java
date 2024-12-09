@@ -40,6 +40,8 @@ public class PhotoViewModel extends AndroidViewModel {
         photoRepository.fetchPhotosFromFirebase(userId);
     }
 
-
+    public void deletePhotoFromFirestore(Photo photo) {
+        photoRepository.deletePhotoFromFirestore(photo);
+    }
 
 }

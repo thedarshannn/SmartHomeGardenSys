@@ -9,6 +9,7 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
+import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.ProfileFragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -33,10 +34,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     private final Context context;
     private final List<Photo> photos;
     private final Random random = new Random();
+    private ProfileFragment profileFragment;
 
-    public PhotoAdapter(Context context, List<Photo> photos) {
+
+    public PhotoAdapter(Context context, List<Photo> photos, ProfileFragment profileFragment) {
         this.context = context;
         this.photos = photos;
+        this.profileFragment = profileFragment;
     }
 
     @NonNull
@@ -62,9 +66,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
         // Handle delete button click
         holder.buttonDelete.setOnClickListener(v -> {
-            photos.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, photos.size());
+            profileFragment.deletePhoto(photo);
+            removePhoto(photo);
         });
     }
 
@@ -95,5 +98,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     public void addPhoto(Photo photo) {
         this.photos.add(0, photo);
         notifyItemInserted(0);
+    }
+
+    public void removePhoto(Photo photo) {
+        int position = photos.indexOf(photo);
+        if (position != -1) {
+            photos.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 }

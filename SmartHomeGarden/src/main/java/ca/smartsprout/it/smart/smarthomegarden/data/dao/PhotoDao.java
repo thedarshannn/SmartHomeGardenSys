@@ -10,6 +10,7 @@ package ca.smartsprout.it.smart.smarthomegarden.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -33,4 +34,6 @@ public interface PhotoDao {
     @Update
     void updatePhoto(Photo photo); // Mark photo as synced
 
+    @Delete
+    void deletePhoto(Photo photo);
 }

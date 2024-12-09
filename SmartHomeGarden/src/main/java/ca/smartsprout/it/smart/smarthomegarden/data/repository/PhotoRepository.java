@@ -104,4 +104,15 @@ public class PhotoRepository {
     }
 
 
+    public void deletePhotoFromFirestore(Photo photo) {
+        StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photo.getUrl());
+        photoRef.delete().addOnSuccessListener(aVoid -> {
+            // Photo deleted successfully from Firestore Storage
+            executorService.execute(() -> photoDao.deletePhoto(photo)); // Delete from Room database on a background thread
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            Log.e("PhotoRepository", "Failed to delete photo from Firestore: " + exception.getMessage());
+        });
+    }
+
 }
