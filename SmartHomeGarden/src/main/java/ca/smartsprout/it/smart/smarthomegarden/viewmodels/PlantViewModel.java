@@ -37,7 +37,7 @@ public class PlantViewModel extends ViewModel {
     private static final String TAG = "PlantViewModel";
     private static final String SEARCH_URL = "https://plant.id/api/v3/kb/plants/name_search";
     private static final String DETAIL_URL = "https://plant.id/api/v3/kb/plants/:";
-    private static final String API_KEY = "3A9BMjgBTtSyZxRsO98zjV7yKpGL4mfDPuoh8giqM3BRp6a2q1";
+    private static final String API_KEY = "wlVT5GVqwoL558AtbNTqjpvku7IEVmHMSvFAlaqD4K48EXy0Ve";
 
     private final MutableLiveData<PlantDetail> plantDetail = new MutableLiveData<>();
     private final PlantRepository plantRepository;
