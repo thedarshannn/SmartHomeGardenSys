@@ -34,7 +34,6 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SearchFragment;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.SensorFragment;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NavigationViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ThemeViewModel;
-import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
 
 public class MainActivity extends BaseActivity {
 
