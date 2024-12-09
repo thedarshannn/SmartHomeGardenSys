@@ -336,6 +336,8 @@ Members:
     <string name="diagnosis_coming_soon">This feature is under development and will be available soon! Stay tuned for updates.</string>
     <string name="back_to_home">Back to Home</string>
     <string name="smart_sprout">Smart Sprout</string>
+    <string name="login1">Login</string>
+    <string name="welcome_back1">Welcome Back!\n</string>
 
 
 </resources>
