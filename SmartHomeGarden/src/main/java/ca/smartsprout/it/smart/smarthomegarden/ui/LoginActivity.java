@@ -37,6 +37,7 @@ import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
@@ -128,29 +129,35 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("RegistrationActivity", "Google Sign-In button clicked");
 
-                if (!googleSignInHelpers.isSignedIn()) {
-                    // Trigger Google Sign-In
-                    googleSignInHelpers.signIn(result -> {
-                        Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
-                        if (result) {
-                            // Handle successful sign-in
-                            runOnUiThread(() -> {
-                                Toast.makeText(LoginActivity.this, getString(R.string.login), Toast.LENGTH_SHORT).show();
-                                // Proceed to the next activity or update the UI
-                                goToHomeScreen();
-                            });
-                        } else {
-                            // Handle sign-in failure
-                            runOnUiThread(() -> {
-                                Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-                            });
-                        }
-                        return null;
-                    });
+                // Check network connectivity before attempting Google Sign-In
+                if (NetworkUtils.isInternetAvailable(LoginActivity.this)) {
+                    if (!googleSignInHelpers.isSignedIn()) {
+                        // Trigger Google Sign-In
+                        googleSignInHelpers.signIn(result -> {
+                            Log.d("RegistrationActivity", "Sign-In result: " + result); // Log the result
+                            if (result) {
+                                // Handle successful sign-in
+                                runOnUiThread(() -> {
+                                    Toast.makeText(LoginActivity.this, getString(R.string.login), Toast.LENGTH_SHORT).show();
+                                    // Proceed to the next activity or update the UI
+                                    goToHomeScreen();
+                                });
+                            } else {
+                                // Handle sign-in failure
+                                runOnUiThread(() -> {
+                                    Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+                                });
+                            }
+                            return null;
+                        });
+                    } else {
+                        // Already signed in, proceed to the next activity or handle accordingly
+                        Toast.makeText(LoginActivity.this, getString(R.string.signedin), Toast.LENGTH_SHORT).show();
+                        goToHomeScreen();
+                    }
                 } else {
-                    // Already signed in, proceed to the next activity or handle accordingly
-                    Toast.makeText(LoginActivity.this, getString(R.string.signedin), Toast.LENGTH_SHORT).show();
-                    goToHomeScreen();
+                    // No internet connection, redirect to OfflineActivity
+                    startActivity(new Intent(LoginActivity.this, OfflineActivity.class));
                 }
             }
         });
@@ -167,8 +174,14 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.checkLoggedInStatus();
 
 
-        // Set click listener for login button
-        loginButton.setOnClickListener(v -> loginUser());
+        loginButton.setOnClickListener(v -> {
+            if (NetworkUtils.isInternetAvailable(this)) {
+                loginUser(); // Proceed with the login if connected
+            } else {
+                // Launch OfflineActivity if offline
+                startActivity(new Intent(this, OfflineActivity.class));
+            }
+        });
 
         forgotpassword.setOnClickListener(v -> showForgotPasswordDialog());
 

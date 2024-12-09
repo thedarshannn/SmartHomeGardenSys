@@ -9,10 +9,8 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 
-import static android.provider.Settings.System.getString;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

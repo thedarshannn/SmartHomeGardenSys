@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -88,6 +88,7 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         photoRepository = new PhotoRepository(requireActivity().getApplication());
@@ -183,13 +184,13 @@ public class ProfileFragment extends Fragment {
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         photosViewModel = new ViewModelProvider(requireActivity()).get(PhotoViewModel.class);
 
-        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), new Observer<List<Photo>>() {
-            @Override
-            public void onChanged(List<Photo> photos) {
-                adapter = new PhotoAdapter(requireContext(), photos);
-                photosGrid.setAdapter(adapter);
-            }
+        photosGrid.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        photosGrid.addItemDecoration(new GridSpacingDecoration(14));
+        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), photos -> {
+            adapter = new PhotoAdapter(requireContext(), photos, this);
+            photosGrid.setAdapter(adapter);
         });
+
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> userNameTV.setText(name));
         // load profile picture and load with glide and update the image view from firebase
@@ -316,7 +317,7 @@ public class ProfileFragment extends Fragment {
 
         // Set up ViewModel
         photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), photos -> {
-            adapter = new PhotoAdapter(requireContext(), photos);
+            adapter = new PhotoAdapter(requireContext(), photos, this);
             photosGrid.setAdapter(adapter);
         });
 
@@ -349,6 +350,15 @@ public class ProfileFragment extends Fragment {
            @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    public void deletePhoto(Photo photo) {
+        if (photosViewModel != null) {
+            photosViewModel.deletePhotoFromFirestore(photo);
+            adapter.removePhoto(photo);
+        } else {
+            Log.e("ProfileFragment", "PhotoViewModel is not initialized");
+        }
     }
 
 }

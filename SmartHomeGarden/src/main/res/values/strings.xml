@@ -333,6 +333,9 @@ Members:
     <string name="name_not_available">Plant name is not available.</string>
     <string name="encryption_failed">Encryption Failed</string>
     <string name="account_settings">Account Settings</string>
+    <string name="diagnosis_coming_soon">This feature is under development and will be available soon! Stay tuned for updates.</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="smart_sprout">Smart Sprout</string>
 
 
 </resources>
