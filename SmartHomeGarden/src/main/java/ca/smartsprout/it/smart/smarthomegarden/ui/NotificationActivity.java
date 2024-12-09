@@ -83,6 +83,9 @@ public class NotificationActivity extends AppCompatActivity {
             String userId = currentUser.getUid();
             databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("notifications");
             loadNotifications(btnClearAll, imgNoNotifications);
+
+            // Add a login notification
+            notificationViewModel.addNotification(getString(R.string.login1), getString(R.string.welcome_back1));
         }
 
         // Handle "Clear All" button click
