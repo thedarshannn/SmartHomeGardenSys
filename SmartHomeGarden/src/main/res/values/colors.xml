@@ -38,5 +38,6 @@
     <color name="blackgrey">#313030</color>
     <color name="lightGrey">#717171</color>
     <color name="rec">#4CAF50</color>
+    <color name="red">#F44336</color>
 
 </resources>
