@@ -25,8 +25,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantSearchResult;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.SearchResponse;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
 import okhttp3.OkHttpClient;

@@ -25,7 +25,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
 
 public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
 
