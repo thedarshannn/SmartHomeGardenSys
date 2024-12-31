@@ -34,7 +34,7 @@
             android:name=".ui.TaskHistoryActivity"
             android:exported="false"
             android:label="@string/title_activity_task_history"
-            android:theme="@style/Theme.SmartHomeGarden.NoActionBar" />
+            android:theme="@style/Theme.SmartHomeGarden" />
         <activity
             android:name=".ui.FAQActivity"
             android:exported="false"
