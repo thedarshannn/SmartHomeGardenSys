@@ -13,42 +13,44 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
-
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
         android:configChanges="uiMode|orientation|screenSize"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/smart_sprout"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHomeGarden"
-        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
+            android:name=".ui.TaskHistoryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_task_history"
+            android:theme="@style/Theme.SmartHomeGarden.NoActionBar" />
+        <activity
             android:name=".ui.FAQActivity"
-            android:label="@string/faq"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/faq" />
         <activity
             android:name=".ui.OfflineActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.NotificationActivity"
             android:exported="false"
-            android:label="Notifications"/>
+            android:label="Notifications" />
         <activity
             android:name=".ui.FeedbackActivity"
-            android:label="@string/feedback"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/feedback" />
         <activity
             android:name=".ui.SettingsActivity"
             android:configChanges="uiMode|orientation|screenSize"
@@ -70,7 +72,6 @@
             android:configChanges="uiMode|orientation|screenSize"
             android:exported="false"
             android:theme="@style/Theme.SmartHomeGarden" />
-
         <activity
             android:name=".ui.SplashActivity"
             android:configChanges="uiMode|orientation|screenSize"
@@ -99,11 +100,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <receiver android:name=".utils.AlarmReceiver" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

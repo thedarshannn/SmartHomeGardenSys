@@ -18,6 +18,7 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.FAQActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.NotificationActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.SettingsActivity;
+import ca.smartsprout.it.smart.smarthomegarden.ui.TaskHistoryActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.HelpBottomSheetFragment;
 
 public class MenuHandler {
@@ -48,6 +49,10 @@ public class MenuHandler {
             return true;
         } else if (id == R.id.action_notification) {
             Intent intent = new Intent(context, NotificationActivity.class);
+            context.startActivity(intent);
+            return true;
+        } else if (id == R.id.TaskHistory) {
+            Intent intent = new Intent(context, TaskHistoryActivity.class);
             context.startActivity(intent);
             return true;
         } else {
