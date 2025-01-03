@@ -26,7 +26,7 @@ public class RetrofitClient {
                         public Response intercept(@NonNull Chain chain) throws IOException {
                             Request original = chain.request();
                             Request request = original.newBuilder()
-                                    .header("Authorization", "Bearer " + BuildConfig.OPENAI_API_KEY)
+                                    .header("Authorization", "Bearer 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")
                                     .header("Content-Type", "application/json")
                                     .method(original.method(), original.body())
                                     .build();
@@ -37,7 +37,7 @@ public class RetrofitClient {
 
             // Build the Retrofit instance
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.openai.com/") // Base URL for the OpenAI API
+                    .baseUrl("https://api.openai.com") // Base URL for the OpenAI API
                     .client(okHttpClient) // Attach OkHttpClient with interceptor
                     .addConverterFactory(GsonConverterFactory.create()) // Gson for JSON parsing
                     .build();

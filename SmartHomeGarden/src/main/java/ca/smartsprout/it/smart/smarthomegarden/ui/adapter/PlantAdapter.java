@@ -19,18 +19,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.ui.fragments.PlantDetailsBottomSheetFragment;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
 
-    private List<PlantDetail> plantList;
+    private List<Plant> plantList;
 
-    public PlantAdapter(List<PlantDetail> plantList) {
+    public PlantAdapter(List<Plant> plantList) {
         this.plantList = plantList;
     }
 
@@ -43,27 +43,17 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
-        PlantDetail plant = plantList.get(position);
+        Plant plant = plantList.get(position);
 
         // Set plant name and description (cycle information in place of description)
-        holder.plantName.setText(plant.getCommonNames().get(0));
+        holder.plantName.setText(plant.getName());
 
         // if description is not available, invisible the description text view and set the user friendly message
-        if (plant.getDescription() != null && plant.getDescription().getValue() != null) {
-            holder.plantDescription.setText(plant.getDescription().getValue());
+        if (plant.getDescription() != null) {
+            holder.plantDescription.setText(plant.getDescription());
         } else {
             holder.plantDescription.setText(R.string.description_not_available);
             holder.plantDescription.setVisibility(View.VISIBLE);
-        }
-
-        // Bind thumbnail image using Glide
-        if (plant.getImage() != null && plant.getImage().getValue() != null) {
-            Glide.with(holder.ivThumbnail.getContext())
-                    .load(plant.getImage().getValue())
-                    .placeholder(R.drawable.image_placeholder)
-                    .into(holder.ivThumbnail);
-        } else {
-            holder.ivThumbnail.setImageResource(R.drawable.image_placeholder);
         }
 
 
@@ -83,7 +73,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         return plantList != null ? plantList.size() : 0;
     }
 
-    public void updatePlantList(List<PlantDetail> plants) {
+    public void updatePlantList(List<Plant> plants) {
         this.plantList.clear();
         this.plantList.addAll(plants);
         notifyDataSetChanged();

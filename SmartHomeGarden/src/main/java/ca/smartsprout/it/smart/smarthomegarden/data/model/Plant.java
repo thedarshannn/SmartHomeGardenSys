@@ -36,6 +36,14 @@ public class Plant implements Serializable {
         this.toxicity = toxicity;
     }
 
+    public Plant(String description, String wateringPeriod, String toxicity, String suitability, String name) {
+        this.description = description;
+        this.wateringPeriod = wateringPeriod;
+        this.toxicity = toxicity;
+        this.suitability = suitability;
+        this.name = name;
+    }
+
     // Getters and setters
     public String getId() {
         return id;

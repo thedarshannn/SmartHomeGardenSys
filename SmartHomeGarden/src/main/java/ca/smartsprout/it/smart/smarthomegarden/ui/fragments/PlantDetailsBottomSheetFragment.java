@@ -25,15 +25,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 
 public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
 
-    private PlantDetail plantDetail;
+    private static Plant Plant;
 
-    public static PlantDetailsBottomSheetFragment newInstance(PlantDetail plantDetail) {
+    public static PlantDetailsBottomSheetFragment newInstance(Plant plantDetail) {
         PlantDetailsBottomSheetFragment fragment = new PlantDetailsBottomSheetFragment();
         Bundle args = new Bundle();
-        args.putSerializable("plantDetail", plantDetail);
+        args.putSerializable("Plant", Plant);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,7 +43,7 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            plantDetail = (PlantDetail) getArguments().getSerializable("plantDetail");
+            Plant = (Plant) getArguments().getSerializable("Plant");
         }
     }
 
@@ -60,33 +61,21 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
         Button btnAddPlant = view.findViewById(R.id.btnAddPlant);
 
         // Populate plant details
-        if (plantDetail != null) {
-            tvPlantName.setText(plantDetail.getName() != null ? plantDetail.getName() : getString(R.string.name_not_available));
-            tvPlantDescription.setText(plantDetail.getDescription() != null && plantDetail.getDescription().getValue() != null ? plantDetail.getDescription().getValue() : getString(R.string.description_not_available));
+        if (Plant != null) {
+            tvPlantName.setText(Plant.getName() != null ? Plant.getName() : getString(R.string.name_not_available));
+            tvPlantDescription.setText(Plant.getDescription() != null ? Plant.getDescription() : getString(R.string.description_not_available));
 
-            if (plantDetail.getWatering() != null) {
-                tvWatering.setText(plantDetail.getWatering().getMax() == 1 ? "Low Watering" : "Frequent Watering");
+            if (Plant.getWateringPeriod() != null) {
+                tvWatering.setText(Plant.getWateringPeriod());
             } else {
                 tvWatering.setText(R.string.watering_info_not_available);
             }
 
-            if (plantDetail.getPropagationMethods() != null) {
-                tvPropagation.setText(getString(R.string.propagation) + String.join(", ", plantDetail.getPropagationMethods()));
-            } else {
-                tvPropagation.setText(R.string.propagation_info_not_available);
-            }
-
-            if (plantDetail.getImage() != null) {
-                Glide.with(requireContext())
-                        .load(plantDetail.getImage().getValue())
-                        .placeholder(R.drawable.image_placeholder)
-                        .into(plantImage);
-            }
         }
 
         // Set button click listener
         btnAddPlant.setOnClickListener(v -> {
-            AddPlantBottomSheet fragment = AddPlantBottomSheet.newInstance(plantDetail.toPlant());
+            AddPlantBottomSheet fragment = AddPlantBottomSheet.newInstance(Plant);
             fragment.show(getParentFragmentManager(), "PlantDetailsBottomSheet");
             dismiss();
         });
