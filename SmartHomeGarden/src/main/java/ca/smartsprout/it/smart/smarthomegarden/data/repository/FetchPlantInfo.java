@@ -19,6 +19,7 @@ import retrofit2.Response;
 public class FetchPlantInfo {
     private static final String TAG = "FetchPlantInfo";
     private final ChatGPTApiService apiService;
+    private boolean isFetching = false; // Flag to track if a request is ongoing
 
     // Constructor to initialize Retrofit service
     public FetchPlantInfo() {
@@ -31,13 +32,21 @@ public class FetchPlantInfo {
      * @param plantName The name of the plant to search for.
      * @param callback  Callback to handle success or error.
      */
-    public void getPlantInfo(String plantName, PlantInfoCallback callback) {
+    public synchronized void getPlantInfo(String plantName, PlantInfoCallback callback) {
+        if (isFetching) {
+            Log.w(TAG, "API call already in progress. Ignoring duplicate request.");
+            return;
+        }
+
+        isFetching = true; // Mark as fetching
         ChatGPTRequest request = new ChatGPTRequest(plantName);
 
         Call<ChatGPTResponse> call = apiService.generatePlantInfo(request);
         call.enqueue(new Callback<ChatGPTResponse>() {
             @Override
             public void onResponse(@NonNull Call<ChatGPTResponse> call, @NonNull Response<ChatGPTResponse> response) {
+                isFetching = false; // Reset the flag
+
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         // Extract and log the response
@@ -66,6 +75,7 @@ public class FetchPlantInfo {
 
             @Override
             public void onFailure(@NonNull Call<ChatGPTResponse> call, @NonNull Throwable t) {
+                isFetching = false; // Reset the flag
                 Log.e(TAG, "API Call Failure: " + t.getMessage(), t);
                 callback.onError("API call failed: " + t.getMessage());
             }
@@ -84,11 +94,10 @@ public class FetchPlantInfo {
                 plantName,
                 plantInfoJson.optString("description", "Description not available."),
                 plantInfoJson.optString("wateringPeriod", "Watering period not available."),
-                plantInfoJson.optString("suitability", "Suitability information not available."),
-                plantInfoJson.optString("toxicity", "Toxicity information not available.")
+                plantInfoJson.optString("toxicity", "Toxicity information not available."),
+                plantInfoJson.optString("suitability", "Suitability information not available.")
         );
     }
-
 
     public interface PlantInfoCallback {
         void onSuccess(Plant plant);

@@ -13,15 +13,14 @@ public class ChatGPTRequest {
     public ChatGPTRequest(String plantName) {
         this.model = DEFAULT_MODEL;
         this.messages = new ArrayList<>();
-        messages.add(new Message( USER_ROLE, "You are a JSON generator. Strictly respond only in JSON format, without any extra text or explanations.\n" +
-                "Generate a JSON response with the following fields for a plant named \"" + plantName + "\":\n" +
-                "{\n" +
-                "  \"description\": \"Provide a concise 2-3 line description of the plant.\",\n" +
-                "  \"wateringPeriod\": \"Specify the watering period in one short sentence.\",\n" +
-                "  \"toxicity\": \"Indicate if the plant is toxic to pets or humans in one short sentence.\",\n" +
-                "  \"suitability\": \"State if the plant is suitable for indoor or outdoor use in one short sentence.\"\n" +
-                "}\n\n" +
-                "Do not include anything outside this JSON structure. If you don't know the details of the plant, respond with an empty JSON object {}."));
+        messages.add(new Message( USER_ROLE, "You are a JSON generator. Strictly respond in JSON format, without extra text or explanations. Provide a JSON response with the following fields for a plant named \"" + plantName + "\": {\n" +
+                "  \"description\": \"One line concise description.\",\n" +
+                "  \"wateringPeriod\": \"2-3 words (e.g., Weekly, Twice daily).\",\n" +
+                "  \"toxicity\": \"2-3 words (e.g., Non-toxic, Mildly toxic).\",\n" +
+                "  \"suitability\": \"2-3 words (e.g., Indoor, Outdoor).\"\n" +
+                "}\n" +
+                "Do not include anything outside this JSON structure.If you don't know the details of the plant, respond with an empty JSON object {}.\""
+        ));
     }
 
     public static class Message {

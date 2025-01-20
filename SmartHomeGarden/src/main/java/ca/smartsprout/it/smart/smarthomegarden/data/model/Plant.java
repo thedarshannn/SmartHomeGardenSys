@@ -26,22 +26,12 @@ public class Plant implements Serializable {
     public Plant() {
     }
 
-    public Plant(String name, String customName, String description, String wateringPeriod, Date dateAdded, String suitability, String toxicity) {
+    public Plant(String name, String description, String wateringPeriod, String toxicity, String suitability) {
         this.name = name;
-        this.customName = customName;
-        this.description = description;
-        this.wateringPeriod = wateringPeriod;
-        this.dateAdded = dateAdded;
-        this.suitability = suitability;
-        this.toxicity = toxicity;
-    }
-
-    public Plant(String description, String wateringPeriod, String toxicity, String suitability, String name) {
         this.description = description;
         this.wateringPeriod = wateringPeriod;
         this.toxicity = toxicity;
         this.suitability = suitability;
-        this.name = name;
     }
 
     // Getters and setters
@@ -109,4 +99,17 @@ public class Plant implements Serializable {
         this.dateAdded = dateAdded;
     }
 
+    @Override
+    public String toString() {
+        return "Plant{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", customName='" + customName + '\'' +
+                ", description='" + description + '\'' +
+                ", wateringPeriod='" + wateringPeriod + '\'' +
+                ", dateAdded=" + dateAdded +
+                ", toxicity='" + toxicity + '\'' +
+                ", suitability='" + suitability + '\'' +
+                '}';
+    }
 }

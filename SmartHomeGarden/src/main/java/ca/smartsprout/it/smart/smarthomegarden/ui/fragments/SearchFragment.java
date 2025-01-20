@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class SearchFragment extends Fragment {
                 mainHandler.post(() -> {
                     List<Plant> plantList = new ArrayList<>();
                     plantList.add(plantDetail);
+                    Log.d("SearchFragment", "Plant List: " + plantList);
                     plantAdapter.updatePlantList(plantList);
                     noResultsTextView.setVisibility(View.GONE);
                 });
