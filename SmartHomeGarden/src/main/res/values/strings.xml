@@ -341,6 +341,10 @@ Members:
     <string name="toxicity_placeholder">Toxicity Placeholder</string>
     <string name="suitability_placeholder">Suitability</string>
     <string name="plant_image">Plant Img</string>
-
+    <string name="watering_period_label">Watering Period: %1$s</string>\
+    <string name="toxicity_label">Toxicity: %1$s</string>
+    <string name="suitability_label">Suitability: %1$s</string>
+    <string name="toxicity_info_not_available">Toxicity information not available</string>
+    <string name="suitability_info_not_available">Suitability information not available</string>
 
 </resources>
