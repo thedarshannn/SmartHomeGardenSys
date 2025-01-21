@@ -338,6 +338,9 @@ Members:
     <string name="smart_sprout">Smart Sprout</string>
     <string name="login1">Login</string>
     <string name="welcome_back1">Welcome Back!\n</string>
+    <string name="toxicity_placeholder">Toxicity Placeholder</string>
+    <string name="suitability_placeholder">Suitability</string>
+    <string name="plant_image">Plant Img</string>
 
 
 </resources>
