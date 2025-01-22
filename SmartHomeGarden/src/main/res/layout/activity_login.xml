@@ -1,185 +1,183 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/backgroundGreen"
+    android:padding="16dp"
     tools:context=".ui.LoginActivity">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+    <!-- Hanging Plant Illustration -->
+    <ImageView
+        android:id="@+id/img_plant"
+        android:layout_width="196dp"
+        android:layout_height="161dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@string/plant_image"
+        android:src="@drawable/hanging_plant" />
+
+    <!-- Welcome Text -->
+
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginBottom="150dp"
-        app:cardCornerRadius="28dp"
-        app:cardElevation="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/welcome_back"
+        android:textColor="@color/green"
+        android:textSize="24sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:boxStrokeColor="@color/green"
+        android:layout_gravity="center"
+        app:boxStrokeErrorColor="@color/red"
+        app:startIconTint="@color/green"
+        app:endIconMode="clear_text"
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            android:layout_width="330dp"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:layout_gravity="center_horizontal"
             android:layout_height="match_parent"
-            android:background="@drawable/card_background"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="179dp"
-                android:layout_height="94dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/sprout" />
+    <!-- Password Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:endIconMode="password_toggle"
+        android:layout_gravity="center"
+        app:boxStrokeColor="@color/green"
+        app:boxStrokeErrorColor="@color/red"
+        app:endIconTint="@color/green"
+        android:layout_marginBottom="8dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:hint="@string/email"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp"
-                app:boxStrokeColor="@color/green"
-                app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="@color/green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="330dp"
+            android:hint="@string/password"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:drawableStart="@drawable/ic_password"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:inputType="textPassword"
+            tools:ignore="PrivateResource" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/editTextEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_email"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/text_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
+    <!-- Remember Me and Forgot Password Row -->
+    <LinearLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/password"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp"
-                app:boxStrokeColor="@color/green"
-                app:endIconMode="password_toggle"
+        <CheckBox
+            android:id="@+id/cb_remember_me"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_height="wrap_content"
+            android:text="@string/rememberme" />
 
-               app:startIconDrawable="@drawable/ic_lock"
-               app:startIconTint="@color/green">
+        <TextView
+            android:id="@+id/tv_forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:textColor="@color/green_700"
+            android:fontFamily="@font/poppins_semibold"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_lock"
-                android:inputType="textPassword"
-                android:textColor="@color/text_primary" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <!-- Login Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_login"
+        android:layout_height="60dp"
+        android:text="@string/log_in"
+        android:fontFamily="@font/poppins_semibold"
+        android:backgroundTint="@color/dark_green"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:layout_width="330dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+    <!-- Divider with OR Text -->
+    <LinearLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
 
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/rememberMeCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/green"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/rememberme"
-                    android:textSize="14sp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/grey" />
 
-                <TextView
-                    android:id="@+id/forgotPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:gravity="end"
-                    android:padding="8dp"
-                    android:text="@string/forgot_password"
-                    android:textColor="@color/green"
-                    android:textSize="14sp" />
-            </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/grey" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@color/green"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/sign"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:cornerRadius="16dp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/grey" />
+    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+    <!-- Google Login Button -->
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/divider" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/googlesignin"
+        android:layout_width="330dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/googlesign"
+        android:textColor="@color/white"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_google"
+        app:iconGravity="textStart"
+        app:iconTint="@null"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:text="@string/continuewith"
-                    android:textColor="@color/text_secondary" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/divider" />
-            </LinearLayout>
+    <!-- Register Link -->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/googlesignin"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="@string/googlesign"
-                android:textColor="@color/text_primary"
-                app:cornerRadius="16dp"
-                app:icon="@drawable/ic_google"
-                app:iconGravity="textStart"
-                app:iconTint="@null"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp" />
+    <!-- Register Link -->
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/new_here_register"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/green_700"
+        android:fontFamily="@font/poppins_semibold" />
 
-            <TextView
-                android:id="@+id/registerswitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="24dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="@string/signup"
-                android:textColor="@color/green"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
