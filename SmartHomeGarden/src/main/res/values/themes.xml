@@ -11,7 +11,9 @@
 
         <item name="android:fontFamily">@font/poppins</item>
     </style>
-    <style name="Theme.ui.SplashActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+
+    <style name="Theme.ui.SplashActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
     <style name="Theme.SmartHomeGarden" parent="Base.Theme.SmartHomeGarden" />
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
@@ -25,8 +27,18 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
+
     <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@drawable/dialog_background</item>
         <item name="android:padding">16dp</item>
     </style>
+
+    <style name="Theme.SmartHomeGarden.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SmartHomeGarden.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SmartHomeGarden.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
