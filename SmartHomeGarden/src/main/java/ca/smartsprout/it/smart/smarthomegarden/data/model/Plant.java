@@ -11,26 +11,27 @@ package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class Plant implements Serializable {
     private String id;
     private String name;
     private String customName; // User-defined custom name for the plant
     private String description;
-    private List<String> commonNames;
-    private int watering;
+    private String wateringPeriod;
     private Date dateAdded;
+    private String toxicity;
+    private String suitability;
 
     // No-argument constructor required for Firestore
     public Plant() {
     }
 
-    public Plant(String name, String description, List<String> commonNames, int watering) {
+    public Plant(String name, String description, String wateringPeriod, String toxicity, String suitability) {
         this.name = name;
         this.description = description;
-        this.commonNames = commonNames;
-        this.watering = watering;
+        this.wateringPeriod = wateringPeriod;
+        this.toxicity = toxicity;
+        this.suitability = suitability;
     }
 
     // Getters and setters
@@ -58,12 +59,28 @@ public class Plant implements Serializable {
         this.description = description;
     }
 
-    public List<String> getCommonNames() {
-        return commonNames;
+    public String getWateringPeriod() {
+        return wateringPeriod;
     }
 
-    public void setCommonNames(List<String> commonNames) {
-        this.commonNames = commonNames;
+    public void setWateringPeriod(String wateringPeriod) {
+        this.wateringPeriod = wateringPeriod;
+    }
+
+    public String getToxicity() {
+        return toxicity;
+    }
+
+    public void setToxicity(String toxicity) {
+        this.toxicity = toxicity;
+    }
+
+    public String getSuitability() {
+        return suitability;
+    }
+
+    public void setSuitability(String suitability) {
+        this.suitability = suitability;
     }
 
     public String getCustomName() {
@@ -82,11 +99,17 @@ public class Plant implements Serializable {
         this.dateAdded = dateAdded;
     }
 
-    public int getWatering() {
-        return watering;
-    }
-
-    public void setWatering(int watering) {
-        this.watering = watering;
+    @Override
+    public String toString() {
+        return "Plant{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", customName='" + customName + '\'' +
+                ", description='" + description + '\'' +
+                ", wateringPeriod='" + wateringPeriod + '\'' +
+                ", dateAdded=" + dateAdded +
+                ", toxicity='" + toxicity + '\'' +
+                ", suitability='" + suitability + '\'' +
+                '}';
     }
 }

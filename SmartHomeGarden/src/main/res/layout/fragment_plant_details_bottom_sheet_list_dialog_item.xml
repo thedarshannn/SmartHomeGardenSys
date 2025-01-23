@@ -8,24 +8,43 @@
     android:padding="16dp"
     android:background="@drawable/bottom_sheet_background">
 
-    <!-- Plant Image -->
-    <ImageView
-        android:id="@+id/ivPlantImage"
+    <!-- Top Section: Plant Image and Name -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:background="@drawable/image_placeholder" />
+        android:layout_height="wrap_content">
 
-    <!-- Plant Name -->
-    <TextView
-        android:id="@+id/tvPlantName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/green"
-        android:text="@string/plant_name" />
+        <!-- Plant Image -->
+        <ImageView
+            android:id="@+id/ivPlantImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_sprout"
+            android:contentDescription="@string/plant_image" />
+
+        <!-- Plant Name -->
+        <TextView
+            android:id="@+id/tvPlantName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ivPlantImage"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/green"
+            android:text="@string/plant_name" />
+    </RelativeLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        android:layout_marginTop="8dp" />
 
     <!-- Plant Description -->
     <TextView
@@ -47,19 +66,31 @@
         android:drawablePadding="4dp"
         android:textColor="@color/green"
         android:text="@string/low_watering"
-        app:drawableLeftCompat="@drawable/water_drop_24px" />
+        app:drawableStartCompat="@drawable/water_drop_24px"/>
 
-    <!-- Propagation Methods -->
+    <!-- Toxicity Info -->
     <TextView
-        android:id="@+id/tvPropagation"
+        android:id="@+id/tvToxicity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:drawablePadding="4dp"
+        android:textColor="@color/red"
+        android:text="@string/toxicity_placeholder"
+        app:drawableStartCompat="@drawable/toxic" />
+
+    <!-- Suitability Info -->
+    <TextView
+        android:id="@+id/tvSuitability"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="14sp"
         android:drawablePadding="4dp"
         android:textColor="@color/green"
-        android:text="@string/propagation_division"
-        app:drawableLeftCompat="@drawable/ic_leaf" />
+        android:text="@string/suitability_placeholder"
+        app:drawableStartCompat="@drawable/ic_leaf" />
 
     <!-- Add Plant Button -->
     <Button

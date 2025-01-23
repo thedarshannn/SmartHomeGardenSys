@@ -27,7 +27,9 @@ android {
             }
         }
 
-        buildConfigField "String", "API_URL", "\"${project.hasProperty('API_URL') ? project.properties['API_URL'] : 'https://default-url.com'}\""
+        // openai api
+        buildConfigField "String", "OPENAI_API_KEY", "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\""
+
     }
 
     buildFeatures {

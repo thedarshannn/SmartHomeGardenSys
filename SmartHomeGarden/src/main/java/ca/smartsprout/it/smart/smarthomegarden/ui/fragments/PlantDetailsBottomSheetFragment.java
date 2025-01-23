@@ -23,18 +23,17 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 
 public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
 
-    private PlantDetail plantDetail;
+    private static Plant plant;
 
-    public static PlantDetailsBottomSheetFragment newInstance(PlantDetail plantDetail) {
+    public static PlantDetailsBottomSheetFragment newInstance(Plant plantDetail) {
         PlantDetailsBottomSheetFragment fragment = new PlantDetailsBottomSheetFragment();
         Bundle args = new Bundle();
-        args.putSerializable("plantDetail", plantDetail);
+        args.putSerializable("Plant", plantDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,7 +42,7 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            plantDetail = (PlantDetail) getArguments().getSerializable("plantDetail");
+            plant = (Plant) getArguments().getSerializable("Plant");
         }
     }
 
@@ -57,37 +56,40 @@ public class PlantDetailsBottomSheetFragment extends BottomSheetDialogFragment {
         TextView tvPlantName = view.findViewById(R.id.tvPlantName);
         TextView tvPlantDescription = view.findViewById(R.id.tvPlantDescription);
         TextView tvWatering = view.findViewById(R.id.tvWatering);
-        TextView tvPropagation = view.findViewById(R.id.tvPropagation);
+        TextView tvToxicity = view.findViewById(R.id.tvToxicity);
+        TextView tvSuitability = view.findViewById(R.id.tvSuitability);
         Button btnAddPlant = view.findViewById(R.id.btnAddPlant);
 
         // Populate plant details
-        if (plantDetail != null) {
-            tvPlantName.setText(plantDetail.getName() != null ? plantDetail.getName() : getString(R.string.name_not_available));
-            tvPlantDescription.setText(plantDetail.getDescription() != null && plantDetail.getDescription().getValue() != null ? plantDetail.getDescription().getValue() : getString(R.string.description_not_available));
+        if (plant != null) {
+            // Set plant name
+            tvPlantName.setText(plant.getName() != null ? plant.getName() : getString(R.string.name_not_available));
 
-            if (plantDetail.getWatering() != null) {
-                tvWatering.setText(plantDetail.getWatering().getMax() == 1 ? "Low Watering" : "Frequent Watering");
-            } else {
-                tvWatering.setText(R.string.watering_info_not_available);
-            }
+            // Set plant description
+            tvPlantDescription.setText(plant.getDescription() != null ? plant.getDescription() : getString(R.string.description_not_available));
 
-            if (plantDetail.getPropagationMethods() != null) {
-                tvPropagation.setText(getString(R.string.propagation) + String.join(", ", plantDetail.getPropagationMethods()));
-            } else {
-                tvPropagation.setText(R.string.propagation_info_not_available);
-            }
+            // Set watering period
+            tvWatering.setText(getString(R.string.watering_period_label,
+                    plant.getWateringPeriod() != null ? plant.getWateringPeriod() : getString(R.string.watering_info_not_available)));
 
-            if (plantDetail.getImage() != null) {
-                Glide.with(requireContext())
-                        .load(plantDetail.getImage().getValue())
-                        .placeholder(R.drawable.image_placeholder)
-                        .into(plantImage);
-            }
+            // Set toxicity
+            tvToxicity.setText(getString(R.string.toxicity_label,
+                    plant.getToxicity() != null ? plant.getToxicity() : getString(R.string.toxicity_info_not_available)));
+
+            // Set suitability
+            tvSuitability.setText(getString(R.string.suitability_label,
+                    plant.getSuitability() != null ? plant.getSuitability() : getString(R.string.suitability_info_not_available)));
+
+            // Load image with Glide or a placeholder
+            Glide.with(this)
+                    .load(R.drawable.ic_sprout) // Replace with actual plant image URL if available
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(plantImage);
         }
 
         // Set button click listener
         btnAddPlant.setOnClickListener(v -> {
-            AddPlantBottomSheet fragment = AddPlantBottomSheet.newInstance(plantDetail.toPlant());
+            AddPlantBottomSheet fragment = AddPlantBottomSheet.newInstance(plant);
             fragment.show(getParentFragmentManager(), "PlantDetailsBottomSheet");
             dismiss();
         });

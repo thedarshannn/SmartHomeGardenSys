@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
-import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantDetail;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 
@@ -70,8 +71,9 @@ public class SearchFragment extends Fragment {
         plantViewModel.getPlantDetail().observe(getViewLifecycleOwner(), plantDetail -> {
             if (plantDetail != null) {
                 mainHandler.post(() -> {
-                    List<PlantDetail> plantList = new ArrayList<>();
+                    List<Plant> plantList = new ArrayList<>();
                     plantList.add(plantDetail);
+                    Log.d("SearchFragment", "Plant List: " + plantList);
                     plantAdapter.updatePlantList(plantList);
                     noResultsTextView.setVisibility(View.GONE);
                 });
@@ -88,7 +90,7 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                executorService.submit(() -> plantViewModel.searchAndFetchPlantDetail(query));
+                executorService.submit(() -> plantViewModel.fetchPlantDetails(query));
                 return true;
             }
 
