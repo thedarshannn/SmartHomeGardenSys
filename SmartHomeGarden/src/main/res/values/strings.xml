@@ -21,7 +21,7 @@ Members:
     <string name="signin">Already have an account?Sign in</string>
     <string name="signup">Do not have an account?Sign up</string>
     <string name="sign">Sign in</string>
-    <string name="register">REGISTER</string>
+    <string name="register">Register</string>
     <string name="date_format">dd MMM, yyyy</string>
     <string name="hello">"Hello, "</string>
     <string name="sir">Shawn</string>
@@ -349,5 +349,7 @@ Members:
     <string name="suitability_info_not_available">Suitability information not available</string>
     <string name="log_in">Log In</string>
     <string name="new_here_register">New here? <b>Create an account</b></string>
+    <string name="go_back_to_login">Go back to login</string>
+    <string name="back">back</string>
 
 </resources>
