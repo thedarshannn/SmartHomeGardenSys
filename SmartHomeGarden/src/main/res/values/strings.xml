@@ -21,7 +21,7 @@ Members:
     <string name="signin">Already have an account?Sign in</string>
     <string name="signup">Do not have an account?Sign up</string>
     <string name="sign">Sign in</string>
-    <string name="register">REGISTER</string>
+    <string name="register">Register</string>
     <string name="date_format">dd MMM, yyyy</string>
     <string name="hello">"Hello, "</string>
     <string name="sir">Shawn</string>
@@ -199,6 +199,7 @@ Members:
     <string name="notifications">notifications</string>
     <string name="login_successful">Login Successful</string>
     <string name="welcome_back">Welcome back!</string>
+    <string name="welcome">Welcome!</string>
     <string name="toggle_temp">Convert Unit</string>
     <string name="celsius">°C</string>
     <string name="fahrenheit">°F</string>
@@ -338,12 +339,27 @@ Members:
     <string name="smart_sprout">Smart Sprout</string>
     <string name="login1">Login</string>
     <string name="welcome_back1">Welcome Back!\n</string>
+
+    <string name="toxicity_placeholder">Toxicity Placeholder</string>
+    <string name="suitability_placeholder">Suitability</string>
+    <string name="plant_image">Plant Img</string>
+    <string name="watering_period_label">Watering Period: %1$s</string>\
+    <string name="toxicity_label">Toxicity: %1$s</string>
+    <string name="suitability_label">Suitability: %1$s</string>
+    <string name="toxicity_info_not_available">Toxicity information not available</string>
+    <string name="suitability_info_not_available">Suitability information not available</string>
+    <string name="log_in">Log In</string>
+    <string name="new_here_register">New here? <b>Create an account</b></string>
+    <string name="go_back_to_login">Go back to login</string>
+    <string name="back">back</string>
+
     <string name="answer">Answer</string>
     <string name="question">Question</string>
     <string name="task_history">Task History</string>
     <string name="title_activity_task_history">Task History</string>
 
     <string name="action_settings">Settings</string>
+
 
 
 </resources>

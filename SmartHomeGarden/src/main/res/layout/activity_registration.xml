@@ -1,205 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login"
+    android:orientation="vertical"
+    android:background="@color/backgroundGreen"
+    android:padding="16dp"
     tools:context=".ui.RegistrationActivity">
 
+    <!-- Hanging Plant Illustration -->
     <ImageView
         android:id="@+id/logoImage"
         android:layout_width="196dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/sprout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="161dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/plant_image"
+        android:src="@drawable/register_plant" />
 
-    <EditText
-        android:id="@+id/editTextName1"
-        android:layout_width="0dp"
+    <!-- Create Account Text -->
+    <TextView
+        android:id="@+id/createAccountText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_person"
-        android:drawablePadding="12dp"
-        android:hint="@string/name"
-        android:inputType="textPersonName"
-        android:padding="16dp"
-        android:textColorHint="@color/hint_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logoImage" />
+        android:layout_gravity="start"
+        android:layout_marginLeft="25dp"
+        android:text="Create an account!"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        android:fontFamily="@font/poppins_semibold" />
 
-    <EditText
-        android:id="@+id/editTextEmail1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_email"
-        android:drawablePadding="12dp"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:padding="16dp"
-        android:textColorHint="@color/hint_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextName1" />
 
-    <EditText
-        android:id="@+id/editTextPhone1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_phone"
-        android:drawablePadding="12dp"
-        android:hint="@string/Phone"
-        android:inputType="phone"
-        android:padding="16dp"
-        android:textColorHint="@color/hint_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail1" />
-
+    <!-- Name Field -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordLayout1"
-        android:layout_width="0dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        app:hintEnabled="false"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/hint_color"
+        android:layout_marginBottom="16dp"
+        app:boxStrokeColor="@color/green"
+        android:layout_gravity="center"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:hintTextColor="@color/hint_color">
 
-        app:boxBackgroundMode="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPhone1">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextName1"
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_person"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="@string/name"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Email Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:boxStrokeColor="@color/green"
+        android:layout_gravity="center"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:hintTextColor="@color/hint_color">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextEmail1"
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Phone Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:boxStrokeColor="@color/green"
+        android:layout_gravity="center"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:hintTextColor="@color/hint_color">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextPhone1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/Phone"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:drawableStart="@drawable/ic_phone"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Password Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:boxStrokeColor="@color/green"
+        app:endIconMode="password_toggle"
+        android:layout_gravity="center"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:hintTextColor="@color/hint_color"
+        tools:ignore="PrivateResource">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_background"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="12dp"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:drawableStart="@drawable/ic_password"
             android:hint="@string/password"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColorHint="@color/hint_color" />
-
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-
+    <!-- Confirm Password Field -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordLayout2"
-        android:layout_width="0dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        app:hintEnabled="false"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/hint_color"
-        app:boxBackgroundMode="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout1">
+        android:layout_marginBottom="24dp"
+        app:endIconMode="password_toggle"
+        app:boxStrokeColor="@color/green"
+        android:layout_gravity="center"
+        app:boxBackgroundColor="@color/backgroundGreen"
+        app:hintTextColor="@color/hint_color"
+        tools:ignore="PrivateResource">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_background"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="12dp"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:drawableStart="@drawable/ic_password"
             android:hint="@string/confirm"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColorHint="@color/hint_color" />
-
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <androidx.appcompat.widget.AppCompatButton
+    <!-- Register Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/primary_button_background"
-        android:padding="16dp"
+        android:layout_width="330dp"
+        android:layout_gravity="center"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/dark_green"
         android:text="@string/register"
+        android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout2" />
+        android:fontFamily="@font/poppins_semibold"
+        app:cornerRadius="16dp" />
 
-    <View
-        android:id="@+id/dividerLeft"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/divider_color"
-        app:layout_constraintBottom_toBottomOf="@id/orText"
-        app:layout_constraintEnd_toStartOf="@id/orText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/orText" />
-
-    <TextView
-        android:id="@+id/orText"
+    <!-- Go Back to Login Link -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/or"
-        android:textColor="@color/text_secondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button2" />
-
-    <View
-        android:id="@+id/dividerRight"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/divider_color"
-        app:layout_constraintBottom_toBottomOf="@id/orText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/orText"
-        app:layout_constraintTop_toTopOf="@id/orText" />
-
-    <TextView
-        android:id="@+id/goback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:background="@drawable/textview_rounded_bg"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
-        android:text="@string/goback"
-        android:textColor="@color/green"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.482" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/backArrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:id="@+id/gobackToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/go_back_to_login"
+            android:textColor="@color/green"
+            android:textSize="16sp"
+            android:fontFamily="@font/poppins_semibold" />
+    </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

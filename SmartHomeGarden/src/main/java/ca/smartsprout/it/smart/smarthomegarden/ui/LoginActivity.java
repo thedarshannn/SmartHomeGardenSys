@@ -67,13 +67,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Initialize UI elements
-        emailInput = findViewById(R.id.editTextEmail);
-        passwordInput = findViewById(R.id.editTextPassword);
-        loginButton = findViewById(R.id.button);
-        registerswitch = findViewById(R.id.registerswitch);
-        rememberMeCheckbox = findViewById(R.id.rememberMeCheckbox);
+        emailInput = findViewById(R.id.et_email);
+        passwordInput = findViewById(R.id.et_password);
+        loginButton = findViewById(R.id.btn_login);
+        registerswitch = findViewById(R.id.tv_register);
+        rememberMeCheckbox = findViewById(R.id.cb_remember_me);
 
-        forgotpassword=findViewById(R.id.forgotPassword);
+        forgotpassword=findViewById(R.id.tv_forgot_password);
         googlesignin=findViewById(R.id.googlesignin);
 
         googlesignin = findViewById(R.id.googlesignin);

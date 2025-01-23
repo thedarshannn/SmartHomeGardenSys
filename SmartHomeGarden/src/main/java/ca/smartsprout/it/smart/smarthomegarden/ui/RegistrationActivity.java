@@ -62,7 +62,7 @@ public class RegistrationActivity extends AppCompatActivity {
         phoneInput = findViewById(R.id.editTextPhone1);
 
 
-        goback = findViewById(R.id.goback);
+        goback = findViewById(R.id.gobackToLogin);
 
 // Hide the Toolbar for this activity
         if (getSupportActionBar() != null) {
