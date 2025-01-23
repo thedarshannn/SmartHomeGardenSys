@@ -19,4 +19,9 @@
         android:id="@+id/help"
         android:title="@string/help"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/TaskHistory"
+        android:title="@string/task_history"
+        app:showAsAction="never" />
 </menu>
