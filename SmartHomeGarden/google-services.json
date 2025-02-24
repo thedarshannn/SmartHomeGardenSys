@@ -15,42 +15,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "204065205787-2flk3p4ph5o784j7s7tn24k3ahocrc15.apps.googleusercontent.com",
+          "client_id": "204065205787-vk2dpcn1aj0tn12rtslrcg9nkc8vdjh4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ca.smartsprout.it.smart.smarthomegarden",
-            "certificate_hash": "e5eed255ee19383237c87748e34d02ef2d93911c"
+            "certificate_hash": "3c08b6b13343797bbb32b9f7ce9860952aa525a7"
           }
         },
-        {
-          "client_id": "204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA-rcK4fHasyPOwwHZO-t5PoJaFfQI4wmg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:204065205787:android:4d3480d66c85d32dfd12be",
-        "android_client_info": {
-          "package_name": "com.example.loginscreen"
-        }
-      },
-      "oauth_client": [
         {
           "client_id": "204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com",
           "client_type": 3
