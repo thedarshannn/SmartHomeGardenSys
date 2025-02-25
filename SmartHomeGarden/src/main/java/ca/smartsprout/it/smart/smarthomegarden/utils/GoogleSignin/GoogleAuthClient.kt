@@ -112,7 +112,7 @@ class GoogleAuthClient(private val context: Context) {
             .addCredentialOption(
                 GetGoogleIdOption.Builder()
                     .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId("204065205787-vk2dpcn1aj0tn12rtslrcg9nkc8vdjh4.apps.googleusercontent.com") // Replace with your Server Client ID
+                    .setServerClientId("204065205787-1g7a97om3768e9lp66bopohr43mia4pr.apps.googleusercontent.com") // Replace with your Server Client ID
                     .setAutoSelectEnabled(false)
                     .build()
             )
