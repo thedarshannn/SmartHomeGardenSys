@@ -359,7 +359,11 @@ Members:
     <string name="title_activity_task_history">Task History</string>
 
     <string name="action_settings">Settings</string>
-
+    <string name="pair_device">Pair Pi</string>
+    <string name="enter_pi">Enter Your Pi Name</string>
+    <string name="illustration_for_pairing_pi">Illustration for pairing Pi</string>
+    <string name="connect_pi_instruction">Connect your Pi\nFollow the instructions below</string>
+    <string name="connect_pi_description">Ensure your Raspberry Pi is powered on and connected to the internet.</string>
 
 
 </resources>
