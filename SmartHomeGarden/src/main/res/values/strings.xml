@@ -364,6 +364,8 @@ Members:
     <string name="illustration_for_pairing_pi">Illustration for pairing Pi</string>
     <string name="connect_pi_instruction">Connect your Pi\nFollow the instructions below</string>
     <string name="connect_pi_description">Ensure your Raspberry Pi is powered on and connected to the internet.</string>
+    <string name="user_not_authenticated">User not authenticated!</string>
+    <string name="enter_a_valid_pi_name">Enter a valid Pi name</string>
 
 
 </resources>

@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,6 +31,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -41,6 +44,7 @@ import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -103,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
         // Initialize FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -230,22 +233,56 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError(getString(R.string.invalidemail));
         } else {
-
             authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
         }
     }
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
-        if (authResult != null) {
+        if (authResult != null && authResult.getUser() != null) {
             Toast.makeText(this, getString(R.string.login), Toast.LENGTH_SHORT).show();
-            showLoginNotification();
-            onLoginSuccess();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+            FirebaseUser user = authResult.getUser();
+            checkIfPiIsPaired(user.getUid());  // Check for paired Pi before redirection
         } else {
             Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void checkIfPiIsPaired(String userId) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("devices");
+        databaseRef.orderByChild("userId").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot device : snapshot.getChildren()) {
+                        String piName = device.getKey();
+                        savePiNameLocally(piName);
+
+                        // Redirect to MainActivity if Pi is paired
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                        return;
+                    }
+                }
+                // No Pi found, redirect to PairActivity
+                startActivity(new Intent(LoginActivity.this, PairActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error fetching paired Pi", error.toException());
+                Toast.makeText(LoginActivity.this, "Error checking Pi pairing", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void savePiNameLocally(String piName) {
+        SharedPreferences prefs = getSharedPreferences("SmartSproutPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("Pi_Name", piName);
+        editor.apply();
+    }
+
 
     private void showLoginNotification() {
         if (currentUser != null) {
