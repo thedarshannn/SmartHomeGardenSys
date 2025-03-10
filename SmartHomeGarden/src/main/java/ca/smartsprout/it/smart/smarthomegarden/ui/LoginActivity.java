@@ -142,8 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                                 // Handle successful sign-in
                                 runOnUiThread(() -> {
                                     Toast.makeText(LoginActivity.this, getString(R.string.login), Toast.LENGTH_SHORT).show();
-                                    // Proceed to the next activity or update the UI
-                                    goToHomeScreen();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    checkIfPiIsPaired(user.getUid());  // Check for paired Pi before redirection
                                 });
                             } else {
                                 // Handle sign-in failure
