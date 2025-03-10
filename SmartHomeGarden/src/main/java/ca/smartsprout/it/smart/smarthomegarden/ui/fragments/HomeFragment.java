@@ -49,8 +49,11 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantTaskAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
+
 
 public class HomeFragment extends Fragment {
 
@@ -66,6 +69,10 @@ public class HomeFragment extends Fragment {
     private PlantTaskViewModel viewModel;
     private PlantTaskAdapter adapter;
     private RecyclerView recyclerView;
+    private PlantViewModel viewModel1;
+    private Button buttonAdd;
+    private PlantRepository plantRepository;
+
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -174,15 +181,44 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button buttonAdd = view.findViewById(R.id.buttonAdd);
-        buttonAdd.setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new SearchFragment())
-                    .addToBackStack(null)
-                    .commit();
+//        Button buttonAdd = view.findViewById(R.id.buttonAdd);
+//        buttonAdd.setOnClickListener(v -> {
+//            getParentFragmentManager().beginTransaction()
+//                    .replace(R.id.nav_host_fragment, new SearchFragment())
+//                    .addToBackStack(null)
+//                    .commit();
+//
+//            BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+//            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+//        });
 
-            BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+        // Initialize ViewModel and Repository
+        viewModel1 = new ViewModelProvider(this).get(PlantViewModel.class);
+        plantRepository = new PlantRepository(); // Initialize your repository
+
+        // Find the button
+        buttonAdd = view.findViewById(R.id.buttonAdd);
+
+        // Fetch plants and set the initial button state
+        fetchPlantsAndUpdateButton();
+
+        // Set the button's click listener
+        buttonAdd.setOnClickListener(v -> {
+            if ("Add Plant".equals(buttonAdd.getText().toString())) {
+                // Navigate to the SearchFragment
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new SearchFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+                // Update the BottomNavigationView
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+            } else if ("Add Task".equals(buttonAdd.getText().toString())) {
+                // Show the CustomBottomSheetFragment
+                CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+                bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
+            }
         });
 
         weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherResponse -> {
@@ -306,5 +342,19 @@ public class HomeFragment extends Fragment {
             temp = temp * 9 / 5 + 32;
         }
         return label + String.format(getString(R.string.tempFormat), temp) + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit));
+    }
+    /**
+     * Fetch plants from the repository and update the button state.
+     */
+    private void fetchPlantsAndUpdateButton() {
+        plantRepository.fetchPlants().observe(getViewLifecycleOwner(), plants -> {
+            if (plants != null && !plants.isEmpty()) {
+                // If there are plants, set the button text to "Add Task"
+                buttonAdd.setText("Add Task");
+            } else {
+                // If there are no plants, set the button text to "Add Plant"
+                buttonAdd.setText("Add Plant");
+            }
+        });
     }
 }
