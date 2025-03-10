@@ -40,5 +40,7 @@
     <color name="rec">#4CAF50</color>
     <color name="red">#F44336</color>
     <color name="backgroundGreen">#F0FFF4</color>
+    <color name="blue">#1E88E5</color>
+    <color name="yellow">#F9A825</color>
 
 </resources>
