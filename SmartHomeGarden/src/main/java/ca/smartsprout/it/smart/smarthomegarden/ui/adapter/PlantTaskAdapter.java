@@ -22,23 +22,31 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantTask;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.PlantTaskHistory;
 import ca.smartsprout.it.smart.smarthomegarden.utils.AlarmReceiver;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.TaskHistoryViewModel;
 
 public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.TaskViewHolder> {
     private List<PlantTask> tasks;
     private OnCheckedChangeListener onCheckedChangeListener;
     private OnEditButtonClickListener onEditButtonClickListener;
     private Context context;
+    private TaskHistoryViewModel taskHistoryViewModel;
 
-    public PlantTaskAdapter(Context context, List<PlantTask> tasks) {
+    // Constructor
+    public PlantTaskAdapter(Context context, List<PlantTask> tasks, TaskHistoryViewModel taskHistoryViewModel) {
         this.context = context;
-        this.tasks = tasks;
+        this.tasks = tasks != null ? tasks : new ArrayList<>(); // Initialize tasks if null
+        this.taskHistoryViewModel = taskHistoryViewModel;
     }
 
     public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
@@ -47,6 +55,87 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
 
     public void setOnEditButtonClickListener(OnEditButtonClickListener listener) {
         this.onEditButtonClickListener = listener;
+    }
+
+    @NonNull
+    @Override
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plant_task, parent, false);
+        return new TaskViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+        PlantTask task = tasks.get(position);
+        holder.bind(task, onCheckedChangeListener, onEditButtonClickListener, context);
+
+        // Handle CheckBox click
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            task.setChecked(isChecked); // Update task state
+
+            if (isChecked) {
+                // Move the task to the task history
+                PlantTaskHistory taskHistory = new PlantTaskHistory(
+                        String.valueOf(task.getId()), // Use task ID as history ID
+                        task.getTaskName(),
+                        task.getPlantName(),
+                        task.getDate(),
+                        task.getTime(),
+                        System.currentTimeMillis() // Current timestamp
+                );
+                taskHistoryViewModel.addTaskHistory(taskHistory);
+
+                // Notify the listener (if any)
+                if (onCheckedChangeListener != null) {
+                    onCheckedChangeListener.onCheckedChanged(task, isChecked);
+                }
+
+                // Remove the task from the current list immediately
+                tasks.remove(task);
+                notifyDataSetChanged();
+
+                // Cancel the task reminder
+                cancelTaskReminder(task);
+
+                // Show a toast message
+                Toast.makeText(context, "Your Task is complete", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return tasks != null ? tasks.size() : 0; // Handle null tasks list
+    }
+
+    public void updateTasks(List<PlantTask> newTasks) {
+        if (tasks == null) {
+            tasks = new ArrayList<>(); // Initialize tasks if null
+        }
+        tasks.clear(); // Clear the existing tasks
+        tasks.addAll(newTasks); // Add the new tasks
+        notifyDataSetChanged(); // Notify the adapter of data changes
+    }
+
+    public void removeTask(PlantTask task) {
+        if (tasks != null) {
+            tasks.remove(task); // Remove the task
+            notifyDataSetChanged(); // Notify the adapter of data changes
+        }
+    }
+
+    private void cancelTaskReminder(PlantTask task) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // Cancel reminder alarm
+        Intent reminderIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent reminderPendingIntent = PendingIntent.getBroadcast(context, (int) task.getId(), reminderIntent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(reminderPendingIntent);
+
+        // Cancel exact task time alarm
+        Intent taskTimeIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent taskTimePendingIntent = PendingIntent.getBroadcast(context, (int) task.getId() + 1, taskTimeIntent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(taskTimePendingIntent);
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -81,9 +170,6 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
                 if (checkedChangeListener != null) {
                     checkedChangeListener.onCheckedChanged(task, isChecked);
                 }
-                if (isChecked) {
-                    Toast.makeText(context, "Your Task is complete", Toast.LENGTH_SHORT).show();
-                }
             });
 
             editButton.setOnClickListener(v -> {
@@ -93,52 +179,6 @@ public class PlantTaskAdapter extends RecyclerView.Adapter<PlantTaskAdapter.Task
             });
         }
     }
-
-    @Override
-    public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plant_task, parent, false);
-        return new TaskViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(TaskViewHolder holder, int position) {
-        PlantTask task = tasks.get(position);
-        holder.bind(task, onCheckedChangeListener, onEditButtonClickListener, context);
-    }
-
-    @Override
-    public int getItemCount() {
-        return tasks.size();
-    }
-
-    public void updateTasks(List<PlantTask> newTasks) {
-        tasks.clear();
-        tasks.addAll(newTasks);
-        notifyDataSetChanged();
-    }
-
-    public void removeTask(PlantTask task) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            tasks.remove(task);
-            notifyDataSetChanged();
-            cancelTaskReminder(task); // Cancel the reminder when the task is removed
-        }, 3000); // 3-second delay
-    }
-
-    private void cancelTaskReminder(PlantTask task) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        // Cancel reminder alarm
-        Intent reminderIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent reminderPendingIntent = PendingIntent.getBroadcast(context, (int) task.getId(), reminderIntent, PendingIntent.FLAG_IMMUTABLE);
-        alarmManager.cancel(reminderPendingIntent);
-
-        // Cancel exact task time alarm
-        Intent taskTimeIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent taskTimePendingIntent = PendingIntent.getBroadcast(context, (int) task.getId() + 1, taskTimeIntent, PendingIntent.FLAG_IMMUTABLE);
-        alarmManager.cancel(taskTimePendingIntent);
-    }
-
 
     public interface OnCheckedChangeListener {
         void onCheckedChanged(PlantTask task, boolean isChecked);
