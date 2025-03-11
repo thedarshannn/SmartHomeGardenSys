@@ -10,35 +10,27 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.utils.EncryptionUtils;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
+import ca.smartsprout.it.smart.smarthomegarden.utils.PairUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 
@@ -205,7 +197,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     User user = new User(name, phone, email, encryptedPassword, encryptedConfirmPassword);
                     authViewModel.saveUserDataToFirestore(uid, user).observe(this, success -> {
                         if (success) {
-                            checkIfPiIsPaired(uid);  // Check for paired Pi before redirecting
+                            PairUtils.getInstance().checkIfPiIsPaired(RegistrationActivity.this, uid); // Check for paired Pi before redirecting
                         } else {
                             Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
                         }
@@ -218,44 +210,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.registration_failed), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void checkIfPiIsPaired(String userId) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("devices");
-
-        databaseRef.orderByChild("userId").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot device : snapshot.getChildren()) {
-                        String piName = device.getKey();
-                        savePiNameLocally(piName);
-
-                        // Redirect to MainActivity if Pi is paired
-                        startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                        finish();
-                        return;
-                    }
-                }
-
-                // No Pi found, redirect to PairActivity
-                startActivity(new Intent(RegistrationActivity.this, PairActivity.class));
-                finish();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Error fetching paired Pi", error.toException());
-                Toast.makeText(RegistrationActivity.this, "Error checking Pi pairing", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void savePiNameLocally(String piName) {
-        SharedPreferences prefs = getSharedPreferences("SmartSproutPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("Pi_Name", piName);
-        editor.apply();
     }
 
 
