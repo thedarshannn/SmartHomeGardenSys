@@ -90,5 +90,21 @@ public class PlantViewModel extends ViewModel {
         PlantRepository plantRepository = null;
         plantRepository.fetchPlants().observeForever(plantList::postValue);
     }
+
+    // add method to fetch plant count
+    public void fetchPlantCount(String userId, PlantRepository.PlantCountCallback callback) {
+        PlantRepository plantRepository = new PlantRepository();
+        plantRepository.fetchPlantCount(userId, new PlantRepository.PlantCountCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Log.d(TAG, "Plant count: " + count);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Error fetching plant count: " + errorMessage);
+            }
+        });
+    }
 }
 

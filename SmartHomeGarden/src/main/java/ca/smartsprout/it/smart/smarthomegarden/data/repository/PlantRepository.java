@@ -148,4 +148,22 @@ public class PlantRepository {
 
         void onFailure(Exception e);
     }
+
+    // add method to fetchPlantCount
+    public void fetchPlantCount(String userId, PlantCountCallback callback) {
+
+        getUserPlantsCollection().get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int count = queryDocumentSnapshots.size();
+                    callback.onSuccess(count);
+                })
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    }
+
+    // add PlantCountCallback interface
+    public interface PlantCountCallback {
+        void onSuccess(int count);
+
+        void onError(String errorMessage);
+    }
 }
