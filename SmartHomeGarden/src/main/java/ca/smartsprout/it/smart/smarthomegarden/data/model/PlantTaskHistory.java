@@ -1,14 +1,19 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
 public class PlantTaskHistory {
-    private String id; // Unique identifier for the task history
-    private String taskName; // Name of the task
-    private String plantName; // Name of the plant associated with the task
-    private String date; // Date when the task was completed
-    private String time; // Time when the task was completed
-    private long timestamp; // Timestamp for sorting
+    private String id;
+    private String taskName;
+    private String plantName;
+    private String date;
+    private String time;
+    private long timestamp;
 
-    // Constructor
+    // No-argument constructor (required by Firebase)
+    public PlantTaskHistory() {
+        // Default constructor required for calls to DataSnapshot.getValue(PlantTaskHistory.class)
+    }
+
+    // Constructor with arguments
     public PlantTaskHistory(String id, String taskName, String plantName, String date, String time, long timestamp) {
         this.id = id;
         this.taskName = taskName;
