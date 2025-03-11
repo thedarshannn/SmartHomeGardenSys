@@ -1,7 +1,9 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
@@ -21,6 +23,7 @@ public class TaskHistoryActivity extends AppCompatActivity {
     private TaskHistoryAdapter adapter;
     private RecyclerView recyclerView;
     private Button buttonClear;
+    private ImageView imageEmptyState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +55,30 @@ public class TaskHistoryActivity extends AppCompatActivity {
         adapter = new TaskHistoryAdapter(this, new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
+        // Initialize Clear Button and Empty State Image
+        buttonClear = findViewById(R.id.button_clear);
+        imageEmptyState = findViewById(R.id.image_empty_state);
+
         // Observe task history data
         taskHistoryViewModel.getTaskHistory().observe(this, taskHistoryList -> {
-            if (taskHistoryList != null) {
+            if (taskHistoryList != null && !taskHistoryList.isEmpty()) {
+                // If there are tasks, show the RecyclerView and Clear button
                 adapter.updateTaskHistory(taskHistoryList);
+                recyclerView.setVisibility(View.VISIBLE);
+                buttonClear.setVisibility(View.VISIBLE);
+                imageEmptyState.setVisibility(View.GONE);
             } else {
-                adapter.updateTaskHistory(new ArrayList<>()); // Pass an empty list if null
+                // If there are no tasks, show the empty state image and hide the RecyclerView and Clear button
+                adapter.updateTaskHistory(new ArrayList<>());
+                recyclerView.setVisibility(View.GONE);
+                buttonClear.setVisibility(View.GONE);
+                imageEmptyState.setVisibility(View.VISIBLE);
             }
         });
 
-        // Initialize Clear Button
-        buttonClear = findViewById(R.id.button_clear);
+        // Set click listener for the Clear button
         buttonClear.setOnClickListener(v -> {
-            taskHistoryViewModel.clearTaskHistory(); // Call ViewModel method to clear history
+            taskHistoryViewModel.clearTaskHistory(); // Clear task history
         });
     }
 
