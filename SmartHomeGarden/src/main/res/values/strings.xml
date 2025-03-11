@@ -359,7 +359,12 @@ Members:
     <string name="title_activity_task_history">Task History</string>
 
     <string name="action_settings">Settings</string>
-
+    <string name="task_name3">Task Name</string>
+    <string name="plant_name3">Plant Name</string>
+    <string name="date_icon">Date icon</string>
+    <string name="date1">Date</string>
+    <string name="time_icon">Time icon</string>
+    <string name="time1">Time</string>
 
 
 </resources>

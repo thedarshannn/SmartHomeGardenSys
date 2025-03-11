@@ -6,7 +6,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="#E8F5E9">
+    app:cardBackgroundColor="@color/cardbg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +18,8 @@
             android:id="@+id/text_task_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Task Name"
-            android:textColor="#1B5E20"
+            android:text="@string/task_name3"
+            android:textColor="@color/task1c"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#81C784" />
+            android:background="@color/task2c" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,15 +41,14 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/pot"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Location icon" />
+                android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/text_plant_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Plant Name"
-                android:textColor="#33691E"
+                android:text="@string/plant_name3"
+                android:textColor="@color/task3c"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -65,14 +64,14 @@
                 android:layout_height="18dp"
                 android:src="@drawable/weekend"
                 android:layout_marginEnd="8dp"
-                android:contentDescription="Date icon" />
+                android:contentDescription="@string/date_icon" />
 
             <TextView
                 android:id="@+id/text_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Date"
-                android:textColor="#33691E"
+                android:text="@string/date1"
+                android:textColor="@color/task3c"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -88,14 +87,14 @@
                 android:layout_height="18dp"
                 android:src="@drawable/time"
                 android:layout_marginEnd="8dp"
-                android:contentDescription="Time icon" />
+                android:contentDescription="@string/time_icon" />
 
             <TextView
                 android:id="@+id/text_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time"
-                android:textColor="#33691E"
+                android:text="@string/time1"
+                android:textColor="@color/task3c"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
