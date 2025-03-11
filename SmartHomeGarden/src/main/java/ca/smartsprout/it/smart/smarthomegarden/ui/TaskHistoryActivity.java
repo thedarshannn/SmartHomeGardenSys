@@ -1,6 +1,7 @@
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
@@ -19,6 +20,7 @@ public class TaskHistoryActivity extends AppCompatActivity {
     private TaskHistoryViewModel taskHistoryViewModel;
     private TaskHistoryAdapter adapter;
     private RecyclerView recyclerView;
+    private Button buttonClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,12 @@ public class TaskHistoryActivity extends AppCompatActivity {
             } else {
                 adapter.updateTaskHistory(new ArrayList<>()); // Pass an empty list if null
             }
+        });
+
+        // Initialize Clear Button
+        buttonClear = findViewById(R.id.button_clear);
+        buttonClear.setOnClickListener(v -> {
+            taskHistoryViewModel.clearTaskHistory(); // Call ViewModel method to clear history
         });
     }
 

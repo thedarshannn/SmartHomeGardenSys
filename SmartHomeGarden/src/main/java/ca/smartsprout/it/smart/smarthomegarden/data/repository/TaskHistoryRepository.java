@@ -65,4 +65,11 @@ public class TaskHistoryRepository {
             databaseReference.child(taskHistory.getId()).setValue(taskHistory);
         }
     }
+
+    // Method to clear task history
+    public void clearTaskHistory() {
+        if (databaseReference != null) {
+            databaseReference.removeValue(); // Remove all task history from the database
+        }
+    }
 }

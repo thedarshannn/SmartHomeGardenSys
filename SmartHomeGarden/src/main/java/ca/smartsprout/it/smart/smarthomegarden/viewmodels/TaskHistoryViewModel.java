@@ -32,4 +32,9 @@ public class TaskHistoryViewModel extends ViewModel {
     public void addTaskHistory(PlantTaskHistory taskHistory) {
         repository.addTaskHistory(taskHistory);
     }
+
+    // Method to clear task history
+    public void clearTaskHistory() {
+        repository.clearTaskHistory();
+    }
 }
