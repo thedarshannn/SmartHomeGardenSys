@@ -1,25 +1,43 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
 package ca.smartsprout.it.smart.smarthomegarden.ui;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
+import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NetworkViewModel;
+
 public class BaseActivity extends AppCompatActivity {
+
+    private NetworkViewModel networkViewModel;
+    private ViewGroup rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize the root view
+        rootView = findViewById(android.R.id.content);
+
+        // Initialize ViewModel
+        networkViewModel = new ViewModelProvider(this).get(NetworkViewModel.class);
+
+//        // Observe connectivity status
+//        networkViewModel.getIsConnected().observe(this, isConnected -> {
+//            if (isConnected) {
+//                // Remove the offline overlay if the internet is restored
+//                NetworkUtils.removeOfflineOverlay(rootView);
+//            } else {
+//                // Show the offline overlay if the internet is not available
+//                NetworkUtils.showOfflineOverlay(this, rootView);
+//            }
+//        });
 
         // Apply the screen orientation when the activity starts
         applyScreenOrientation();
@@ -33,6 +51,9 @@ public class BaseActivity extends AppCompatActivity {
         applyScreenOrientation();
     }
 
+    /**
+     * Applies the screen orientation based on user preferences.
+     */
     void applyScreenOrientation() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String orientation = sharedPreferences.getString("screen_orientation", "auto");

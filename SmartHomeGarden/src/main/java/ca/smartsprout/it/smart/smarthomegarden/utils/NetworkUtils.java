@@ -1,30 +1,56 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01584247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
-
 package ca.smartsprout.it.smart.smarthomegarden.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 
-
 public class NetworkUtils {
+
+    /**
+     * Show an offline overlay image on the current screen.
+     *
+     * @param context  The context of the application.
+     * @param rootView The root view of the current screen (e.g., activity or fragment layout).
+     */
+    public static void showOfflineOverlay(Context context, ViewGroup rootView) {
+        // Inflate the offline overlay layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View offlineOverlayView = inflater.inflate(R.layout.offline_overlay, rootView, false);
+
+        // Add the overlay to the root view
+        rootView.addView(offlineOverlayView);
+
+        // Set up a retry button (optional)
+        offlineOverlayView.findViewById(R.id.button_retry).setOnClickListener(v -> {
+            if (isInternetAvailable(context)) {
+                // Remove the overlay if the internet is restored
+                rootView.removeView(offlineOverlayView);
+            } else {
+                Toast.makeText(context, R.string.still_no_internet_connection, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Remove the offline overlay image from the current screen.
+     *
+     * @param rootView The root view of the current screen.
+     */
+    public static void removeOfflineOverlay(ViewGroup rootView) {
+        View offlineOverlayView = rootView.findViewById(R.id.offline_overlay);
+        if (offlineOverlayView != null) {
+            rootView.removeView(offlineOverlayView);
+        }
+    }
 
     /**
      * Check if the device is connected to the internet.
@@ -48,42 +74,4 @@ public class NetworkUtils {
         }
         return false;
     }
-
-    /**
-     * Show a dialog to inform the user that there is no internet connection.
-     *
-     * @param context The context of the application.
-     */
-    public static void showNoInternetDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        // Inflate custom layout
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_no_internet, null);
-        builder.setView(dialogView);
-
-        // Find views in custom layout
-        ImageView icon = dialogView.findViewById(R.id.dialog_icon);
-        TextView title = dialogView.findViewById(R.id.dialog_title);
-        TextView message = dialogView.findViewById(R.id.dialog_message);
-
-        // Set dialog buttons
-        dialogView.findViewById(R.id.button_retry).setOnClickListener(v -> {
-            if (isInternetAvailable(context)) {
-                Toast.makeText(context, R.string.internet_connection_restored, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, R.string.still_no_internet_connection, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        dialogView.findViewById(R.id.button_settings).setOnClickListener(v -> {
-            context.startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-        });
-
-        // Create and show dialog
-        AlertDialog dialog = builder.create();
-        dialog.setCancelable(false);
-        dialog.show();
-    }
-
 }

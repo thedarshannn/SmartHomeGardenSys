@@ -1,12 +1,3 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
-
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.os.Bundle;
@@ -20,10 +11,14 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NetworkViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.SensorViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +33,8 @@ public class SensorFragment extends Fragment {
     private ProgressBar moistureProgressBar;
     private AutoCompleteTextView spinnerPlantSelection;
     private PlantRepository plantRepository;
+    private NetworkViewModel networkViewModel;
+    private ViewGroup rootView;
 
     public SensorFragment() {
         // Required empty public constructor
@@ -76,6 +73,23 @@ public class SensorFragment extends Fragment {
             }
         });
 
+        // Initialize the root view (FrameLayout)
+        ViewGroup rootView = (ViewGroup) view;
+
+        // Initialize ViewModel
+        networkViewModel = new ViewModelProvider(requireActivity()).get(NetworkViewModel.class);
+
+        // Observe network status
+        networkViewModel.getIsConnected().observe(getViewLifecycleOwner(), isConnected -> {
+            if (isConnected) {
+                // Device is online
+                NetworkUtils.removeOfflineOverlay(rootView); // Remove offline overlay
+            } else {
+                // Device is offline
+                NetworkUtils.showOfflineOverlay(requireContext(), rootView); // Show offline overlay
+            }
+        });
+
         // Observe LiveData from ViewModel
         sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
             if (sensorData != null) {
@@ -93,4 +107,3 @@ public class SensorFragment extends Fragment {
         return view;
     }
 }
-
