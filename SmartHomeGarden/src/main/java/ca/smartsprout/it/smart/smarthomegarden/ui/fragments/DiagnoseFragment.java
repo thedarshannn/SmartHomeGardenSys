@@ -1,37 +1,31 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
-
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ca.smartsprout.it.smart.smarthomegarden.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NetworkViewModel;
 
 public class DiagnoseFragment extends Fragment {
 
+    private NetworkViewModel networkViewModel;
+    private ViewGroup rootView;
 
     public DiagnoseFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -39,5 +33,27 @@ public class DiagnoseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_diagnose, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Initialize the root view (FrameLayout)
+        rootView = (ViewGroup) view;
+
+        // Initialize ViewModel
+        networkViewModel = new ViewModelProvider(requireActivity()).get(NetworkViewModel.class);
+
+        // Observe network status
+        networkViewModel.getIsConnected().observe(getViewLifecycleOwner(), isConnected -> {
+            if (isConnected) {
+                // Device is online
+                NetworkUtils.removeOfflineOverlay(rootView); // Remove offline overlay
+            } else {
+                // Device is offline
+                NetworkUtils.showOfflineOverlay(requireContext(), rootView); // Show offline overlay
+            }
+        });
     }
 }

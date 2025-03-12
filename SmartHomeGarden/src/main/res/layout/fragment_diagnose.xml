@@ -1,80 +1,93 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    tools:context=".ui.fragments.DiagnoseFragment">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/plant_diagnosis"
-        android:textColor="@color/green"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Main Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-    <!-- Image Preview -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/plantImagePreview"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/plant_placeholder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:shapeAppearanceOverlay="@style/RoundedImageView" />
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/plant_diagnosis"
+            android:textColor="@color/green"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Scan Button - Floating over the image -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/scanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:backgroundTint="@color/green"
-        app:layout_constraintBottom_toBottomOf="@id/plantImagePreview"
-        app:layout_constraintEnd_toEndOf="@id/plantImagePreview"
-        app:srcCompat="@drawable/ic_camera"
-        app:tint="@color/white" />
+        <!-- Image Preview -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/plantImagePreview"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="32dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/plant_placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleText"
+            app:shapeAppearanceOverlay="@style/RoundedImageView" />
 
-    <!-- Loading Progress -->
-    <ProgressBar
-        android:id="@+id/loadingProgress"
-        style="@style/Widget.MaterialComponents.LinearProgressIndicator"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="24dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/green"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
+        <!-- Scan Button - Floating over the image -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/scanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:backgroundTint="@color/green"
+            app:layout_constraintBottom_toBottomOf="@id/plantImagePreview"
+            app:layout_constraintEnd_toEndOf="@id/plantImagePreview"
+            app:srcCompat="@drawable/ic_camera"
+            app:tint="@color/white" />
 
-    <!-- Coming Soon Message -->
-    <TextView
-        android:id="@+id/comingSoonMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/poppins"
-        android:gravity="center"
-        android:text="@string/diagnosis_coming_soon"
-        android:textColor="@color/grey"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
+        <!-- Loading Progress -->
+        <ProgressBar
+            android:id="@+id/loadingProgress"
+            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
 
+        <!-- Coming Soon Message -->
+        <TextView
+            android:id="@+id/comingSoonMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:text="@string/diagnosis_coming_soon"
+            android:textColor="@color/grey"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Offline Overlay (Initially hidden) -->
+    <include
+        android:id="@+id/offline_overlay"
+        layout="@layout/offline_overlay"
+        android:visibility="gone" />
+
+</FrameLayout>

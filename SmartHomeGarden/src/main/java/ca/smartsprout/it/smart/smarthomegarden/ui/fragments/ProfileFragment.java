@@ -55,6 +55,8 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.ProfilePlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
 import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NetworkViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
@@ -214,6 +216,22 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        // Initialize the root view (FrameLayout)
+        ViewGroup rootView = (ViewGroup) view;
+
+        // Initialize ViewModel
+        NetworkViewModel networkViewModel = new ViewModelProvider(requireActivity()).get(NetworkViewModel.class);
+
+        // Observe network status
+        networkViewModel.getIsConnected().observe(getViewLifecycleOwner(), isConnected -> {
+            if (isConnected) {
+                // Device is online
+                NetworkUtils.removeOfflineOverlay(rootView); // Remove offline overlay
+            } else {
+                // Device is offline
+                NetworkUtils.showOfflineOverlay(requireContext(), rootView); // Show offline overlay
+            }
+        });
 
         fabMain = view.findViewById(R.id.floatingActionButton);
         addPlantContainer = view.findViewById(R.id.addplantContainer);
