@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantAdapter;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 
 public class SearchFragment extends Fragment {
@@ -90,7 +91,11 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                executorService.submit(() -> plantViewModel.fetchPlantDetails(query));
+                if (!NetworkUtils.isInternetAvailable(requireContext())) {
+                    NetworkUtils.showNoInternetDialog(requireContext());
+                } else {
+                    executorService.submit(() -> plantViewModel.fetchPlantDetails(query));
+                }
                 return true;
             }
 

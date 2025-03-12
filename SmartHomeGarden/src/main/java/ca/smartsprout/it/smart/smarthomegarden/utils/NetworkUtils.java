@@ -1,5 +1,6 @@
 package ca.smartsprout.it.smart.smarthomegarden.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -38,6 +39,29 @@ public class NetworkUtils {
                 Toast.makeText(context, R.string.still_no_internet_connection, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Show a dialog indicating no internet connection.
+     *
+     * @param context The context of the application.
+     */
+    public static void showNoInternetDialog(Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Opps!!")
+                .setMessage("Check Your Internet Connection")
+                .setPositiveButton("Retry", (dialog, which) -> {
+                    // Retry logic (optional)
+                    if (isInternetAvailable(context)) {
+                        // Internet is restored, do nothing
+                    } else {
+                        // Still no internet, show the dialog again
+                        showNoInternetDialog(context);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setIcon(R.drawable.no_wifi) // Replace with your icon
+                .show();
     }
 
     /**

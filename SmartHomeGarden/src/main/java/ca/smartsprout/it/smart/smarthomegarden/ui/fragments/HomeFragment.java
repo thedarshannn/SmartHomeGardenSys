@@ -1,11 +1,3 @@
-/**
- * Smart Sprout
- * Members:
- * 1. Aditi Patel, n01525570, CENG322-RCB
- * 2. Birava Prajapati, n01579924, CENG322-RCA
- * 3. Darshankumar Prajapati, n01574247, CENG322-RCB
- * 4. Zeel Patel, n01526282, CENG322-RCB
- */
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.Manifest;
@@ -48,6 +40,7 @@ import java.util.ArrayList;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantTaskAdapter;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
@@ -111,13 +104,12 @@ public class HomeFragment extends Fragment {
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> greetingTextView.setText(getString(R.string.hello) + name));
 
-
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        adapter = new PlantTaskAdapter(getContext(),new ArrayList<>());
+        adapter = new PlantTaskAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -144,6 +136,7 @@ public class HomeFragment extends Fragment {
 
             bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
         });
+
         viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -164,25 +157,37 @@ public class HomeFragment extends Fragment {
 
         CardView weatherCardView = view.findViewById(R.id.cardView);
         weatherCardView.setOnClickListener(v -> {
-            if (!isPermissionPreviouslyGranted()) {
-                requestPermissionLauncher.launch(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                });
-            } else if (!isLocationEnabled()) {
-                showLocationServicesDialog();
+            if (!NetworkUtils.isInternetAvailable(requireContext())) {
+                // Show no internet dialog if there is no internet
+                NetworkUtils.showNoInternetDialog(requireContext());
+            } else {
+                // Handle card view click (existing logic)
+                if (!isPermissionPreviouslyGranted()) {
+                    requestPermissionLauncher.launch(new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    });
+                } else if (!isLocationEnabled()) {
+                    showLocationServicesDialog();
+                }
             }
         });
 
         Button buttonAdd = view.findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new SearchFragment())
-                    .addToBackStack(null)
-                    .commit();
+            if (!NetworkUtils.isInternetAvailable(requireContext())) {
+                // Show no internet dialog if there is no internet
+                NetworkUtils.showNoInternetDialog(requireContext());
+            } else {
+                // Handle button click (existing logic)
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new SearchFragment())
+                        .addToBackStack(null)
+                        .commit();
 
-            BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+            }
         });
 
         weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherResponse -> {
@@ -226,7 +231,7 @@ public class HomeFragment extends Fragment {
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager == null) {
-            Log.e(getString(R.string.weatherfragment),getString(R.string.location_service_not_available));
+            Log.e(getString(R.string.weatherfragment), getString(R.string.location_service_not_available));
             return;
         }
 
