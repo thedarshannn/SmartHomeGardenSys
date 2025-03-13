@@ -229,7 +229,7 @@ public class ProfileFragment extends Fragment {
                 NetworkUtils.removeOfflineOverlay(rootView); // Remove offline overlay
             } else {
                 // Device is offline
-                NetworkUtils.showOfflineOverlay(requireContext(), rootView); // Show offline overlay
+                NetworkUtils.showOfflineOverlay(requireContext(), rootView, getViewLifecycleOwner());
             }
         });
 
