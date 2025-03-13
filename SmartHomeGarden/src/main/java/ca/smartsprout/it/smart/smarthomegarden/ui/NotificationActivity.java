@@ -12,6 +12,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -38,7 +39,9 @@ import java.util.List;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.NotificationAdapter;
+import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NetworkViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.NotificationViewModel;
 
 public class NotificationActivity extends AppCompatActivity {
@@ -55,6 +58,24 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+
+        // Initialize the root view (FrameLayout)
+        ViewGroup rootView = findViewById(android.R.id.content); // Use activity's root view
+
+// Initialize ViewModel
+        NetworkViewModel networkViewModel = new ViewModelProvider(this).get(NetworkViewModel.class);
+
+// Observe network status
+        networkViewModel.getIsConnected().observe(this, isConnected -> {
+            if (isConnected) {
+                // Device is online
+                NetworkUtils.removeOfflineOverlay(rootView); // Remove offline overlay
+            } else {
+                // Device is offline
+                NetworkUtils.showOfflineOverlay(this, rootView, this);
+            }
+        });
+
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view_notifications);
         Button btnClearAll = findViewById(R.id.btn_clear_all);
