@@ -76,5 +76,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
 
+    <Switch
+        android:id="@+id/relaySwitch"
+        android:layout_width="153dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="48dp"
+        android:text="Relay Control"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comingSoonMessage"
+        app:layout_constraintVertical_bias="0.035" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

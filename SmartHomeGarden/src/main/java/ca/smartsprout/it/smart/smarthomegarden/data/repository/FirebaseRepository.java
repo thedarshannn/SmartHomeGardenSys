@@ -8,6 +8,7 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.data.repository;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -21,6 +22,11 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Feedback;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,13 +41,14 @@ import java.io.ByteArrayOutputStream;
 
 import java.util.Objects;
 
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Relay;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.User;
 
 public class FirebaseRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    private final DatabaseReference relayRef;
     private MutableLiveData<Boolean> isResetEmailSent;
     private MutableLiveData<String> resetEmailError;
 
@@ -51,7 +58,7 @@ public class FirebaseRepository {
 
     public FirebaseRepository() {
         firestore = FirebaseFirestore.getInstance();
-
+        relayRef = FirebaseDatabase.getInstance().getReference("relay");
         isResetEmailSent = new MutableLiveData<>();
         resetEmailError = new MutableLiveData<>();
     }
@@ -278,4 +285,35 @@ public class FirebaseRepository {
         return profilePictureUrlLiveData;
 
     }
+    // Fetch relay state from Firebase
+    public void getRelayState(final RelayCallback callback) {
+        relayRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String state = snapshot.getValue(String.class);
+                if (state != null) {
+                    callback.onSuccess(new Relay(state));
+                } else {
+                    callback.onFailure("No data found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailure(error.getMessage());
+            }
+        });
+    }
+
+    // Update relay state in Firebase
+    public void updateRelayState(String state) {
+        relayRef.setValue(state);
+    }
+
+    // Callback interface for data retrieval
+    public interface RelayCallback {
+        void onSuccess(Relay relay);
+        void onFailure(String error);
+    }
+
 }

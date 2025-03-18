@@ -11,17 +11,25 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.RelayViewModel;
 
 
 public class DiagnoseFragment extends Fragment {
-
+    private Switch relaySwitch;
+    private RelayViewModel relayViewModel;
 
     public DiagnoseFragment() {
         // Required empty public constructor
@@ -35,9 +43,38 @@ public class DiagnoseFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_diagnose, container, false);
+        View view = inflater.inflate(R.layout.fragment_diagnose, container, false);
+
+        // Initialize switch and ViewModel
+        relaySwitch = view.findViewById(R.id.relaySwitch);
+        relayViewModel = new ViewModelProvider(this).get(RelayViewModel.class);
+
+        // Observe relay state changes from ViewModel
+        relayViewModel.getRelayState().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String state) {
+                relaySwitch.setOnCheckedChangeListener(null); // Avoid triggering listener while updating UI
+                relaySwitch.setChecked(state.equals("on"));
+                relaySwitch.setOnCheckedChangeListener(switchListener);
+            }
+        });
+
+        // Set switch listener to update Firebase when toggled
+        relaySwitch.setOnCheckedChangeListener(switchListener);
+
+        return view;
     }
+
+    // Switch listener to update relay state in Firebase
+    private final CompoundButton.OnCheckedChangeListener switchListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            String newState = isChecked ? "on" : "off";
+            relayViewModel.updateRelayState(newState);
+            Toast.makeText(getContext(), "Relay " + newState.toUpperCase(), Toast.LENGTH_SHORT).show();
+        }
+    };
 }
