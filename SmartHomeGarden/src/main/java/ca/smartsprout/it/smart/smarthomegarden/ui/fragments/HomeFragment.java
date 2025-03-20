@@ -49,8 +49,11 @@ import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.WeatherResponse;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PlantTaskAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantTaskViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.WeatherViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.TaskHistoryViewModel;
 
 public class HomeFragment extends Fragment {
 
@@ -66,6 +69,10 @@ public class HomeFragment extends Fragment {
     private PlantTaskViewModel viewModel;
     private PlantTaskAdapter adapter;
     private RecyclerView recyclerView;
+    private PlantViewModel viewModel1;
+    private Button buttonAdd;
+    private PlantRepository plantRepository;
+    private TaskHistoryViewModel taskHistoryViewModel; // Add TaskHistoryViewModel
 
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -91,6 +98,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         viewModel = new ViewModelProvider(this).get(PlantTaskViewModel.class);
+        taskHistoryViewModel = new ViewModelProvider(this).get(TaskHistoryViewModel.class); // Initialize TaskHistoryViewModel
 
         // If permission was previously granted, start updates
         if (isPermissionPreviouslyGranted()) {
@@ -111,13 +119,12 @@ public class HomeFragment extends Fragment {
 
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> greetingTextView.setText(getString(R.string.hello) + name));
 
-
         tvHighTemp = view.findViewById(R.id.tv_high_temp);
         tvLowTemp = view.findViewById(R.id.tv_low_temp);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        adapter = new PlantTaskAdapter(getContext(),new ArrayList<>());
+        adapter = new PlantTaskAdapter(getContext(), new ArrayList<>(), taskHistoryViewModel); // Pass TaskHistoryViewModel
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -144,6 +151,7 @@ public class HomeFragment extends Fragment {
 
             bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
         });
+
         viewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> adapter.notifyDataSetChanged());
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -174,15 +182,33 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button buttonAdd = view.findViewById(R.id.buttonAdd);
-        buttonAdd.setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new SearchFragment())
-                    .addToBackStack(null)
-                    .commit();
+        // Initialize ViewModel and Repository
+        viewModel1 = new ViewModelProvider(this).get(PlantViewModel.class);
+        plantRepository = new PlantRepository(); // Initialize your repository
 
-            BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+        // Find the button
+        buttonAdd = view.findViewById(R.id.buttonAdd);
+
+        // Fetch plants and set the initial button state
+        fetchPlantsAndUpdateButton();
+
+        // Set the button's click listener
+        buttonAdd.setOnClickListener(v -> {
+            if ("Add Plant".equals(buttonAdd.getText().toString())) {
+                // Navigate to the SearchFragment
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new SearchFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+                // Update the BottomNavigationView
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+            } else if ("Add Task".equals(buttonAdd.getText().toString())) {
+                // Show the CustomBottomSheetFragment
+                CustomBottomSheetFragment bottomSheetFragment = new CustomBottomSheetFragment();
+                bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
+            }
         });
 
         weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherResponse -> {
@@ -226,7 +252,7 @@ public class HomeFragment extends Fragment {
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager == null) {
-            Log.e(getString(R.string.weatherfragment),getString(R.string.location_service_not_available));
+            Log.e(getString(R.string.weatherfragment), getString(R.string.location_service_not_available));
             return;
         }
 
@@ -306,5 +332,20 @@ public class HomeFragment extends Fragment {
             temp = temp * 9 / 5 + 32;
         }
         return label + String.format(getString(R.string.tempFormat), temp) + (isCelsius ? getString(R.string.celsius) : getString(R.string.fahrenheit));
+    }
+
+    /**
+     * Fetch plants from the repository and update the button state.
+     */
+    private void fetchPlantsAndUpdateButton() {
+        plantRepository.fetchPlants().observe(getViewLifecycleOwner(), plants -> {
+            if (plants != null && !plants.isEmpty()) {
+                // If there are plants, set the button text to "Add Task"
+                buttonAdd.setText("Add Task");
+            } else {
+                // If there are no plants, set the button text to "Add Plant"
+                buttonAdd.setText("Add Plant");
+            }
+        });
     }
 }
