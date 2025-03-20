@@ -51,6 +51,7 @@ import java.util.Locale;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PhotoRepository;
+import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.ProfilePlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
@@ -65,7 +66,7 @@ public class ProfileFragment extends Fragment {
 
     boolean isOptionsVisible;
     private ImageView imageView;
-    private TextView userNameTV;
+    private TextView userNameTV, plantsCountTV;
     private View addPlantContainer, cameraContainer, addTaskContainer;
     private UserViewModel userViewModel;
     private PhotoViewModel photosViewModel;
@@ -304,6 +305,7 @@ public class ProfileFragment extends Fragment {
         recyclerView.setAdapter(plantAdapter);
 
         plantViewModel = new ViewModelProvider(requireActivity()).get(PlantViewModel.class);
+        plantsCountTV = view.findViewById(R.id.plantsCountTV);
 
         plantViewModel.getAllPlants().observe(getViewLifecycleOwner(), plants -> {
             if (plants != null) {
@@ -346,6 +348,16 @@ public class ProfileFragment extends Fragment {
         // Default to Plants Tab
         recyclerView.setVisibility(View.VISIBLE);
         photosGrid.setVisibility(View.GONE);
+
+        userViewModel.getUserID().observe(getViewLifecycleOwner(), userId -> {
+            if (userId != null) {
+                Log.d("ProfileFragment", "UserID found: " + userId);
+                fetchPlantCount(userId); // Fetch plant count only when userId is available
+            } else {
+                Log.e("ProfileFragment", "UserID is null!");
+            }
+        });
+
     }
            @Override
     public void onDestroyView() {
@@ -359,6 +371,25 @@ public class ProfileFragment extends Fragment {
         } else {
             Log.e("ProfileFragment", "PhotoViewModel is not initialized");
         }
+    }
+
+    private void fetchPlantCount(String userId) {
+        PlantRepository plantRepository = new PlantRepository();
+        plantRepository.fetchPlantCount(userId, new PlantRepository.PlantCountCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Log.d("ProfileFragment", "Plant count: " + count);
+               requireActivity().runOnUiThread(() -> {
+                   String plantText = count == 1 ? "Plant" : "Plants";
+                   plantsCountTV.setText(count + " " + plantText);
+               });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e("ProfileFragment", "Error fetching plant count: " + errorMessage);
+            }
+        });
     }
 
 }

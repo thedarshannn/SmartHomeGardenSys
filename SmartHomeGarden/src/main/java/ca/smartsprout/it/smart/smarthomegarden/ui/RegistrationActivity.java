@@ -16,7 +16,6 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,11 +26,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.utils.EncryptionUtils;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
+import ca.smartsprout.it.smart.smarthomegarden.utils.PairUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 
@@ -198,9 +197,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     User user = new User(name, phone, email, encryptedPassword, encryptedConfirmPassword);
                     authViewModel.saveUserDataToFirestore(uid, user).observe(this, success -> {
                         if (success) {
-                            Toast.makeText(this, getString(R.string.registration), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                            finish();
+                            PairUtils.getInstance().checkIfPiIsPaired(RegistrationActivity.this, uid); // Check for paired Pi before redirecting
                         } else {
                             Toast.makeText(this, getString(R.string.faileddata), Toast.LENGTH_SHORT).show();
                         }
@@ -214,4 +211,6 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

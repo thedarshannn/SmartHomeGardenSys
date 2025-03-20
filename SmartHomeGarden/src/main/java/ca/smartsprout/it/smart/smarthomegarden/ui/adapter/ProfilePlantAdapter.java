@@ -74,7 +74,6 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
         public PlantViewHolder(@NonNull View itemView) {
             super(itemView);
             plantName = itemView.findViewById(R.id.plantName);
-            plantSpecies = itemView.findViewById(R.id.plantSpecies);
             dateAdded = itemView.findViewById(R.id.dateAdded);
             cardView = itemView.findViewById(R.id.cardView);
         }

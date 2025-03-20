@@ -31,6 +31,11 @@
         android:theme="@style/Theme.SmartHomeGarden"
         tools:targetApi="34">
         <activity
+            android:name=".ui.PairActivity"
+            android:configChanges="uiMode|orientation|screenSize"
+            android:theme="@style/Theme.ui.PairActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.TaskHistoryActivity"
             android:exported="false"
             android:label="@string/title_activity_task_history"

@@ -13,6 +13,7 @@
     </style>
 
     <style name="Theme.ui.SplashActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="Theme.ui.PairActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
     <style name="Theme.SmartHomeGarden" parent="Base.Theme.SmartHomeGarden" />
 

@@ -40,9 +40,14 @@
     <color name="rec">#4CAF50</color>
     <color name="red">#F44336</color>
     <color name="backgroundGreen">#F0FFF4</color>
+
+    <color name="blue">#1E88E5</color>
+    <color name="yellow">#F9A825</color>
+
     <color name="task1c">#1B5E20</color>
     <color name="task2c">#81C784</color>
     <color name="task3c">#33691E</color>
     <color name="cardbg">#E8F5E9</color>
+
 
 </resources>

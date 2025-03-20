@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,6 +31,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 
 import ca.smartsprout.it.smart.smarthomegarden.MainActivity;
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -39,6 +42,7 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.Notification;
 import ca.smartsprout.it.smart.smarthomegarden.ui.GoogleSignin.GoogleSignInHelper;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NetworkUtils;
 import ca.smartsprout.it.smart.smarthomegarden.utils.NotificationHelper;
+import ca.smartsprout.it.smart.smarthomegarden.utils.PairUtils;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.AuthViewModel;
 
 import androidx.annotation.Nullable;
@@ -103,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
         // Initialize FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -139,8 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                                 // Handle successful sign-in
                                 runOnUiThread(() -> {
                                     Toast.makeText(LoginActivity.this, getString(R.string.login), Toast.LENGTH_SHORT).show();
-                                    // Proceed to the next activity or update the UI
-                                    goToHomeScreen();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    PairUtils.getInstance().checkIfPiIsPaired(LoginActivity.this, user.getUid()); // Check for paired Pi before redirection
                                 });
                             } else {
                                 // Handle sign-in failure
@@ -230,18 +233,15 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError(getString(R.string.invalidemail));
         } else {
-
             authViewModel.loginUser(email, password).observe(this, this::handleLoginResult);
         }
     }
 
     private void handleLoginResult(@Nullable AuthResult authResult) {
-        if (authResult != null) {
+        if (authResult != null && authResult.getUser() != null) {
             Toast.makeText(this, getString(R.string.login), Toast.LENGTH_SHORT).show();
-            showLoginNotification();
-            onLoginSuccess();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+            FirebaseUser user = authResult.getUser();
+            PairUtils.getInstance().checkIfPiIsPaired(LoginActivity.this, user.getUid());  // Check for paired Pi before redirection
         } else {
             Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
         }

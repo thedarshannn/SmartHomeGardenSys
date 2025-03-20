@@ -10,49 +10,57 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.repository;
 
 import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 
 public class PlantRepository {
 
     private static final String TAG = "PlantRepository";
-    private final FirebaseFirestore firebaseFirestore;
+    private final FirebaseFirestore firestore;
+    private final FirebaseDatabase realtimeDatabase;
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<List<Plant>> plantsLiveData = new MutableLiveData<>();
 
     public PlantRepository() {
-        firebaseFirestore = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        realtimeDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-
     /**
-     * Get the CollectionReference for the user's plants
-     * @return CollectionReference for the user's plants
+     * Get the Firestore CollectionReference for the user's plants
+     * @return CollectionReference for Firestore plants
      */
     private CollectionReference getUserPlantsCollection() {
         String userId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
-        return firebaseFirestore.collection("users").document(userId).collection("plants");
+        return firestore.collection("users").document(userId).collection("plants");
     }
 
+    /**
+     * Get the Realtime Database Reference for the user's plants
+     * @return DatabaseReference for Realtime Database plants
+     */
+    private DatabaseReference getUserRealtimePlantsRef() {
+        String userId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
+        return realtimeDatabase.getReference("Users").child(userId).child("plants");
+    }
 
     /**
-     * Fetch the user's plants from Firebase
+     * Fetch user's plants from Firestore and sync them to LiveData
      * @return LiveData object containing a list of plants
      */
     public LiveData<List<Plant>> fetchPlants() {
@@ -78,10 +86,8 @@ public class PlantRepository {
         return plantsLiveData;
     }
 
-
-
     /**
-     * Add a plant to the user's collection
+     * Add a plant to Firestore and Realtime Database
      * @param actualName The actual name of the plant
      * @param customName The custom name of the plant
      * @param dateAdded The date the plant was added
@@ -97,6 +103,13 @@ public class PlantRepository {
             Map<String, Object> additionalDetails,
             OnPlantAddedListener listener
     ) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser == null) {
+            listener.onFailure(new Exception("User not logged in"));
+            return;
+        }
+        String userId = currentUser.getUid();
+
         Map<String, Object> plantData = new HashMap<>();
         plantData.put("actualName", actualName);
         plantData.put("customName", customName);
@@ -107,28 +120,47 @@ public class PlantRepository {
             plantData.putAll(additionalDetails);
         }
 
+        // Add to Firestore
         getUserPlantsCollection().add(plantData)
                 .addOnSuccessListener(documentReference -> {
-                    Log.d(TAG, "Plant added successfully: " + documentReference.getId());
-                    listener.onSuccess();
+                    String plantId = documentReference.getId();
+                    plantData.put("id", plantId);
+
+                    // Add to Realtime Database
+                    getUserRealtimePlantsRef().child(plantId).setValue(plantData)
+                            .addOnSuccessListener(aVoid -> listener.onSuccess())
+                            .addOnFailureListener(listener::onFailure);
                 })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error adding plant: " + e.getMessage(), e);
-                    listener.onFailure(e);
-                });
+                .addOnFailureListener(listener::onFailure);
     }
 
-
-
     /**
-     * Delete a plant from the user's collection
+     * Delete a plant from Firestore and Realtime Database
      * @param plantId The ID of the plant to delete
      * @param listener Callback listener for success/failure
      */
     public void deletePlant(String plantId, OnPlantDeletedListener listener) {
         getUserPlantsCollection().document(plantId).delete()
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnSuccessListener(aVoid -> {
+                    getUserRealtimePlantsRef().child(plantId).removeValue()
+                            .addOnSuccessListener(aVoid1 -> listener.onSuccess())
+                            .addOnFailureListener(listener::onFailure);
+                })
                 .addOnFailureListener(listener::onFailure);
+    }
+
+    /**
+     * Fetch plant count from Firestore
+     * @param userId User ID
+     * @param callback Callback interface for result
+     */
+    public void fetchPlantCount(String userId, PlantCountCallback callback) {
+        getUserPlantsCollection().get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int count = queryDocumentSnapshots.size();
+                    callback.onSuccess(count);
+                })
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 
     /**
@@ -136,7 +168,6 @@ public class PlantRepository {
      */
     public interface OnPlantAddedListener {
         void onSuccess();
-
         void onFailure(Exception e);
     }
 
@@ -145,7 +176,14 @@ public class PlantRepository {
      */
     public interface OnPlantDeletedListener {
         void onSuccess();
-
         void onFailure(Exception e);
+    }
+
+    /**
+     * Interface for fetching plant count
+     */
+    public interface PlantCountCallback {
+        void onSuccess(int count);
+        void onError(String errorMessage);
     }
 }
