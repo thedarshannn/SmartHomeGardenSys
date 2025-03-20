@@ -79,8 +79,6 @@ public class SensorFragment extends Fragment {
         // Observe LiveData from ViewModel
         sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
             if (sensorData != null) {
-                sunlightValueTextView.setText(String.valueOf(sensorData.getSunlight()));
-                sunlightProgressBar.setProgress((int) sensorData.getSunlight());
 
                 temperatureValueTextView.setText(String.valueOf(sensorData.getTemperature()));
                 temperatureProgressBar.setProgress((int) sensorData.getTemperature());
