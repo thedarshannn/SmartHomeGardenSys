@@ -1,5 +1,5 @@
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
-
+//zeel
 public class Relay {
     private String state;
 
