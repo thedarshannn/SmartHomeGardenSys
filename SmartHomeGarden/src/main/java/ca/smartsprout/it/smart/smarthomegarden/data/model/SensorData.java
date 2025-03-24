@@ -8,42 +8,61 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SensorData {
-    private double sunlight;
-    private double temperature;
-    private double moisture;
+    private float moisture;
+    private float temperature;
+    private String relay;
+    private Map<String, Float> lightSensor;
 
+    // Default constructor required for Firebase
     public SensorData() {
-        // Default constructor required for calls to DataSnapshot.getValue(SensorData.class)
     }
 
-    public SensorData(double sunlight, double temperature, double moisture) {
-        this.sunlight = sunlight;
-        this.temperature = temperature;
+    public SensorData(float moisture, float temperature, String relay, float uv, float lux) {
         this.moisture = moisture;
-    }
-
-    public double getSunlight() {
-        return sunlight;
-    }
-
-    public void setSunlight(double sunlight) {
-        this.sunlight = sunlight;
-    }
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(double temperature) {
         this.temperature = temperature;
+        this.relay = relay;
+        this.lightSensor = new HashMap<>();
+        this.lightSensor.put("UV", uv);
+        this.lightSensor.put("lux", lux);
     }
 
-    public double getMoisture() {
+    public float getMoisture() {
         return moisture;
     }
 
-    public void setMoisture(double moisture) {
+    public void setMoisture(float moisture) {
         this.moisture = moisture;
     }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
+    }
+
+    public String getRelay() {
+        return relay;
+    }
+
+    public void setRelay(String relay) {
+        this.relay = relay;
+    }
+
+    public Map<String, Float> getLightSensor() {
+        return lightSensor;
+    }
+
+    public void setLightSensor(Map<String, Float> lightSensor) {
+        this.lightSensor = lightSensor;
+    }
+    public float getLux() {
+        return lightSensor != null && lightSensor.containsKey("lux") ? lightSensor.get("lux") : 0;
+    }
+
 }

@@ -120,19 +120,36 @@ public class PlantRepository {
             plantData.putAll(additionalDetails);
         }
 
-        // Add to Firestore
+        // Store in Firestore
         getUserPlantsCollection().add(plantData)
                 .addOnSuccessListener(documentReference -> {
                     String plantId = documentReference.getId();
                     plantData.put("id", plantId);
 
-                    // Add to Realtime Database
-                    getUserRealtimePlantsRef().child(plantId).setValue(plantData)
-                            .addOnSuccessListener(aVoid -> listener.onSuccess())
+                    DatabaseReference plantRef = getUserRealtimePlantsRef().child(plantId);
+
+                    Map<String, Object> sensorData = new HashMap<>();
+                    sensorData.put("moisture", 0);
+                    sensorData.put("temperature", 0);
+                    sensorData.put("relay", "off");
+                    sensorData.put("light_sensor", new HashMap<String, Object>() {{
+                        put("UV", 0);
+                        put("lux", 0);
+                    }});
+
+                    // **Store in Realtime Database**
+                    plantRef.setValue(plantData)
+                            .addOnSuccessListener(aVoid -> {
+                                // **Initialize sensor node after plant data**
+                                plantRef.child("sensors").setValue(sensorData)
+                                        .addOnSuccessListener(aVoid2 -> listener.onSuccess())
+                                        .addOnFailureListener(listener::onFailure);
+                            })
                             .addOnFailureListener(listener::onFailure);
                 })
                 .addOnFailureListener(listener::onFailure);
     }
+
 
     /**
      * Delete a plant from Firestore and Realtime Database
