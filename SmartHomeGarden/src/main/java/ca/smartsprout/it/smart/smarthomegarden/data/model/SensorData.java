@@ -61,4 +61,8 @@ public class SensorData {
     public void setLightSensor(Map<String, Float> lightSensor) {
         this.lightSensor = lightSensor;
     }
+    public float getLux() {
+        return lightSensor != null && lightSensor.containsKey("lux") ? lightSensor.get("lux") : 0;
+    }
+
 }

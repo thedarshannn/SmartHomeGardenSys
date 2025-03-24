@@ -50,6 +50,7 @@ import java.util.Locale;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Photo;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PhotoRepository;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
 import ca.smartsprout.it.smart.smarthomegarden.ui.AccountSettingsActivity;
@@ -57,6 +58,7 @@ import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.ProfilePlantAdapter;
 import ca.smartsprout.it.smart.smarthomegarden.utils.GridSpacingDecoration;
 import ca.smartsprout.it.smart.smarthomegarden.utils.ImagePickerHandler;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PlantViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.ProfilePlantViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.UserViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PhotoViewModel;
 import ca.smartsprout.it.smart.smarthomegarden.ui.adapter.PhotoAdapter;
@@ -307,21 +309,25 @@ public class ProfileFragment extends Fragment {
         plantViewModel = new ViewModelProvider(requireActivity()).get(PlantViewModel.class);
         plantsCountTV = view.findViewById(R.id.plantsCountTV);
 
+
+        ProfilePlantViewModel viewModel = new ViewModelProvider(this).get(ProfilePlantViewModel.class);
+        PlantViewModel plantViewModel = new ViewModelProvider(this).get(PlantViewModel.class);
+        ProfilePlantAdapter adapter = new ProfilePlantAdapter(new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+
+        // Observe plant list
         plantViewModel.getAllPlants().observe(getViewLifecycleOwner(), plants -> {
-            if (plants != null) {
-                plantAdapter.updatePlantList(plants);
+            adapter.updatePlantList(plants);
+            for (Plant p : plants) {
+                viewModel.loadSensorDataForPlant(p.getId());
             }
         });
+
+        viewModel.getSensorDataMap().observe(getViewLifecycleOwner(), adapter::updateSensorDataMap);
 
 
         photosGrid.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         photosGrid.addItemDecoration(new GridSpacingDecoration(14));
-
-        // Set up ViewModel
-        photosViewModel.getAllPhotos().observe(getViewLifecycleOwner(), photos -> {
-            adapter = new PhotoAdapter(requireContext(), photos, this);
-            photosGrid.setAdapter(adapter);
-        });
 
 
         // Handle Tab Selection

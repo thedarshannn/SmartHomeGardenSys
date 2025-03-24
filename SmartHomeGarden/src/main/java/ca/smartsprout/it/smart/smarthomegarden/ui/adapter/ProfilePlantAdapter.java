@@ -19,15 +19,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
+import ca.smartsprout.it.smart.smarthomegarden.data.model.SensorData;
 
 public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapter.PlantViewHolder> {
 
     private List<Plant> plantList;
     private OnPlantClickListener listener = null;
+    private Map<String, SensorData> sensorDataMap = new HashMap<>();
 
     public ProfilePlantAdapter(List<Plant> plantList) {
         this.plantList = plantList;
@@ -39,6 +43,14 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
         notifyDataSetChanged();
     }
 
+    public void updateSensorDataMap(Map<String, SensorData> newMap) {
+        this.sensorDataMap = newMap;
+        notifyDataSetChanged();
+    }
+
+    public void setOnPlantClickListener(OnPlantClickListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -50,13 +62,30 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
     @Override
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
         Plant plant = plantList.get(position);
+
         holder.plantName.setText(plant.getCustomName() != null ? plant.getCustomName() : plant.getName());
         holder.plantSpecies.setText(plant.getName());
+
         if (plant.getDateAdded() != null) {
             holder.dateAdded.setText(plant.getDateAdded().toString());
         } else {
-            holder.dateAdded.setText(R.string.no_date_provided); // Or any placeholder text
+            holder.dateAdded.setText(R.string.no_date_provided);
         }
+
+        SensorData sensor = sensorDataMap.get(plant.getId());
+        if (sensor != null) {
+            holder.moisture.setText("Moisture: " + sensor.getMoisture() + "%");
+            holder.temperature.setText("Temp: " + sensor.getTemperature() + "°C");
+            holder.sunlight.setText("Light: " + sensor.getLux() + " lx");
+        } else {
+            holder.moisture.setText("Moisture: --%");
+            holder.temperature.setText("Temp: --°C");
+            holder.sunlight.setText("Light: -- lx");
+        }
+
+        holder.cardView.setOnClickListener(v -> {
+            if (listener != null) listener.onPlantClick(plant);
+        });
     }
 
     @Override
@@ -66,16 +95,19 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
 
     static class PlantViewHolder extends RecyclerView.ViewHolder {
 
-        TextView plantName;
-        TextView plantSpecies;
-        TextView dateAdded;
+        TextView plantName, plantSpecies, dateAdded;
+        TextView moisture, temperature, sunlight;
         MaterialCardView cardView;
 
         public PlantViewHolder(@NonNull View itemView) {
             super(itemView);
             plantName = itemView.findViewById(R.id.plantName);
+            plantSpecies = itemView.findViewById(R.id.customName);
             dateAdded = itemView.findViewById(R.id.dateAdded);
             cardView = itemView.findViewById(R.id.cardView);
+            moisture = itemView.findViewById(R.id.moistureLevel);
+            temperature = itemView.findViewById(R.id.temperature);
+            sunlight = itemView.findViewById(R.id.lightExposure);
         }
     }
 
