@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import ca.smartsprout.it.smart.smarthomegarden.R;
@@ -25,70 +26,110 @@ import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.SensorViewModel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SensorFragment extends Fragment {
 
     private SensorViewModel sensorViewModel;
-    private TextView sunlightValueTextView;
-    private TextView temperatureValueTextView;
-    private TextView moistureValueTextView;
-    private ProgressBar sunlightProgressBar;
-    private ProgressBar temperatureProgressBar;
-    private ProgressBar moistureProgressBar;
-    private AutoCompleteTextView spinnerPlantSelection;
     private PlantRepository plantRepository;
 
-    public SensorFragment() {
-        // Required empty public constructor
-    }
+    private TextView sunlightValueTextView, temperatureValueTextView, moistureValueTextView;
+    private ProgressBar sunlightProgressBar, temperatureProgressBar, moistureProgressBar;
+    private AutoCompleteTextView spinnerPlantSelection;
+
+    private Map<String, String> plantNameToIdMap = new HashMap<>();
+
+    public SensorFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorViewModel = new ViewModelProvider(this).get(SensorViewModel.class);
         plantRepository = new PlantRepository();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
 
-        // Initialize UI elements
+        // UI initialization
         sunlightValueTextView = view.findViewById(R.id.sunlight_value);
         temperatureValueTextView = view.findViewById(R.id.temperature_value);
         moistureValueTextView = view.findViewById(R.id.moisture_value);
+
         sunlightProgressBar = view.findViewById(R.id.sunlight_progress);
         temperatureProgressBar = view.findViewById(R.id.temperature_progress);
         moistureProgressBar = view.findViewById(R.id.moisture_progress);
+
         spinnerPlantSelection = view.findViewById(R.id.spinner_plant_selection);
 
-        // Fetch plants and set up the spinner
+        // Fetch plants and populate dropdown
         plantRepository.fetchPlants().observe(getViewLifecycleOwner(), plants -> {
-            if (plants != null) {
+            if (plants != null && !plants.isEmpty()) {
                 List<String> plantNames = new ArrayList<>();
                 for (Plant plant : plants) {
-                    plantNames.add(plant.getCustomName()); // Show custom name
+                    String name = plant.getCustomName();
+                    plantNames.add(name);
+                    plantNameToIdMap.put(name, plant.getId());
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantNames);
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, plantNames);
                 spinnerPlantSelection.setAdapter(adapter);
+
+                // Default: Select first plant
+                String firstPlantId = plantNameToIdMap.get(plantNames.get(0));
+                initSensorViewModel(firstPlantId);
             }
         });
 
-        // Observe LiveData from ViewModel
-        sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
-            if (sensorData != null) {
-
-                temperatureValueTextView.setText(String.valueOf(sensorData.getTemperature()));
-                temperatureProgressBar.setProgress((int) sensorData.getTemperature());
-
-                moistureValueTextView.setText(String.valueOf(sensorData.getMoisture()));
-                moistureProgressBar.setProgress((int) sensorData.getMoisture());
+        // Handle plant selection
+        spinnerPlantSelection.setOnItemClickListener((parent, view1, position, id) -> {
+            String selectedName = parent.getItemAtPosition(position).toString();
+            String plantId = plantNameToIdMap.get(selectedName);
+            if (plantId != null) {
+                initSensorViewModel(plantId);
             }
         });
 
         return view;
     }
+
+    private void initSensorViewModel(String plantId) {
+        sensorViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory())
+                .get(SensorViewModel.class);
+
+        sensorViewModel.setPlantId(plantId); // dynamic plant id
+        sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
+            if (sensorData != null) {
+                // Temperature
+                float temp = sensorData.getTemperature();
+                temperatureValueTextView.setText(temp + "°C");
+                temperatureProgressBar.setProgress((int) temp);
+
+                // Moisture
+                float moisture = sensorData.getMoisture();
+                moistureValueTextView.setText(moisture + "%");
+                moistureProgressBar.setProgress((int) moisture);
+
+                // Sunlight (lux)
+                float lux = sensorData.getLux();
+                sunlightValueTextView.setText(lux + " lx");
+                int luxPercent = (int) Math.min(100, (lux / 1000f) * 100); // convert to %
+                sunlightProgressBar.setProgress(luxPercent);
+            } else {
+                // Handle null sensor
+                temperatureValueTextView.setText("--°C");
+                temperatureProgressBar.setProgress(0);
+
+                moistureValueTextView.setText("--%");
+                moistureProgressBar.setProgress(0);
+
+                sunlightValueTextView.setText("-- lx");
+                sunlightProgressBar.setProgress(0);
+            }
+        });
+    }
 }
+
 
