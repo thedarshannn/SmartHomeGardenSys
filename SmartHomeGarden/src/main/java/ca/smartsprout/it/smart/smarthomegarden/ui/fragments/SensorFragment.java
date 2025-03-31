@@ -9,6 +9,7 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
+import ca.smartsprout.it.smart.smarthomegarden.utils.Util;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.SensorViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,8 +80,8 @@ public class SensorFragment extends Fragment {
                 spinnerPlantSelection.setAdapter(adapter);
 
                 // Default: Select first plant
-                String firstPlantId = plantNameToIdMap.get(plantNames.get(0));
-                initSensorViewModel(firstPlantId);
+//                String firstPlantId = plantNameToIdMap.get(plantNames.get(0));
+//                initSensorViewModel(firstPlantId);
             }
         });
 
@@ -95,28 +97,29 @@ public class SensorFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     private void initSensorViewModel(String plantId) {
         sensorViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory())
                 .get(SensorViewModel.class);
 
         sensorViewModel.setPlantId(plantId); // dynamic plant id
+
         sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
+
             if (sensorData != null) {
                 // Temperature
-                float temp = sensorData.getTemperature();
-                temperatureValueTextView.setText(temp + "°C");
-                temperatureProgressBar.setProgress((int) temp);
 
-                // Moisture
-                float moisture = sensorData.getMoisture();
-                moistureValueTextView.setText(moisture + "%");
-                moistureProgressBar.setProgress((int) moisture);
+                int moisturePercent = Util.convertMoistureToPercentage(sensorData.getMoisture());
+                moistureValueTextView.setText(moisturePercent + "%");
+                moistureProgressBar.setProgress(moisturePercent);
+
 
                 // Sunlight (lux)
                 float lux = sensorData.getLux();
                 sunlightValueTextView.setText(lux + " lx");
                 int luxPercent = (int) Math.min(100, (lux / 1000f) * 100); // convert to %
                 sunlightProgressBar.setProgress(luxPercent);
+
             } else {
                 // Handle null sensor
                 temperatureValueTextView.setText("--°C");
