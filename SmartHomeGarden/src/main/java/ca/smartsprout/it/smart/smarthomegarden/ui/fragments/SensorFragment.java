@@ -107,28 +107,33 @@ public class SensorFragment extends Fragment {
         sensorViewModel.getSensorData().observe(getViewLifecycleOwner(), sensorData -> {
 
             if (sensorData != null) {
-                // Temperature
+
+                // uv
+                String uvLevel = Util.getUVLevelDescription(sensorData.getUV());
+                sunlightValueTextView.setText(uvLevel);
+                sunlightProgressBar.setProgress((int) sensorData.getUV());
+
 
                 int moisturePercent = Util.convertMoistureToPercentage(sensorData.getMoisture());
                 moistureValueTextView.setText(moisturePercent + "%");
                 moistureProgressBar.setProgress(moisturePercent);
 
 
-                // Sunlight (lux)
+                // Brightness (lux)
                 float lux = sensorData.getLux();
-                sunlightValueTextView.setText(lux + " lx");
+                temperatureValueTextView.setText(lux + " lx");
                 int luxPercent = (int) Math.min(100, (lux / 1000f) * 100); // convert to %
-                sunlightProgressBar.setProgress(luxPercent);
+                temperatureProgressBar.setProgress(luxPercent);
 
             } else {
                 // Handle null sensor
-                temperatureValueTextView.setText("--°C");
+                temperatureValueTextView.setText("--lx");
                 temperatureProgressBar.setProgress(0);
 
                 moistureValueTextView.setText("--%");
                 moistureProgressBar.setProgress(0);
 
-                sunlightValueTextView.setText("-- lx");
+                sunlightValueTextView.setText("--");
                 sunlightProgressBar.setProgress(0);
             }
         });
