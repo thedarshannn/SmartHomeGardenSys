@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/sunlight"
+                        android:text="@string/uv"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -135,8 +135,8 @@
                     android:layout_height="64dp"
                     android:layout_marginEnd="16dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/temperature"
-                    app:tint="#F44336" />
+                    android:src="@drawable/ic_light"
+                     />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -149,7 +149,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/temperature"
+                        android:text="@string/brightness"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -160,7 +160,7 @@
                         android:text="0"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textColor="#008000" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/temperature_progress"
@@ -171,7 +171,7 @@
                         android:progress="0"
                         app:trackCornerRadius="4dp"
                         app:trackThickness="8dp"
-                        app:indicatorColor="#F44336" />
+                        app:indicatorColor="#008000" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
