@@ -8,26 +8,22 @@
  */
 package ca.smartsprout.it.smart.smarthomegarden.data.model;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class SensorData {
     private float moisture;
-    private float temperature;
     private String relay;
-    private Map<String, Float> lightSensor;
+    private float UV;
+    private float lux;
 
     // Default constructor required for Firebase
     public SensorData() {
     }
 
-    public SensorData(float moisture, float temperature, String relay, float uv, float lux) {
+    public SensorData(float moisture, String relay, float uv, float lux) {
         this.moisture = moisture;
-        this.temperature = temperature;
         this.relay = relay;
-        this.lightSensor = new HashMap<>();
-        this.lightSensor.put("UV", uv);
-        this.lightSensor.put("lux", lux);
+        this.UV = uv;
+        this.lux = lux;
     }
 
     public float getMoisture() {
@@ -38,13 +34,6 @@ public class SensorData {
         this.moisture = moisture;
     }
 
-    public float getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(float temperature) {
-        this.temperature = temperature;
-    }
 
     public String getRelay() {
         return relay;
@@ -54,15 +43,20 @@ public class SensorData {
         this.relay = relay;
     }
 
-    public Map<String, Float> getLightSensor() {
-        return lightSensor;
+    public float getUV() {
+        return UV;
     }
 
-    public void setLightSensor(Map<String, Float> lightSensor) {
-        this.lightSensor = lightSensor;
+    public void setUV(float uv) {
+        this.UV = uv;
     }
+
     public float getLux() {
-        return lightSensor != null && lightSensor.containsKey("lux") ? lightSensor.get("lux") : 0;
+        return lux;
+    }
+
+    public void setLux(float lux) {
+        this.lux = lux;
     }
 
 }

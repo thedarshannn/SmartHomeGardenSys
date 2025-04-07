@@ -68,20 +68,20 @@
                 tools:text="Moisture: 40%" />
 
             <TextView
-                android:id="@+id/temperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/red"
-                tools:text="Temp: 22°C" />
-
-            <TextView
                 android:id="@+id/lightExposure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/yellow"
                 tools:text="Light: 300lx" />
+
+            <TextView
+                android:id="@+id/uv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/red"
+                tools:text="UV: Low" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

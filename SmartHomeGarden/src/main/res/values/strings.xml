@@ -374,7 +374,9 @@ Members:
     <string name="date1">Date</string>
     <string name="time_icon">Time icon</string>
     <string name="time1">Time</string>
-
+    <string name="brightness">Brightness</string>
+    <string name="uv">UV</string>
+    <string name="water_control">Water Control</string>
 
 
 </resources>

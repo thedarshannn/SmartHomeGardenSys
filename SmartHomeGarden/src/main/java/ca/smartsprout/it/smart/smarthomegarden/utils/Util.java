@@ -27,4 +27,16 @@ public class Util {
         }
         snackbar.show();
     }
+
+    public static String getUVLevelDescription(float uv) {
+        if (uv <= 2) return "Low";
+        else if (uv <= 5) return "Moderate";
+        else if (uv <= 7) return "High";
+        else if (uv <= 10) return "Very High";
+        else return "Extreme";
+    }
+
+    public static int convertMoistureToPercentage(float rawMoisture) {
+        return (int) ((rawMoisture / 1023f) * 100);
+    }
 }

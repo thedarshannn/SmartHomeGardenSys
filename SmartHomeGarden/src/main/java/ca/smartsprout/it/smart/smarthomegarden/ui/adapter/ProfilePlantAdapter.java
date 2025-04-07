@@ -9,6 +9,7 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.Map;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.SensorData;
+import ca.smartsprout.it.smart.smarthomegarden.utils.Util;
 
 public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapter.PlantViewHolder> {
 
@@ -59,6 +61,7 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
         return new PlantViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
         Plant plant = plantList.get(position);
@@ -74,13 +77,13 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
 
         SensorData sensor = sensorDataMap.get(plant.getId());
         if (sensor != null) {
-            holder.moisture.setText("Moisture: " + sensor.getMoisture() + "%");
-            holder.temperature.setText("Temp: " + sensor.getTemperature() + "°C");
-            holder.sunlight.setText("Light: " + sensor.getLux() + " lx");
+            holder.moisture.setText("Moisture: " + Util.convertMoistureToPercentage(sensor.getMoisture()) + "%");
+            holder.light.setText("Light: " + sensor.getLux() + " lx");
+            holder.uv.setText("UV: " + Util.getUVLevelDescription(sensor.getUV()));
         } else {
             holder.moisture.setText("Moisture: --%");
-            holder.temperature.setText("Temp: --°C");
-            holder.sunlight.setText("Light: -- lx");
+            holder.light.setText("Light: -- lx");
+            holder.uv.setText("UV: --");
         }
 
         holder.cardView.setOnClickListener(v -> {
@@ -96,7 +99,7 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
     static class PlantViewHolder extends RecyclerView.ViewHolder {
 
         TextView plantName, plantSpecies, dateAdded;
-        TextView moisture, temperature, sunlight;
+        TextView moisture, light, uv;
         MaterialCardView cardView;
 
         public PlantViewHolder(@NonNull View itemView) {
@@ -106,8 +109,8 @@ public class ProfilePlantAdapter extends RecyclerView.Adapter<ProfilePlantAdapte
             dateAdded = itemView.findViewById(R.id.dateAdded);
             cardView = itemView.findViewById(R.id.cardView);
             moisture = itemView.findViewById(R.id.moistureLevel);
-            temperature = itemView.findViewById(R.id.temperature);
-            sunlight = itemView.findViewById(R.id.lightExposure);
+            light = itemView.findViewById(R.id.lightExposure);
+            uv = itemView.findViewById(R.id.uv);
         }
     }
 
