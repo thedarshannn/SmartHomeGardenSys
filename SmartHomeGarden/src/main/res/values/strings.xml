@@ -376,6 +376,7 @@ Members:
     <string name="time1">Time</string>
     <string name="brightness">Brightness</string>
     <string name="uv">UV</string>
+    <string name="water_control">Water Control</string>
 
 
 </resources>

@@ -1,80 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/diagnoseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".ui.fragments.DiagnoseFragment">
 
     <!-- Title -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/plant_diagnosis"
+        android:text="@string/water_control"
         android:textColor="@color/green"
         android:textSize="28sp"
         android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp" />
 
-    <!-- Image Preview -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/plantImagePreview"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/plant_placeholder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:shapeAppearanceOverlay="@style/RoundedImageView" />
-
-    <!-- Scan Button - Floating over the image -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/scanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:backgroundTint="@color/green"
-        app:layout_constraintBottom_toBottomOf="@id/plantImagePreview"
-        app:layout_constraintEnd_toEndOf="@id/plantImagePreview"
-        app:srcCompat="@drawable/ic_camera"
-        app:tint="@color/white" />
-
-    <!-- Loading Progress -->
-    <ProgressBar
-        android:id="@+id/loadingProgress"
-        style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+    <!-- Water Level & Pump Toggle Row -->
+    <LinearLayout
+        android:id="@+id/topRowLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="24dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/green"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
-
-    <!-- Coming Soon Message -->
-    <TextView
-        android:id="@+id/comingSoonMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
+        android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/poppins"
+        android:layout_marginHorizontal="16dp"
         android:gravity="center"
-        android:text="@string/diagnosis_coming_soon"
-        android:textColor="@color/grey"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/plantImagePreview" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Water Level -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Water Level"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/waterLevelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50%"
+                android:textColor="#2196F3"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- Pump Toggle -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pump"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/pumpToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/green"
+                android:trackTint="@color/green" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Plant Care Chart -->
+    <LinearLayout
+        android:id="@+id/plantCareChartLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/topRowLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Plant Care Chart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Chart or other info can go here, you can replace this TextView with any other UI element -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More details or chart here"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
