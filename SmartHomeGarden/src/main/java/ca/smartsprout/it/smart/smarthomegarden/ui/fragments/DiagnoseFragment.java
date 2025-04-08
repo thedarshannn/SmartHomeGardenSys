@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -34,7 +34,7 @@ import ca.smartsprout.it.smart.smarthomegarden.viewmodels.DiagnoseViewModel;
 public class DiagnoseFragment extends Fragment {
 
     private TextView waterLevelText;
-    private SwitchMaterial pumpToggle;
+    private MaterialSwitch pumpToggle;
     private DiagnoseViewModel diagnoseViewModel;
 
     private String userId;

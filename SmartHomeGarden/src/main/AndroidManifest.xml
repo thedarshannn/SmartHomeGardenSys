@@ -28,7 +28,7 @@
         android:label="@string/smart_sprout"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SmartHomeGarden"
+        android:theme="@style/Base.Theme.SmartHomeGarden"
         tools:targetApi="34">
         <activity
             android:name=".ui.PairActivity"

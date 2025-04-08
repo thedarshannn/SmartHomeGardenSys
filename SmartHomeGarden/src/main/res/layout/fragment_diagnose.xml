@@ -78,12 +78,14 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/pumpToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:thumbTint="@color/green"
-                android:trackTint="@color/green" />
+                android:checked="false"
+                tools:layout_editor_absoluteX="88dp"
+                tools:layout_editor_absoluteY="502dp"
+                />
 
         </LinearLayout>
 
