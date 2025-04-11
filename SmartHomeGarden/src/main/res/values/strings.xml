@@ -377,6 +377,7 @@ Members:
     <string name="brightness">Brightness</string>
     <string name="uv">UV</string>
     <string name="water_control">Water Control</string>
+    <string name="water">Water</string>
 
 
 </resources>

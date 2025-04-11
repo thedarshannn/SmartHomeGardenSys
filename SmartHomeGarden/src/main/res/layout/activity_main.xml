@@ -30,10 +30,13 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        app:backgroundTint="?attr/colorSurfaceContainer"
+        app:elevation="3dp"
         app:menu="@menu/bottom_navigation_menu"
-        app:itemIconTint="@drawable/bottom_nav_selector"
-        app:itemTextColor="@drawable/bottom_nav_selector"
+        android:color="?attr/colorSecondaryContainer"
+        android:width="56dp"
+        android:height="32dp"
+        app:activeIndicatorLabelPadding="4dp"
         app:itemRippleColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
