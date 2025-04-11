@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
-        android:titleTextColor="?attr/colorOnPrimaryContainer"
+        app:titleTextColor="?attr/colorOnPrimaryContainer"
         app:menu="@menu/menu"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

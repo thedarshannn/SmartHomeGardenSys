@@ -9,6 +9,7 @@
 
 package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -29,26 +30,25 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
-import ca.smartsprout.it.smart.smarthomegarden.viewmodels.DiagnoseViewModel;
+import ca.smartsprout.it.smart.smarthomegarden.viewmodels.PumpStateViewModel;
 
 public class DiagnoseFragment extends Fragment {
 
     private TextView waterLevelText;
     private MaterialSwitch pumpToggle;
-    private DiagnoseViewModel diagnoseViewModel;
+    private PumpStateViewModel pumpStateViewModel;
 
     private String userId;
-    private String plantId = "PlantID1"; // Replace with selected plant logic
-
     public DiagnoseFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        diagnoseViewModel = new ViewModelProvider(this).get(DiagnoseViewModel.class);
+        pumpStateViewModel = new ViewModelProvider(this).get(PumpStateViewModel.class);
         userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,19 +58,19 @@ public class DiagnoseFragment extends Fragment {
         pumpToggle = view.findViewById(R.id.pumpToggle);
 
         // Observe Water Level
-        diagnoseViewModel.getWaterLevel(userId).observe(getViewLifecycleOwner(), level -> {
+        pumpStateViewModel.getWaterLevel(userId).observe(getViewLifecycleOwner(), level -> {
             waterLevelText.setText(level + "%");
         });
 
         // Sync Pump Toggle State
-        diagnoseViewModel.getPumpState(userId).observe(getViewLifecycleOwner(), state -> {
+        pumpStateViewModel.getPumpState(userId).observe(getViewLifecycleOwner(), state -> {
             pumpToggle.setChecked("on".equals(state));
         });
 
         // Toggle listener to update relay state
         pumpToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
             String newState = isChecked ? "on" : "off";
-            diagnoseViewModel.updatePumpState(userId, newState);
+            pumpStateViewModel.updatePumpState(userId, newState);
         });
 
         return view;

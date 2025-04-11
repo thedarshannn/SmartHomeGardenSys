@@ -10,14 +10,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class DiagnoseViewModel extends ViewModel {
+public class PumpStateViewModel extends ViewModel {
 
-    String plantId = "yjtjOghcp2gJ3UzT2GIY";
+
     public LiveData<Integer> getWaterLevel(String userId) {
         MutableLiveData<Integer> waterLevelLiveData = new MutableLiveData<>();
         FirebaseDatabase.getInstance().getReference("Users")
-                .child(userId).child("plants").child(plantId)
-                .child("sensors").child("water_level")
+                .child(userId).child("pump")
+                .child("water_level")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -34,8 +34,8 @@ public class DiagnoseViewModel extends ViewModel {
     public LiveData<String> getPumpState(String userId) {
         MutableLiveData<String> pumpStateLiveData = new MutableLiveData<>();
         FirebaseDatabase.getInstance().getReference("Users")
-                .child(userId).child("plants").child(plantId)
-                .child("sensors").child("relay")
+                .child(userId).child("pump")
+                .child("relay")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -50,8 +50,8 @@ public class DiagnoseViewModel extends ViewModel {
 
     public void updatePumpState(String userId, String state) {
         FirebaseDatabase.getInstance().getReference("Users")
-                .child(userId).child("plants").child(plantId)
-                .child("sensors").child("relay")
+                .child(userId).child("pump")
+                .child("relay")
                 .setValue(state);
     }
 }
