@@ -91,6 +91,7 @@ public class SensorFragment extends Fragment {
             String plantId = plantNameToIdMap.get(selectedName);
             if (plantId != null) {
                 initSensorViewModel(plantId);
+                sensorViewModel.updateSensorCommand(plantId);
             }
         });
 
