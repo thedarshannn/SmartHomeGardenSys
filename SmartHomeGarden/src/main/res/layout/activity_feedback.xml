@@ -1,179 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="32dp"
+    android:layout_height="match_parent"
     tools:context=".ui.FeedbackActivity">
-    
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/your_feedback"
-        android:textColor="@color/green"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:fontFamily="sans-serif-medium"/>
-
-    <com.google.android.material.card.MaterialCardView
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/cardViewBg"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/green"
-        android:layout_marginBottom="16dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        android:title="@string/your_feedback"
+        android:titleTextColor="?attr/colorOnSurface"
+        android:navigationIcon="@drawable/ic_back" />
 
-        <TextView
-            android:id="@+id/nameTextView"
+    <!-- Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="32dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawablePadding="12dp"
-            android:padding="16dp"
-            android:text="@string/name"
-            android:textColor="@color/green"
-            android:drawableTint="@color/green"
-            android:textSize="16sp" />
-    </com.google.android.material.card.MaterialCardView>
+            android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/cardViewBg"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/green"
-        android:layout_marginBottom="16dp">
+            <!-- Profile info cards -->
+            <!-- Use MaterialCardView with backgroundTint -->
 
-        <TextView
-            android:id="@+id/PhonefetchtextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawablePadding="12dp"
-            android:padding="16dp"
-            android:text="@string/Phone"
-            android:textColor="@color/green"
-            android:drawableTint="@color/green"
-            android:textSize="16sp" />
-    </com.google.android.material.card.MaterialCardView>
+            <!-- Name Card -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/cardViewBg"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/green"
-        android:layout_marginBottom="24dp">
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="@string/name"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textColor="?attr/colorPrimary" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/EmailfetchtextView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawablePadding="12dp"
-            android:padding="16dp"
-            android:text="@string/email"
-            android:textColor="@color/green"
-            android:drawableTint="@color/green"
-            android:textSize="16sp" />
-    </com.google.android.material.card.MaterialCardView>
+            <!-- Phone Card -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rate_your_experience"
-        android:textColor="@color/green"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp"/>
+                <TextView
+                    android:id="@+id/PhonefetchtextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="@string/Phone"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textColor="?attr/colorPrimary" />
+            </com.google.android.material.card.MaterialCardView>
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:progressTint="@color/lightgreen"
-        android:secondaryProgressTint="@color/lightgreen"
-        android:stepSize="0.5"
-        android:layout_marginBottom="24dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:progressBackgroundTint="@color/grey"/>
+            <!-- Email Card -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:boxBackgroundColor="@color/cardViewBg"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxStrokeWidth="1dp"
-        app:boxStrokeColor="@color/green"
-        app:hintEnabled="true"
-        app:counterEnabled="true"
-        app:counterMaxLength="500"
-        app:counterTextColor="@color/grey"
-        app:helperText="@string/share_your_thoughts_with_us"
-        app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/green"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <TextView
+                    android:id="@+id/EmailfetchtextView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="@string/email"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textColor="?attr/colorPrimary" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/descriptionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="120dp"
-            android:gravity="top|start"
-            android:hint="@string/feedbackdesc"
-            android:inputType="textMultiLine|textCapSentences"
-            android:padding="16dp"
-            android:textColor="@color/green"
-            android:textColorHint="@color/grey"/>
+            <!-- Rating -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_your_experience"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="12dp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center_horizontal" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/feedbackbutton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/bottomNavColour"
-        android:paddingVertical="16dp"
-        android:text="@string/submit"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:cornerRadius="12dp"
-        android:elevation="4dp"
-        android:layout_marginBottom="16dp"/>
+            <!-- Feedback Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="500"
+                app:helperText="@string/share_your_thoughts_with_us">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        android:indeterminateTint="@color/green"
-        android:layout_gravity="center_horizontal"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="120dp"
+                    android:gravity="top|start"
+                    android:hint="@string/feedbackdesc"
+                    android:inputType="textMultiLine|textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/timerTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/green"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone"/>
+            <!-- Submit Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/feedbackbutton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"
+                android:textAllCaps="false"
+                android:layout_marginBottom="16dp" />
 
-</LinearLayout>
+            <!-- Progress -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/timerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
