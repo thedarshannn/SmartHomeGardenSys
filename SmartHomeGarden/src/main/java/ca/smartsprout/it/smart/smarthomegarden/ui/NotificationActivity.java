@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +57,10 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view_notifications);
         Button btnClearAll = findViewById(R.id.btn_clear_all);
         ImageView imgNoNotifications = findViewById(R.id.img_no_notifications);
@@ -68,13 +73,6 @@ public class NotificationActivity extends AppCompatActivity {
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
-
-        // Initialize ActionBar
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         // Handle the back button press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
