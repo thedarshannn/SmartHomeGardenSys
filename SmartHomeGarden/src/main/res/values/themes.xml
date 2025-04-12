@@ -63,6 +63,11 @@
         <item name="android:statusBarColor">@color/md_theme_surface</item>
 
         <item name="android:fontFamily">@font/poppins</item>
+        <item name="switchPreferenceCompatStyle">@style/PreferenceMaterialSwitch</item>
+    </style>
+
+    <style name="PreferenceMaterialSwitch" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="widgetLayout">@layout/preference_switch</item>
     </style>
 
     <style name="Theme.ui.SplashActivity" parent="Theme.Material3.DayNight.NoActionBar" />
