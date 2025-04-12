@@ -11,6 +11,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -382,13 +383,18 @@ public class ProfileFragment extends Fragment {
     private void fetchPlantCount(String userId) {
         PlantRepository plantRepository = new PlantRepository();
         plantRepository.fetchPlantCount(userId, new PlantRepository.PlantCountCallback() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onSuccess(int count) {
                 Log.d("ProfileFragment", "Plant count: " + count);
-               requireActivity().runOnUiThread(() -> {
-                   String plantText = count == 1 ? "Plant" : "Plants";
-                   plantsCountTV.setText(count + " " + plantText);
-               });
+
+                // ✅ Avoid IllegalStateException
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        String plantText = count == 1 ? "Plant" : "Plants";
+                        plantsCountTV.setText(count + " " + plantText);
+                    });
+                }
             }
 
             @Override
@@ -397,5 +403,6 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
 
 }
