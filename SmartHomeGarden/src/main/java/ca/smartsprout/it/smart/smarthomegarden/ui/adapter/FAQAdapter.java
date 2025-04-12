@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,16 +40,31 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FAQViewHolder holder, int position) {
         FAQ faq = faqList.get(position);
-        Log.d("FAQAdapter", "Question: " + faq.getQuestion() + ", Answer: " + faq.getAnswer());
         holder.questionTextView.setText(faq.getQuestion());
         holder.answerTextView.setText(faq.getAnswer());
-         holder.answerTextView.setVisibility(faq.isExpanded() ? View.VISIBLE : View.GONE);
+
+        boolean isExpanded = faq.isExpanded();
+        holder.answerTextView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.arrowIcon.setRotation(isExpanded ? 180 : 0); // Show correct rotation
 
         holder.itemView.setOnClickListener(v -> {
-            faq.setExpanded(!faq.isExpanded());
+            boolean currentlyExpanded = faq.isExpanded();
+            faq.setExpanded(!currentlyExpanded);
+
+            // Animate arrow
+            holder.arrowIcon.animate()
+                    .rotation(currentlyExpanded ? 0 : 90)
+                    .setDuration(200)
+                    .start();
+
+            // Animate answer expand/collapse
+            holder.answerTextView.setVisibility(faq.isExpanded() ? View.VISIBLE : View.GONE);
+
+            // Optional: notify if only needed
             notifyItemChanged(position);
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -57,11 +73,14 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
 
     public static class FAQViewHolder extends RecyclerView.ViewHolder {
         TextView questionTextView, answerTextView;
+        ImageView arrowIcon;
+
 
         public FAQViewHolder(@NonNull View itemView) {
             super(itemView);
             questionTextView = itemView.findViewById(R.id.questionTextView);
             answerTextView = itemView.findViewById(R.id.answerTextView);
+            arrowIcon = itemView.findViewById(R.id.arrowIcon);
         }
     }
 }

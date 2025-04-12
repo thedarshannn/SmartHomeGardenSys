@@ -13,13 +13,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.MaterialToolbar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +32,11 @@ public class FAQActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_faq);
+
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         RecyclerView faqRecyclerView = findViewById(R.id.faqRecyclerView);
         faqRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -57,6 +60,7 @@ public class FAQActivity extends AppCompatActivity {
         faqList.add(new FAQ(getString(R.string.faq3), getString(R.string.faq7)));
         faqList.add(new FAQ(getString(R.string.faq4), getString(R.string.faq8)));
 
+        // Set up the RecyclerView with the FAQAdapter
         FAQAdapter adapter = new FAQAdapter(faqList);
         faqRecyclerView.setAdapter(adapter);
 
