@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +40,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -70,7 +70,7 @@ public class ProfileFragment extends Fragment {
     boolean isOptionsVisible;
     private ImageView imageView;
     private TextView userNameTV, plantsCountTV;
-    private View addPlantContainer, cameraContainer, addTaskContainer;
+    private ExtendedFloatingActionButton fabAddPlant, fabAddPicture, fabAddTask;
     private UserViewModel userViewModel;
     private PhotoViewModel photosViewModel;
     private PlantViewModel plantViewModel;
@@ -179,9 +179,14 @@ public class ProfileFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         FloatingActionButton fabMain = view.findViewById(R.id.floatingActionButton);
-        final FloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
-        final FloatingActionButton fabAddPicture = view.findViewById(R.id.camera);
-        final FloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
+        final ExtendedFloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
+        final ExtendedFloatingActionButton fabAddPicture = view.findViewById(R.id.camera);
+        final ExtendedFloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
+
+        // All the FABs are initially hidden
+        fabAddPlant.setVisibility(View.GONE);
+        fabAddPicture.setVisibility(View.GONE);
+        fabAddTask.setVisibility(View.GONE);
 
         imageView = view.findViewById(R.id.imageView);
         userNameTV = view.findViewById(R.id.userNameTV);
@@ -220,28 +225,39 @@ public class ProfileFragment extends Fragment {
 
 
         fabMain = view.findViewById(R.id.floatingActionButton);
-        addPlantContainer = view.findViewById(R.id.addplantContainer);
-        cameraContainer = view.findViewById(R.id.cameraContainer);
-        addTaskContainer = view.findViewById(R.id.addtaskContainer);
 
         // Toggle FAB menu with translationY animation based on your example
         fabMain.setOnClickListener(v -> {
+            // Toggle the visibility of the FAB menu
+            isOptionsVisible = !isOptionsVisible;
             if (isOptionsVisible) {
-                // Animate down and set visibility to GONE
-                addPlantContainer.animate().translationY(0).withEndAction(() -> addPlantContainer.setVisibility(View.GONE));
-                cameraContainer.animate().translationY(0).withEndAction(() -> cameraContainer.setVisibility(View.GONE));
-                addTaskContainer.animate().translationY(0).withEndAction(() -> addTaskContainer.setVisibility(View.GONE));
-                isOptionsVisible = false;
-            } else {
-                // Set visibility to VISIBLE and animate up
-                addPlantContainer.setVisibility(View.VISIBLE);
-                cameraContainer.setVisibility(View.VISIBLE);
-                addTaskContainer.setVisibility(View.VISIBLE);
+                fabAddPlant.setVisibility(View.VISIBLE);
+                fabAddPicture.setVisibility(View.VISIBLE);
+                fabAddTask.setVisibility(View.VISIBLE);
 
-                addPlantContainer.animate().translationY(-getResources().getDimension(R.dimen.stan_60));
-                cameraContainer.animate().translationY(-getResources().getDimension(R.dimen.stan_110));
-                addTaskContainer.animate().translationY(-getResources().getDimension(R.dimen.stan_160));
-                isOptionsVisible = true;
+                // Animate up
+                fabAddPlant.extend();
+                fabAddPicture.extend();
+                fabAddTask.extend();
+
+            } else {
+                fabAddPlant.shrink();
+                fabAddPicture.shrink();
+                fabAddTask.shrink();
+
+                // Animate them down and hide after
+                fabAddPlant.animate().translationY(0)
+                        .withEndAction(() -> fabAddPlant.setVisibility(View.GONE))
+                        .start();
+
+                fabAddPicture.animate().translationY(0)
+                        .withEndAction(() -> fabAddPicture.setVisibility(View.GONE))
+                        .start();
+
+                fabAddTask.animate().translationY(0)
+                        .withEndAction(() -> fabAddTask.setVisibility(View.GONE))
+                        .start();
+
             }
         });
 
