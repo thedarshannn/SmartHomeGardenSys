@@ -13,7 +13,7 @@
         android:background="?attr/colorSurface"
         android:title="@string/account_settings"
         android:titleTextColor="?attr/colorOnSurface"
-        android:navigationIcon="@drawable/ic_back"
+        app:navigationIcon="@drawable/ic_back"
         app:layout_scrollFlags="scroll|enterAlways" />
 
     <androidx.core.widget.NestedScrollView
