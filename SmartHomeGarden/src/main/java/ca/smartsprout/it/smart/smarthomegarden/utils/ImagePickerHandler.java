@@ -48,20 +48,20 @@ public class ImagePickerHandler {
             AppCompatActivity activity,
             ActivityResultLauncher<Intent> cameraLauncher,
             ActivityResultLauncher<Intent> galleryLauncher,
-           @Nullable ActivityResultLauncher<String> requestCameraPermissionLauncher,
-           @Nullable ActivityResultLauncher<String> requestGalleryPermissionLauncher
+            @Nullable ActivityResultLauncher<String> requestCameraPermissionLauncher,
+            @Nullable ActivityResultLauncher<String> requestGalleryPermissionLauncher
     ) {
-        new AlertDialog.Builder(activity)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.choose_option)
                 .setMessage(R.string.select_camera_or_gallery)
+                .setIcon(R.drawable.ic_add_img) // Optional: add your icon here
                 .setPositiveButton(R.string.camera, (dialog, which) -> {
                     if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
                             == PackageManager.PERMISSION_GRANTED) {
                         openCamera(activity, cameraLauncher);
                     } else if (requestCameraPermissionLauncher != null) {
-                            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
-                        }
-                     else {
+                        requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+                    } else {
                         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, 100);
                     }
                 })
@@ -75,19 +75,20 @@ public class ImagePickerHandler {
                         openGallery(activity, galleryLauncher);
                     } else if (requestGalleryPermissionLauncher != null) {
                         requestGalleryPermissionLauncher.launch(permission);
-                    }
-                    else {
+                    } else {
                         ActivityCompat.requestPermissions(activity, new String[]{permission}, 101);
                     }
                 })
+                .setNeutralButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .show();
     }
+
 
     public static void openCamera(AppCompatActivity activity, ActivityResultLauncher<Intent> launcher) {
         try {
             File photoFile = createImageFile(activity);
             Uri cameraImageUri = FileProvider.getUriForFile(activity,
-                    activity.getApplicationContext().getPackageName() + ".fileprovider",
+                    activity.getApplicationContext().getPackageName() + ".provider",
                     photoFile);
 
             if (activity instanceof AccountSettingsActivity){

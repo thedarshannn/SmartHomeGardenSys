@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,6 +45,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,10 +83,11 @@ public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ActivityResultLauncher<String> requestCameraPermissionLauncher;
     private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
-    private ActivityResultLauncher<Intent> cameraLauncher;
-    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private ActivityResultLauncher<String> galleryLauncher;
     private String currentDate;
     private PhotoRepository photoRepository;
+    private Uri capturedImageUri;
 
 
     public ProfileFragment() {
@@ -112,8 +115,7 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
-                        // Open the camera via ImagePickerHandler
-                        ImagePickerHandler.openCamera((AppCompatActivity) requireActivity(), cameraLauncher);
+                        openCamera();
                     } else {
                         Toast.makeText(requireContext(), "Camera permission denied.", Toast.LENGTH_SHORT).show();
                     }
@@ -125,8 +127,7 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
-                        // Open the gallery via ImagePickerHandler
-                        ImagePickerHandler.openGallery((AppCompatActivity) requireActivity(), galleryLauncher);
+                        openGallery();
                     } else {
                         Toast.makeText(requireContext(), "Gallery permission denied.", Toast.LENGTH_SHORT).show();
                     }
@@ -134,34 +135,31 @@ public class ProfileFragment extends Fragment {
         );
 
         // Initialize camera launcher
-                cameraLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
                 result -> {
-                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            Photo photo = new Photo(imageUri.toString(), currentDate);
-                            adapter.addPhoto(photo);
-                        } else {
-                            Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
-                        }
+                    if (result && capturedImageUri != null) {
+                        Photo photo = new Photo(capturedImageUri.toString(), currentDate);
+                        adapter.addPhoto(photo);
+                        photoRepository.uploadImageToFirebase(capturedImageUri, userViewModel.getUserId());
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
                     }
                 }
+
         );
 
         // Initialize gallery launcher
         galleryLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            Photo photo = new Photo(imageUri.toString(), currentDate);
-                            adapter.addPhoto(photo);
-                            photoRepository.uploadImageToFirebase(imageUri, userViewModel.getUserId());
-                        } else {
-                            Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
-                        }
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        capturedImageUri = uri;
+                        Photo photo = new Photo(uri.toString(), currentDate);
+                        adapter.addPhoto(photo);
+                        photoRepository.uploadImageToFirebase(uri, userViewModel.getUserId());
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -275,21 +273,18 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        fabAddPicture.setOnClickListener(new View.OnClickListener() {
+        fabAddPicture.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View view) {
-
-                // Handle adding a picture of a plant
-                ImagePickerHandler.showImagePickerDialog(
-                        (AppCompatActivity) requireActivity(),
-                        cameraLauncher,
-                        galleryLauncher,
-                        requestCameraPermissionLauncher,
-                        requestGalleryPermissionLauncher
-                );
-            }
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder( requireContext())
+                    .setTitle("Add a Photo")
+                    .setMessage("Choose how you'd like to upload a photo to track your plant's growth.")
+                    .setIcon(R.drawable.ic_add_img)
+                    .setPositiveButton("Camera", (dialog, which) -> openCamera())
+                    .setNegativeButton("Gallery", (dialog, which) -> openGallery())
+                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .show();
         });
+
 
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -419,6 +414,17 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    private void openCamera() {
+        File photoFile = new File(requireContext().getExternalFilesDir(null), "photo_" + System.currentTimeMillis() + ".jpg");
+        capturedImageUri = FileProvider.getUriForFile(requireContext(), requireContext().getPackageName() + ".provider", photoFile);
+        cameraLauncher.launch(capturedImageUri);
+    }
+
+    private void openGallery() {
+        galleryLauncher.launch("image/*");
+    }
+
 
 
 }
