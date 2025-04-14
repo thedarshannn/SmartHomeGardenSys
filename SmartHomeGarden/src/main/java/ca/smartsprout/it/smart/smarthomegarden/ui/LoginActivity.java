@@ -186,7 +186,24 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        forgotpassword.setOnClickListener(v -> showForgotPasswordDialog());
+
+        forgotpassword.setOnClickListener(v -> {
+            String email = emailInput.getText().toString().trim();
+
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Email not available for reset.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Password reset link sent to " + email, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
 
         // Observe the LiveData from ViewModel
         observeViewModel();
@@ -272,32 +289,6 @@ public class LoginActivity extends AppCompatActivity {
         // Show login notification
         NotificationHelper.createNotification(this, getString(R.string.login_successful), getString(R.string.welcome_back));
     }
-
-    private void showForgotPasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.resetpassword);
-
-        // Inflate custom layout
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.dialog_forgot_password, null);
-        builder.setView(dialogView);
-
-        // Reference EditText from custom layout
-        EditText inputEmail = dialogView.findViewById(R.id.editTextEmail);
-
-        builder.setPositiveButton(R.string.send, (dialog, which) -> {
-            String email = inputEmail.getText().toString().trim();
-            if (!TextUtils.isEmpty(email)) {
-                authViewModel.sendPasswordResetEmail(email);
-            } else {
-                Toast.makeText(this, R.string.valid, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
-        builder.show();
-    }
-
 
     private void observeViewModel() {
         authViewModel.getIsResetEmailSent().observe(this, isSent -> {

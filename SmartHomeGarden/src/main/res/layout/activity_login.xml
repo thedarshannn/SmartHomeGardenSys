@@ -160,6 +160,7 @@
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/googlesign"
         android:textColor="@color/white"
+        android:backgroundTint="@color/md_theme_onSurface"
         app:cornerRadius="16dp"
         app:icon="@drawable/ic_google"
         app:iconGravity="textStart"
