@@ -25,10 +25,10 @@
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/smart_sprout"
+        android:label="@string/SmartHomeGarden"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SmartHomeGarden"
+        android:theme="@style/Base.Theme.SmartHomeGarden"
         tools:targetApi="34">
         <activity
             android:name=".ui.PairActivity"
@@ -98,7 +98,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

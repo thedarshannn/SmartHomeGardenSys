@@ -24,19 +24,21 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 
@@ -57,6 +59,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private PasswordViewModel passwordViewModel;
     private final Handler handler = new Handler();
     private Runnable runnable;
+    private TextView tvForgotPassword;
 
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -115,11 +118,19 @@ public class AccountSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_settings);
 
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+
+// Enable back navigation
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+
         profileImageView = findViewById(R.id.editProfilePic);
         editUserName = findViewById(R.id.editUserName);
         emailEditText = findViewById(R.id.etCurrentEmail);
         editPasswordText = findViewById(R.id.etNewPassword);
         editcurrentPasswordText = findViewById(R.id.etCurrentPassword);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         retypePasswordText = findViewById(R.id.etRetypePassword);
         currentPasswordLayout = findViewById(R.id.CurrentPasswordLayout);
         newPasswordLayout = findViewById(R.id.NewPasswordLayout);
@@ -127,11 +138,23 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.saveButton);
         Button updatePasswordButton = findViewById(R.id.btnUpdatePassword);
 
-        // Initialize ActionBar
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        tvForgotPassword.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString().trim();
+
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Email not available for reset.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Password reset link sent to " + email, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
 
         // Handle the back button press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

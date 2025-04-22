@@ -129,13 +129,9 @@ public class PlantRepository {
                     DatabaseReference plantRef = getUserRealtimePlantsRef().child(plantId);
 
                     Map<String, Object> sensorData = new HashMap<>();
+                    sensorData.put("UV", 0);
+                    sensorData.put("lux", 0);
                     sensorData.put("moisture", 0);
-                    sensorData.put("temperature", 0);
-                    sensorData.put("relay", "off");
-                    sensorData.put("light_sensor", new HashMap<String, Object>() {{
-                        put("UV", 0);
-                        put("lux", 0);
-                    }});
 
                     // **Store in Realtime Database**
                     plantRef.setValue(plantData)

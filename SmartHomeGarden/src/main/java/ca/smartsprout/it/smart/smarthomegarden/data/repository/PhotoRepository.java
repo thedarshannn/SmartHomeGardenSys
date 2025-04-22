@@ -105,14 +105,25 @@ public class PhotoRepository {
 
 
     public void deletePhotoFromFirestore(Photo photo) {
-        StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(photo.getUrl());
-        photoRef.delete().addOnSuccessListener(aVoid -> {
-            // Photo deleted successfully from Firestore Storage
-            executorService.execute(() -> photoDao.deletePhoto(photo)); // Delete from Room database on a background thread
-        }).addOnFailureListener(exception -> {
-            // Handle any errors
-            Log.e("PhotoRepository", "Failed to delete photo from Firestore: " + exception.getMessage());
-        });
+        String url = photo.getUrl();
+
+        if (url != null && url.startsWith("https://firebasestorage.googleapis.com")) {
+            try {
+                StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                photoRef.delete().addOnSuccessListener(aVoid -> {
+                    // Photo deleted successfully from Firebase Storage
+                    executorService.execute(() -> photoDao.deletePhoto(photo));
+                }).addOnFailureListener(exception -> {
+                    Log.e("PhotoRepository", "Failed to delete from Firebase Storage: " + exception.getMessage());
+                });
+            } catch (IllegalArgumentException e) {
+                Log.e("PhotoRepository", "Invalid Firebase Storage URL: " + url);
+            }
+        } else {
+            Log.w("PhotoRepository", "Skipping deletion: Not a Firebase Storage URL: " + url);
+            executorService.execute(() -> photoDao.deletePhoto(photo)); // Still delete from Room
+        }
     }
+
 
 }

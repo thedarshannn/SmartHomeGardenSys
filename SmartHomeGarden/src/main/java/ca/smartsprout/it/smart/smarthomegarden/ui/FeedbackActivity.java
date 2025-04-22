@@ -28,10 +28,10 @@ import androidx.lifecycle.ViewModelProvider;
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.viewmodels.FeedbackViewModel;
 import android.graphics.Color;
-import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
 
 
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -55,6 +55,10 @@ public class FeedbackActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Initialize ViewModel
         feedbackViewModel = new ViewModelProvider(this).get(FeedbackViewModel.class);
@@ -250,17 +254,13 @@ public class FeedbackActivity extends AppCompatActivity {
         }, 1000);
     }
     private void showConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.feedback_submitted)  // Title of the dialog
-                .setMessage(getString(R.string.thank_you_for_your_feedback_your_submission_has_been_successfully_recorded))  // Message to display
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Dismiss the dialog when OK is pressed
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(false)  // Make sure dialog is not dismissable outside
-                .show();  // Show the dialog
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.feedback_submitted)
+                .setIcon(R.drawable.ic_approve)
+                .setMessage(getString(R.string.thank_you_for_your_feedback_your_submission_has_been_successfully_recorded))
+                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
     }
+
 }

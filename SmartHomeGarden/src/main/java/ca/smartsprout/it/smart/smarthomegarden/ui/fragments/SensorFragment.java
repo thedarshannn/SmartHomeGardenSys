@@ -22,6 +22,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import ca.smartsprout.it.smart.smarthomegarden.R;
 import ca.smartsprout.it.smart.smarthomegarden.data.model.Plant;
 import ca.smartsprout.it.smart.smarthomegarden.data.repository.PlantRepository;
@@ -54,6 +57,8 @@ public class SensorFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
+
+        sensorViewModel = new ViewModelProvider(this).get(SensorViewModel.class);
 
         // UI initialization
         sunlightValueTextView = view.findViewById(R.id.sunlight_value);
@@ -90,7 +95,7 @@ public class SensorFragment extends Fragment {
             String selectedName = parent.getItemAtPosition(position).toString();
             String plantId = plantNameToIdMap.get(selectedName);
             if (plantId != null) {
-                initSensorViewModel(plantId);
+                showConfirmationDialog(plantNameToIdMap.get(selectedName));
             }
         });
 
@@ -138,6 +143,30 @@ public class SensorFragment extends Fragment {
             }
         });
     }
+
+    @SuppressLint("SetTextI18n")
+    private void showConfirmationDialog(String plantId) {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+        builder.setIcon(R.drawable.ic_alert_sensor) // optional, match hero icon
+                .setTitle("Did you move your sensor to the selected plant?")
+                .setMessage("Selecting the correct plant ensures accurate readings.")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    sensorViewModel.updateSensorCommand(plantId);
+                    initSensorViewModel(plantId); // trigger real reading
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    temperatureValueTextView.setText("--lx");
+                    temperatureProgressBar.setProgress(0);
+
+                    moistureValueTextView.setText("--%");
+                    moistureProgressBar.setProgress(0);
+
+                    sunlightValueTextView.setText("--");
+                    sunlightProgressBar.setProgress(0);
+                })
+                .show();
+    }
+
 }
 
 

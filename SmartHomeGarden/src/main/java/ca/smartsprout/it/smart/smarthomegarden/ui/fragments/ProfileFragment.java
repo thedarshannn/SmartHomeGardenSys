@@ -11,6 +11,7 @@ package ca.smartsprout.it.smart.smarthomegarden.ui.fragments;
 
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,9 +41,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,7 +72,7 @@ public class ProfileFragment extends Fragment {
     boolean isOptionsVisible;
     private ImageView imageView;
     private TextView userNameTV, plantsCountTV;
-    private View addPlantContainer, cameraContainer, addTaskContainer;
+    private ExtendedFloatingActionButton fabAddPlant, fabAddPicture, fabAddTask;
     private UserViewModel userViewModel;
     private PhotoViewModel photosViewModel;
     private PlantViewModel plantViewModel;
@@ -80,10 +83,11 @@ public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ActivityResultLauncher<String> requestCameraPermissionLauncher;
     private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
-    private ActivityResultLauncher<Intent> cameraLauncher;
-    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private ActivityResultLauncher<String> galleryLauncher;
     private String currentDate;
     private PhotoRepository photoRepository;
+    private Uri capturedImageUri;
 
 
     public ProfileFragment() {
@@ -111,8 +115,7 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
-                        // Open the camera via ImagePickerHandler
-                        ImagePickerHandler.openCamera((AppCompatActivity) requireActivity(), cameraLauncher);
+                        openCamera();
                     } else {
                         Toast.makeText(requireContext(), "Camera permission denied.", Toast.LENGTH_SHORT).show();
                     }
@@ -124,8 +127,7 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
-                        // Open the gallery via ImagePickerHandler
-                        ImagePickerHandler.openGallery((AppCompatActivity) requireActivity(), galleryLauncher);
+                        openGallery();
                     } else {
                         Toast.makeText(requireContext(), "Gallery permission denied.", Toast.LENGTH_SHORT).show();
                     }
@@ -133,34 +135,31 @@ public class ProfileFragment extends Fragment {
         );
 
         // Initialize camera launcher
-                cameraLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
                 result -> {
-                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            Photo photo = new Photo(imageUri.toString(), currentDate);
-                            adapter.addPhoto(photo);
-                        } else {
-                            Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
-                        }
+                    if (result && capturedImageUri != null) {
+                        Photo photo = new Photo(capturedImageUri.toString(), currentDate);
+                        adapter.addPhoto(photo);
+                        photoRepository.uploadImageToFirebase(capturedImageUri, userViewModel.getUserId());
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to capture image.", Toast.LENGTH_SHORT).show();
                     }
                 }
+
         );
 
         // Initialize gallery launcher
         galleryLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            Photo photo = new Photo(imageUri.toString(), currentDate);
-                            adapter.addPhoto(photo);
-                            photoRepository.uploadImageToFirebase(imageUri, userViewModel.getUserId());
-                        } else {
-                            Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
-                        }
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        capturedImageUri = uri;
+                        Photo photo = new Photo(uri.toString(), currentDate);
+                        adapter.addPhoto(photo);
+                        photoRepository.uploadImageToFirebase(uri, userViewModel.getUserId());
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to select image.", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -178,9 +177,14 @@ public class ProfileFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         FloatingActionButton fabMain = view.findViewById(R.id.floatingActionButton);
-        final FloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
-        final FloatingActionButton fabAddPicture = view.findViewById(R.id.camera);
-        final FloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
+        final ExtendedFloatingActionButton fabAddPlant = view.findViewById(R.id.addplant);
+        final ExtendedFloatingActionButton fabAddPicture = view.findViewById(R.id.camera);
+        final ExtendedFloatingActionButton fabAddTask = view.findViewById(R.id.addtask);
+
+        // All the FABs are initially hidden
+        fabAddPlant.setVisibility(View.GONE);
+        fabAddPicture.setVisibility(View.GONE);
+        fabAddTask.setVisibility(View.GONE);
 
         imageView = view.findViewById(R.id.imageView);
         userNameTV = view.findViewById(R.id.userNameTV);
@@ -219,28 +223,39 @@ public class ProfileFragment extends Fragment {
 
 
         fabMain = view.findViewById(R.id.floatingActionButton);
-        addPlantContainer = view.findViewById(R.id.addplantContainer);
-        cameraContainer = view.findViewById(R.id.cameraContainer);
-        addTaskContainer = view.findViewById(R.id.addtaskContainer);
 
         // Toggle FAB menu with translationY animation based on your example
         fabMain.setOnClickListener(v -> {
+            // Toggle the visibility of the FAB menu
+            isOptionsVisible = !isOptionsVisible;
             if (isOptionsVisible) {
-                // Animate down and set visibility to GONE
-                addPlantContainer.animate().translationY(0).withEndAction(() -> addPlantContainer.setVisibility(View.GONE));
-                cameraContainer.animate().translationY(0).withEndAction(() -> cameraContainer.setVisibility(View.GONE));
-                addTaskContainer.animate().translationY(0).withEndAction(() -> addTaskContainer.setVisibility(View.GONE));
-                isOptionsVisible = false;
-            } else {
-                // Set visibility to VISIBLE and animate up
-                addPlantContainer.setVisibility(View.VISIBLE);
-                cameraContainer.setVisibility(View.VISIBLE);
-                addTaskContainer.setVisibility(View.VISIBLE);
+                fabAddPlant.setVisibility(View.VISIBLE);
+                fabAddPicture.setVisibility(View.VISIBLE);
+                fabAddTask.setVisibility(View.VISIBLE);
 
-                addPlantContainer.animate().translationY(-getResources().getDimension(R.dimen.stan_60));
-                cameraContainer.animate().translationY(-getResources().getDimension(R.dimen.stan_110));
-                addTaskContainer.animate().translationY(-getResources().getDimension(R.dimen.stan_160));
-                isOptionsVisible = true;
+                // Animate up
+                fabAddPlant.extend();
+                fabAddPicture.extend();
+                fabAddTask.extend();
+
+            } else {
+                fabAddPlant.shrink();
+                fabAddPicture.shrink();
+                fabAddTask.shrink();
+
+                // Animate them down and hide after
+                fabAddPlant.animate().translationY(0)
+                        .withEndAction(() -> fabAddPlant.setVisibility(View.GONE))
+                        .start();
+
+                fabAddPicture.animate().translationY(0)
+                        .withEndAction(() -> fabAddPicture.setVisibility(View.GONE))
+                        .start();
+
+                fabAddTask.animate().translationY(0)
+                        .withEndAction(() -> fabAddTask.setVisibility(View.GONE))
+                        .start();
+
             }
         });
 
@@ -258,21 +273,18 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        fabAddPicture.setOnClickListener(new View.OnClickListener() {
+        fabAddPicture.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View view) {
-
-                // Handle adding a picture of a plant
-                ImagePickerHandler.showImagePickerDialog(
-                        (AppCompatActivity) requireActivity(),
-                        cameraLauncher,
-                        galleryLauncher,
-                        requestCameraPermissionLauncher,
-                        requestGalleryPermissionLauncher
-                );
-            }
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder( requireContext())
+                    .setTitle("Add a Photo")
+                    .setMessage("Choose how you'd like to upload a photo to track your plant's growth.")
+                    .setIcon(R.drawable.ic_add_img)
+                    .setPositiveButton("Camera", (dialog, which) -> openCamera())
+                    .setNegativeButton("Gallery", (dialog, which) -> openGallery())
+                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .show();
         });
+
 
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -382,13 +394,18 @@ public class ProfileFragment extends Fragment {
     private void fetchPlantCount(String userId) {
         PlantRepository plantRepository = new PlantRepository();
         plantRepository.fetchPlantCount(userId, new PlantRepository.PlantCountCallback() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onSuccess(int count) {
                 Log.d("ProfileFragment", "Plant count: " + count);
-               requireActivity().runOnUiThread(() -> {
-                   String plantText = count == 1 ? "Plant" : "Plants";
-                   plantsCountTV.setText(count + " " + plantText);
-               });
+
+                // ✅ Avoid IllegalStateException
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        String plantText = count == 1 ? "Plant" : "Plants";
+                        plantsCountTV.setText(count + " " + plantText);
+                    });
+                }
             }
 
             @Override
@@ -397,5 +414,17 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    private void openCamera() {
+        File photoFile = new File(requireContext().getExternalFilesDir(null), "photo_" + System.currentTimeMillis() + ".jpg");
+        capturedImageUri = FileProvider.getUriForFile(requireContext(), requireContext().getPackageName() + ".provider", photoFile);
+        cameraLauncher.launch(capturedImageUri);
+    }
+
+    private void openGallery() {
+        galleryLauncher.launch("image/*");
+    }
+
+
 
 }
